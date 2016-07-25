@@ -19,8 +19,8 @@ public interface ServerConfiguration extends Credentials, Principal {
     int getPort();
 
     /**
-     * Indicates whether to accept invalid certificates.
+     * Indicates whether to validate certificates.
      * Useful for development machines, should return false in production environment.
      */
-    boolean isSkipCertificateCheck();
+    boolean isValidateCertificates();
 }

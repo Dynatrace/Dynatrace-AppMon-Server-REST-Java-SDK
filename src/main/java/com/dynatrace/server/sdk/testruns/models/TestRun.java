@@ -32,42 +32,42 @@ public class TestRun {
     private String versionBuild;
 
     public String getCreationTime() {
-        return creationTime;
+        return this.creationTime;
     }
 
     public String getPlatform() {
-        return platform;
+        return this.platform;
     }
 
     public String getSystemProfile() {
-        return systemProfile;
+        return this.systemProfile;
     }
 
     public TestCategory getCategory() {
-        return category;
+        return this.category;
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public String getHref() {
-        return href;
+        return this.href;
     }
 
     public String getVersionMajor() {
-        return versionMajor;
+        return this.versionMajor;
     }
 
     public String getVersionMinor() {
-        return versionMinor;
+        return this.versionMinor;
     }
 
     public String getVersionRevision() {
-        return versionRevision;
+        return this.versionRevision;
     }
 
     public String getVersionBuild() {
-        return versionBuild;
+        return this.versionBuild;
     }
 }

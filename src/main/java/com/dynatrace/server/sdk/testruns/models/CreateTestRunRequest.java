@@ -4,11 +4,11 @@ import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "testRun")
-public class TestRunRequest {
+public class CreateTestRunRequest {
 
     @XmlAttribute
     private String platform;
-    @XmlAttribute
+    @XmlAttribute(required = true)
     private String systemProfile;
     @XmlAttribute
     private TestCategory category;
@@ -27,10 +27,11 @@ public class TestRunRequest {
     @XmlElement
     private TestMetaData additionalMetaData;
 
-    public TestRunRequest() {
+    public CreateTestRunRequest() {
     }
 
-    public TestRunRequest(String versionBuild) {
+    public CreateTestRunRequest(String systemProfile, String versionBuild) {
+        this.systemProfile = systemProfile;
         this.versionBuild = versionBuild;
     }
 

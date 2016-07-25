@@ -18,13 +18,13 @@ public enum TestCategory {
     @XmlEnumValue("external")
     EXTERNAL("external");
 
-    private String internalName;
+    private String internal;
 
-    TestCategory(String internalName) {
-        this.internalName = internalName;
+    TestCategory(String internal) {
+        this.internal = internal;
     }
 
-    public String toString() {
-        return this.internalName;
+    public String getInternal() {
+        return this.internal;
     }
 }

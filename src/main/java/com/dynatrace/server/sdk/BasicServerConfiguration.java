@@ -17,14 +17,14 @@ public class BasicServerConfiguration implements ServerConfiguration {
     public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 8021;
     public static final boolean DEFAULT_SSL = true;
-    public static final boolean DEFAULT_SKIP_CERTIFICATE_CHECK = true;
+    public static final boolean DEFAULT_VALIDATE_CERTIFICATES = true;
 
     private final String name;
     private final String password;
     private final boolean ssl;
     private final String host;
     private final int port;
-    private final boolean skipCertificateCheck;
+    private final boolean validateCertificates;
 
     /**
      * Constructs BasicServerConfiguration with given {@code username} and {@code password} and populating it with default values:
@@ -37,11 +37,32 @@ public class BasicServerConfiguration implements ServerConfiguration {
      * <dd>{@value DEFAULT_SSL}</dd>
      * </dl>
      *
+     * @param name                 - server's username
+     * @param password             - server's password
+     * @param validateCertificates - whether to validate certificates
+     */
+    public BasicServerConfiguration(String name, String password, boolean validateCertificates) {
+        this(name, password, DEFAULT_SSL, DEFAULT_HOST, DEFAULT_PORT, validateCertificates);
+    }
+
+    /**
+     * Constructs BasicServerConfiguration with given {@code username} and {@code password} and populating it with default values:
+     * <dl>
+     * <dt>Host</dt>
+     * <dd>{@value DEFAULT_HOST}</dd>
+     * <dt>Port</dt>
+     * <dd>{@value DEFAULT_PORT}</dd>
+     * <dt>SSL</dt>
+     * <dd>{@value DEFAULT_SSL}</dd>
+     * <dt>Validate Certificates</dt>
+     * <dd>{@value DEFAULT_VALIDATE_CERTIFICATES}</dd>
+     * </dl>
+     *
      * @param name     - server's username
      * @param password - server's password
      */
     public BasicServerConfiguration(String name, String password) {
-        this(name, password, DEFAULT_SSL, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_SKIP_CERTIFICATE_CHECK);
+        this(name, password, DEFAULT_SSL, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_VALIDATE_CERTIFICATES);
     }
 
     /**
@@ -52,15 +73,15 @@ public class BasicServerConfiguration implements ServerConfiguration {
      * @param host                 - server's host
      * @param ssl                  - whether to preceed hostname with https:// or leave http://
      * @param port                 - server's port
-     * @param skipCertificateCheck - whether to accept invalid certificates
+     * @param validateCertificates - whether to validate certificates
      */
-    public BasicServerConfiguration(String name, String password, boolean ssl, String host, int port, boolean skipCertificateCheck) {
+    public BasicServerConfiguration(String name, String password, boolean ssl, String host, int port, boolean validateCertificates) {
         this.name = name;
         this.password = password;
         this.ssl = ssl;
         this.host = host;
         this.port = port;
-        this.skipCertificateCheck = skipCertificateCheck;
+        this.validateCertificates = validateCertificates;
     }
 
     public Principal getUserPrincipal() {
@@ -87,7 +108,7 @@ public class BasicServerConfiguration implements ServerConfiguration {
         return this.port;
     }
 
-    public boolean isSkipCertificateCheck() {
-        return this.skipCertificateCheck;
+    public boolean isValidateCertificates() {
+        return this.validateCertificates;
     }
 }

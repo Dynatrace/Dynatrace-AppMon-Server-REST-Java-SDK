@@ -1,11 +1,19 @@
 package com.dynatrace.server.sdk.exceptions;
 
 public class ServerResponseException extends Exception {
-    public ServerResponseException(String message, Throwable cause) {
+    private final int statusCode;
+
+    public ServerResponseException(int statusCode, String message, Throwable cause) {
         super(message, cause);
+        this.statusCode = statusCode;
     }
 
-    public ServerResponseException(String message) {
+    public ServerResponseException(int statusCode, String message) {
         super(message);
+        this.statusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return this.statusCode;
     }
 }

@@ -35,11 +35,6 @@ public class DynatraceClient {
             }
         }
 
-        //setup basic http authentication
-        CredentialsProvider provider = new BasicCredentialsProvider();
-        provider.setCredentials(AuthScope.ANY, configuration);
-        builder.setDefaultCredentialsProvider(provider);
-
         return builder.build();
     }
 

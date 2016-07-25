@@ -1,6 +1,8 @@
 package com.dynatrace.server.sdk.exceptions;
 
-public class ServerConnectionException extends Exception {
+import java.io.IOException;
+
+public class ServerConnectionException extends IOException {
     public ServerConnectionException(String message, Throwable cause) {
         super(message, cause);
     }

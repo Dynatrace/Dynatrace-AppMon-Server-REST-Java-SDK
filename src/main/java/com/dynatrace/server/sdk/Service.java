@@ -2,6 +2,7 @@ package com.dynatrace.server.sdk;
 
 import com.dynatrace.server.sdk.exceptions.ServerConnectionException;
 import com.dynatrace.server.sdk.exceptions.ServerResponseException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -25,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class Service {
+public abstract class Service {
     private static final XPathExpression ERROR_EXPRESSION;
 
     static {
@@ -55,7 +56,7 @@ public class Service {
         return writer.getBuffer().toString();
     }
 
-    protected final DynatraceClient client;
+    private final DynatraceClient client;
 
     protected Service(DynatraceClient client) {
         this.client = client;
@@ -73,6 +74,7 @@ public class Service {
 
     protected <T> T doRequest(HttpUriRequest request, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
         request.setHeader("Accept", "application/xml");
+        request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
         try (CloseableHttpResponse response = this.client.getClient().execute(request)) {
             if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
                 String error = null;
@@ -83,20 +85,22 @@ public class Service {
                     // xpath is reasonable for parsing such a small entity
                     error = ERROR_EXPRESSION.evaluate(new InputSource(is));
                 } catch (XPathExpressionException e) {
+                    // error message might not exist
                 }
 
                 if (error == null || error.isEmpty()) {
                     error = response.getStatusLine().getReasonPhrase();
                 }
-                throw new ServerResponseException(error);
+                throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
             }
 //                String content = EntityUtils.toString(response.getEntity());
 //                System.out.println(content);
 //                InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-            T obj = inputStreamToObject(response.getEntity().getContent(), responseClass);
-            return obj;
-        } catch (JAXBException e) {
-            throw new ServerResponseException("Could not unmarshall response into given object", e);
+            try {
+                return inputStreamToObject(response.getEntity().getContent(), responseClass);
+            } catch (JAXBException e) {
+                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not unmarshall response into given object", e);
+            }
         } catch (IOException e) {
             throw new ServerConnectionException("Could not connect to Dynatrace Server", e);
         }

@@ -1,6 +1,6 @@
 package com.dynatrace.server.sdk.testruns;
 
-import com.dynatrace.server.sdk.ServerConfiguration;
+import com.dynatrace.server.sdk.DynatraceClient;
 import com.dynatrace.server.sdk.Service;
 import com.dynatrace.server.sdk.exceptions.ServerConnectionException;
 import com.dynatrace.server.sdk.exceptions.ServerResponseException;
@@ -19,8 +19,8 @@ import java.util.List;
 public class TestRuns extends Service {
     public static final String TEST_RUNS_EP = "/rest/management/profiles/%s/testruns/%s";
 
-    public TestRuns(ServerConfiguration configuration) {
-        super(configuration);
+    public TestRuns(DynatraceClient client) {
+        super(client);
     }
 
     /**

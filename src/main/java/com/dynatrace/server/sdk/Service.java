@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.xml.sax.InputSource;
 
 import javax.xml.bind.JAXBContext;
@@ -56,19 +55,17 @@ public class Service {
         return writer.getBuffer().toString();
     }
 
-    protected final ServerConfiguration configuration;
-    protected final CloseableHttpClient client;
+    protected final DynatraceClient client;
 
-    protected Service(ServerConfiguration configuration) {
-        this.configuration = configuration;
-        this.client = Utils.buildClient(configuration);
+    protected Service(DynatraceClient client) {
+        this.client = client;
     }
 
     protected URI buildURI(String path, NameValuePair... params) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setScheme(configuration.isSSL() ? "https" : "http");
-        uriBuilder.setHost(configuration.getHost());
-        uriBuilder.setPort(configuration.getPort());
+        uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
+        uriBuilder.setHost(this.client.getConfiguration().getHost());
+        uriBuilder.setPort(this.client.getConfiguration().getPort());
         uriBuilder.setPath(path);
         uriBuilder.setParameters(params);
         return uriBuilder.build();
@@ -76,7 +73,7 @@ public class Service {
 
     protected <T> T doRequest(HttpUriRequest request, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
         request.setHeader("Accept", "application/xml");
-        try (CloseableHttpResponse response = this.client.execute(request)) {
+        try (CloseableHttpResponse response = this.client.getClient().execute(request)) {
             if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
                 String error = null;
                 // dynatrace often returns an error message along with a status code

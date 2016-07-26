@@ -19,12 +19,13 @@ public class BasicServerConfigurationTest {
 
     @Test
     public void construct() {
-        BasicServerConfiguration bsc = new BasicServerConfiguration("constructUser", "constructPassword", !BasicServerConfiguration.DEFAULT_SSL, "8.8.8.8", 8080, !BasicServerConfiguration.DEFAULT_VALIDATE_CERTIFICATES);
+        BasicServerConfiguration bsc = new BasicServerConfiguration("constructUser", "constructPassword", !BasicServerConfiguration.DEFAULT_SSL, "8.8.8.8", 8080, !BasicServerConfiguration.DEFAULT_VALIDATE_CERTIFICATES, BasicServerConfiguration.DEFAULT_CONNECTION_TIMEOUT - 100);
         assertThat(bsc.getName(), is("constructUser"));
         assertThat(bsc.getPassword(), is("constructPassword"));
         assertThat(bsc.getHost(), is("8.8.8.8"));
         assertThat(bsc.getPort(), is(8080));
         assertThat(bsc.isSSL(), is(!BasicServerConfiguration.DEFAULT_SSL));
         assertThat(bsc.isValidateCertificates(), is(!BasicServerConfiguration.DEFAULT_VALIDATE_CERTIFICATES));
+        assertThat(bsc.getTimeout(), is(BasicServerConfiguration.DEFAULT_CONNECTION_TIMEOUT - 100));
     }
 }

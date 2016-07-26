@@ -14,7 +14,7 @@ import static org.hamcrest.core.Is.is;
 public class TestAutomationTest {
     @Rule
     public WireMockRule wireMock = new WireMockRule();
-    private TestAutomation testAutomation = new TestAutomation(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false)));
+    private TestAutomation testAutomation = new TestAutomation(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 2000)));
 
     @Test
     public void createTestRun() throws Exception {

@@ -27,7 +27,7 @@ public class ServiceTest {
 
     @Before
     public void setup() {
-        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false))) {
+        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 1000))) {
         };
     }
 
@@ -86,7 +86,7 @@ public class ServiceTest {
     @Test
     public void invalidPort() throws Exception {
         //http://en.wikipedia.org/wiki/Ephemeral_port
-        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 49153, false))) {
+        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 49153, false, 1000))) {
         };
         try {
             this.service.doGetRequest(this.service.buildURI("/"));
@@ -97,7 +97,7 @@ public class ServiceTest {
 
     @Test
     public void invalidHostname() throws Exception {
-        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "INVALID", 8080, false))) {
+        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "INVALID", 8080, false, 1000))) {
         };
         try {
             this.service.doGetRequest(this.service.buildURI("/"));

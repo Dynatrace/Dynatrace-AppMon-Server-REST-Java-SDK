@@ -1,6 +1,7 @@
 package com.dynatrace.server.sdk;
 
 import org.apache.http.annotation.ThreadSafe;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -13,10 +14,10 @@ import java.security.cert.X509Certificate;
 
 @ThreadSafe
 public class DynatraceClient {
-
     public static HttpClientBuilder clientBuilder(ServerConfiguration configuration) {
         HttpClientBuilder builder = HttpClients.custom();
-
+        builder.setDefaultRequestConfig(RequestConfig.custom()
+                .setConnectTimeout(configuration.getTimeout()).build());
         // marks all certificates as trusted
         if (!configuration.isValidateCertificates()) {
             try {
@@ -31,7 +32,6 @@ public class DynatraceClient {
                 throw new RuntimeException("Failed to create a HTTP Client with skipped certificates check.", e);
             }
         }
-
         return builder;
     }
 
@@ -39,8 +39,7 @@ public class DynatraceClient {
     private final ServerConfiguration configuration;
 
     public DynatraceClient(ServerConfiguration configuration) {
-        this.configuration = configuration;
-        this.client = clientBuilder(configuration).build();
+        this(configuration, clientBuilder(configuration).build());
     }
 
     public DynatraceClient(ServerConfiguration configuration, CloseableHttpClient httpClient) {

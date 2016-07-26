@@ -1,8 +1,6 @@
 package com.dynatrace.server.sdk.agentsandcollectors.models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -10,34 +8,38 @@ import java.util.List;
 public class AgentInformation {
     public static final String ROOT_ELEMENT_NAME = "agentinformation";
 
+    private CollectorInformation collectorinformation;
+    private AgentPropertiesInformation agentProperties;
+    private List<DeployedSensorInformation> deployedSensorsInformation;
+
+    private Boolean connected;
+    private Boolean capture;
+    private Boolean licenseOk;
+    private Boolean agentConfigured;
+    private Long startupTimeUTC;
+
     private String name;
-    private long startupDateUTC;
-    private int agentId;
-    private int processId;
+    private Integer agentId;
+    private Integer processId;
     private String technologyType;
-    private byte techTypeConstant;
+    private Byte techTypeConstant;
     private String host;
-    private long eventCount;
-    private int classLoadCount;
-    private int totalClassLoadCount;
-    private boolean isConnected;
-    private boolean isHotUpdateable;
+    private Long eventCount;
+    private Integer classLoadCount;
+    private Integer totalClassLoadCount;
+    private Boolean isHotUpdateable;
     private String licenseInformation;
-    private boolean isCapture;
-    private long counterSkipEvents;
-    private long counterSkipExecPaths;
-    private double totalExecutionTime;
-    private double totalCpuTime;
-    private long totalPurePathCount;
+    private Long counterSkipEvents;
+    private Long counterSkipExecPaths;
+    private Double totalExecutionTime;
+    private Double totalCpuTime;
+    private Long totalPurePathCount;
     private String systemProfileName;
     private String profileConfigurationName;
     private String agentGroupLabel;
-    private boolean isLicenseOk;
-    private CollectorInformation collectorInfo;
-    private List<DeployedSensorInformation> deployedSensorsInformation;
     private String agentVersion;
     private Integer processorCount;
-    private boolean isvLicenseSupported;
+    private Boolean isvLicenseSupported;
     private String vmVersionString;
     private String vmVendor;
     private String configurationId;
@@ -46,33 +48,31 @@ public class AgentInformation {
     private String sourceGroupId;
     private String licenseFlagsToString;
     private String collectorName;
-    private boolean isAgentConfigured;
     private String agentInstanceName;
     private String instanceName;
-    private double syncThreshold;
-    private boolean fromCmdb;
-    private boolean required;
-    private boolean hotUpdateCritical;
-    private boolean hotUpdateable;
-    private long timestamp;
-    private long virtualTime;
-    private boolean captureCPUTimes;
-    private AgentPropertiesInformation agentProperties;
+    private Double syncThreshold;
+    private Boolean fromCmdb;
+    private Boolean required;
+    private Boolean hotUpdateCritical;
+    private Boolean hotUpdateable;
+    private Long timestamp;
+    private Long virtualTime;
+    private Boolean captureCPUTimes;
 
     /* getters */
     public String getName() {
         return this.name;
     }
 
-    public long getStartupDateUTC() {
-        return this.startupDateUTC;
+    public Long getStartupTimeUTC() {
+        return this.startupTimeUTC;
     }
 
-    public int getAgentId() {
+    public Integer getAgentId() {
         return this.agentId;
     }
 
-    public int getProcessId() {
+    public Integer getProcessId() {
         return this.processId;
     }
 
@@ -88,35 +88,35 @@ public class AgentInformation {
         return this.host;
     }
 
-    public long getEventCount() {
+    public Long getEventCount() {
         return this.eventCount;
     }
 
-    public int getClassLoadCount() {
+    public Integer getClassLoadCount() {
         return this.classLoadCount;
     }
 
-    public int getTotalClassLoadCount() {
+    public Integer getTotalClassLoadCount() {
         return this.totalClassLoadCount;
     }
 
-    public boolean isConnected() {
-        return this.isConnected;
+    public Boolean isConnected() {
+        return this.connected;
     }
 
-    public boolean isHotUpdateable() {
+    public Boolean isHotUpdateable() {
         return this.isHotUpdateable;
     }
 
-    public long getTimestamp() {
+    public Long getTimestamp() {
         return this.timestamp;
     }
 
-    public long getVirtualTime() {
+    public Long getVirtualTime() {
         return this.virtualTime;
     }
 
-    public boolean isCaptureCPUTimes() {
+    public Boolean isCaptureCPUTimes() {
         return this.captureCPUTimes;
     }
 
@@ -128,27 +128,27 @@ public class AgentInformation {
         return this.licenseInformation;
     }
 
-    public boolean isCapture() {
-        return this.isCapture;
+    public Boolean isCapture() {
+        return this.capture;
     }
 
-    public long getCounterSkipEvents() {
+    public Long getCounterSkipEvents() {
         return this.counterSkipEvents;
     }
 
-    public long getCounterSkipExecPaths() {
+    public Long getCounterSkipExecPaths() {
         return this.counterSkipExecPaths;
     }
 
-    public double getTotalExecutionTime() {
+    public Double getTotalExecutionTime() {
         return this.totalExecutionTime;
     }
 
-    public double getTotalCpuTime() {
+    public Double getTotalCpuTime() {
         return this.totalCpuTime;
     }
 
-    public long getTotalPurePathCount() {
+    public Long getTotalPurePathCount() {
         return this.totalPurePathCount;
     }
 
@@ -164,12 +164,12 @@ public class AgentInformation {
         return this.agentGroupLabel;
     }
 
-    public boolean isLicenseOk() {
-        return this.isLicenseOk;
+    public Boolean isLicenseOk() {
+        return this.licenseOk;
     }
 
-    public CollectorInformation getCollectorInfo() {
-        return this.collectorInfo;
+    public CollectorInformation getCollectorinformation() {
+        return this.collectorinformation;
     }
 
     public List<DeployedSensorInformation> getDeployedSensorsInformation() {
@@ -184,7 +184,7 @@ public class AgentInformation {
         return this.processorCount;
     }
 
-    public boolean isvLicenseSupported() {
+    public Boolean isvLicenseSupported() {
         return this.isvLicenseSupported;
     }
 
@@ -220,8 +220,8 @@ public class AgentInformation {
         return this.collectorName;
     }
 
-    public boolean isAgentConfigured() {
-        return this.isAgentConfigured;
+    public Boolean isAgentConfigured() {
+        return this.agentConfigured;
     }
 
     public String getAgentInstanceName() {
@@ -232,19 +232,19 @@ public class AgentInformation {
         return this.instanceName;
     }
 
-    public double getSyncThreshold() {
+    public Double getSyncThreshold() {
         return this.syncThreshold;
     }
 
-    public boolean isFromCmdb() {
+    public Boolean isFromCmdb() {
         return this.fromCmdb;
     }
 
-    public boolean isRequired() {
+    public Boolean isRequired() {
         return this.required;
     }
 
-    public boolean isHotUpdateCritical() {
+    public Boolean isHotUpdateCritical() {
         return this.hotUpdateCritical;
     }
 
@@ -252,7 +252,7 @@ public class AgentInformation {
     public String toString() {
         return "AgentInformation{" +
                 "name='" + name + '\'' +
-                ", startupDateUTC=" + startupDateUTC +
+                ", startupTimeUTC=" + startupTimeUTC +
                 ", agentId=" + agentId +
                 ", processId=" + processId +
                 ", technologyType='" + technologyType + '\'' +
@@ -261,10 +261,10 @@ public class AgentInformation {
                 ", eventCount=" + eventCount +
                 ", classLoadCount=" + classLoadCount +
                 ", totalClassLoadCount=" + totalClassLoadCount +
-                ", isConnected=" + isConnected +
+                ", connected=" + connected +
                 ", isHotUpdateable=" + isHotUpdateable +
                 ", licenseInformation='" + licenseInformation + '\'' +
-                ", isCapture=" + isCapture +
+                ", capture=" + capture +
                 ", counterSkipEvents=" + counterSkipEvents +
                 ", counterSkipExecPaths=" + counterSkipExecPaths +
                 ", totalExecutionTime=" + totalExecutionTime +
@@ -273,8 +273,8 @@ public class AgentInformation {
                 ", systemProfileName='" + systemProfileName + '\'' +
                 ", profileConfigurationName='" + profileConfigurationName + '\'' +
                 ", agentGroupLabel='" + agentGroupLabel + '\'' +
-                ", isLicenseOk=" + isLicenseOk +
-                ", collectorInfo=" + collectorInfo +
+                ", licenseOk=" + licenseOk +
+                ", collectorinformation=" + collectorinformation +
                 ", deployedSensorsInformation=" + deployedSensorsInformation +
                 ", agentVersion='" + agentVersion + '\'' +
                 ", processorCount=" + processorCount +
@@ -287,7 +287,7 @@ public class AgentInformation {
                 ", sourceGroupId='" + sourceGroupId + '\'' +
                 ", licenseFlagsToString='" + licenseFlagsToString + '\'' +
                 ", collectorName='" + collectorName + '\'' +
-                ", isAgentConfigured=" + isAgentConfigured +
+                ", agentConfigured=" + agentConfigured +
                 ", agentInstanceName='" + agentInstanceName + '\'' +
                 ", instanceName='" + instanceName + '\'' +
                 ", syncThreshold=" + syncThreshold +

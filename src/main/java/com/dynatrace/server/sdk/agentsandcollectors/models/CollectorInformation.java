@@ -3,24 +3,25 @@ package com.dynatrace.server.sdk.agentsandcollectors.models;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "collectorinformation")
+@XmlRootElement(name = CollectorInformation.ROOT_ELEMENT_NAME)
 public class CollectorInformation {
+    public static final String ROOT_ELEMENT_NAME = "collectorinformation";
+
     @XmlAttribute
-    private String href; //TODO is it necessary?
-    private boolean embedded; //TODO is it necessary?
+    private String href;
 
     private String name;
     private String host;
-    private boolean isConnected;
-    private boolean isLocal;
     private String version;
 
-    /* getters */
-    public String getHref() {
-        return this.href;
-    }
+    private Boolean connected;
+    private Boolean embedded;
+    private Boolean local;
 
-    public boolean isEmbedded() {
+    /* getters */
+    public String getHref() { return this.href; }
+
+    public Boolean isEmbedded() {
         return this.embedded;
     }
 
@@ -32,12 +33,12 @@ public class CollectorInformation {
         return this.host;
     }
 
-    public boolean isConnected() {
-        return this.isConnected;
+    public Boolean isConnected() {
+        return this.connected;
     }
 
-    public boolean isLocal() {
-        return this.isLocal;
+    public Boolean isLocal() {
+        return this.local;
     }
 
     public String getVersion() {
@@ -52,8 +53,8 @@ public class CollectorInformation {
                 ", embedded=" + embedded +
                 ", name='" + name + '\'' +
                 ", host='" + host + '\'' +
-                ", isConnected=" + isConnected +
-                ", isLocal=" + isLocal +
+                ", connected=" + connected +
+                ", local=" + local +
                 ", version='" + version + '\'' +
                 '}';
     }

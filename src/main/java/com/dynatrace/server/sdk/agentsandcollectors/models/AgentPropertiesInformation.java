@@ -6,8 +6,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "agentProperties")
+@XmlRootElement(name = AgentPropertiesInformation.ROOT_ELEMENT_NAME)
 public class AgentPropertiesInformation {
+    public static final String ROOT_ELEMENT_NAME = "agentProperties";
+
     private String agentHost;
     private String agentId;
     private String agentVersion;
@@ -257,5 +259,61 @@ public class AgentPropertiesInformation {
 
     public String getRegionId() {
         return this.regionId;
+    }
+
+
+    @Override
+    public String toString() {
+        return "AgentPropertiesInformation{" +
+                "agentHost='" + agentHost + '\'' +
+                ", agentId='" + agentId + '\'' +
+                ", agentVersion='" + agentVersion + '\'' +
+                ", agentBootstrapVersion='" + agentBootstrapVersion + '\'' +
+                ", agentHostAddress='" + agentHostAddress + '\'' +
+                ", agentPlatform='" + agentPlatform + '\'' +
+                ", bufferCount='" + bufferCount + '\'' +
+                ", bufferSaturationThreshold='" + bufferSaturationThreshold + '\'' +
+                ", bufferSize='" + bufferSize + '\'' +
+                ", clockFrequency='" + clockFrequency + '\'' +
+                ", cloud='" + cloud + '\'' +
+                ", hiResClock='" + hiResClock + '\'' +
+                ", hotSensorPlaceable='" + hotSensorPlaceable + '\'' +
+                ", hypervisor='" + hypervisor + '\'' +
+                ", osHyperVFriendly='" + osHyperVFriendly + '\'' +
+                ", instrumentationState='" + instrumentationState + '\'' +
+                ", logFileLocation='" + logFileLocation + '\'' +
+                ", maximumMemory='" + maximumMemory + '\'' +
+                ", operatingSystem='" + operatingSystem + '\'' +
+                ", osArchitecture='" + osArchitecture + '\'' +
+                ", osEdition='" + osEdition + '\'' +
+                ", osProductId='" + osProductId + '\'' +
+                ", osVersion='" + osVersion + '\'' +
+                ", processors='" + processors + '\'' +
+                ", recoveryEnabled='" + recoveryEnabled + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", startUp='" + startUp + '\'' +
+                ", timer='" + timer + '\'' +
+                ", applicationServerVersionDetected='" + applicationServerVersionDetected + '\'' +
+                ", applicationServerDetected='" + applicationServerDetected + '\'' +
+                ", cellNameDetected='" + cellNameDetected + '\'' +
+                ", clrVendor='" + clrVendor + '\'' +
+                ", clrVersion='" + clrVersion + '\'' +
+                ", runtimeVersion='" + runtimeVersion + '\'' +
+                ", commandLine='" + commandLine + '\'' +
+                ", commandLineMayBeTruncated='" + commandLineMayBeTruncated + '\'' +
+                ", hasCommandLine='" + hasCommandLine + '\'' +
+                ", workingDirectory='" + workingDirectory + '\'' +
+                ", hasWorkingDirectory='" + hasWorkingDirectory + '\'' +
+                ", smfId='" + smfId + '\'' +
+                ", snaId='" + snaId + '\'' +
+                ", subsystem='" + subsystem + '\'' +
+                ", jobname='" + jobname + '\'' +
+                ", queueType='" + queueType + '\'' +
+                ", ccsid='" + ccsid + '\'' +
+                ", zosType='" + zosType + '\'' +
+                ", zosRelease='" + zosRelease + '\'' +
+                ", asid='" + asid + '\'' +
+                ", regionId='" + regionId + '\'' +
+                '}';
     }
 }

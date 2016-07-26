@@ -27,6 +27,7 @@ public class CreateTestRunRequest {
     @XmlElement
     private TestMetaData additionalMetaData;
 
+    //Required by JAXB
     public CreateTestRunRequest() {
     }
 
@@ -36,7 +37,7 @@ public class CreateTestRunRequest {
     }
 
     public String getPlatform() {
-        return platform;
+        return this.platform;
     }
 
     public void setPlatform(String platform) {
@@ -44,7 +45,7 @@ public class CreateTestRunRequest {
     }
 
     public String getSystemProfile() {
-        return systemProfile;
+        return this.systemProfile;
     }
 
     public void setSystemProfile(String systemProfile) {
@@ -52,7 +53,7 @@ public class CreateTestRunRequest {
     }
 
     public TestCategory getCategory() {
-        return category;
+        return this.category;
     }
 
     public void setCategory(TestCategory category) {
@@ -60,7 +61,7 @@ public class CreateTestRunRequest {
     }
 
     public String getVersionMajor() {
-        return versionMajor;
+        return this.versionMajor;
     }
 
     public void setVersionMajor(String versionMajor) {
@@ -68,7 +69,7 @@ public class CreateTestRunRequest {
     }
 
     public String getVersionMinor() {
-        return versionMinor;
+        return this.versionMinor;
     }
 
     public void setVersionMinor(String versionMinor) {
@@ -76,7 +77,7 @@ public class CreateTestRunRequest {
     }
 
     public String getVersionRevision() {
-        return versionRevision;
+        return this.versionRevision;
     }
 
     public void setVersionRevision(String versionRevision) {
@@ -84,7 +85,7 @@ public class CreateTestRunRequest {
     }
 
     public String getVersionBuild() {
-        return versionBuild;
+        return this.versionBuild;
     }
 
     public void setVersionBuild(String versionBuild) {
@@ -92,7 +93,7 @@ public class CreateTestRunRequest {
     }
 
     public String getVersionMilestone() {
-        return versionMilestone;
+        return this.versionMilestone;
     }
 
     public void setVersionMilestone(String versionMilestone) {
@@ -100,7 +101,7 @@ public class CreateTestRunRequest {
     }
 
     public TestMetaData getAdditionalMetaData() {
-        return additionalMetaData;
+        return this.additionalMetaData;
     }
 
     public void setAdditionalMetaData(TestMetaData additionalMetaData) {

@@ -1,12 +1,17 @@
 package com.dynatrace.server.sdk.testruns.models;
 
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlRootElement(name = "testRuns")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TestRuns {
-    @XmlElementWrapper(name = "testRuns")
-    private final List<TestRun> testRuns = new ArrayList<>();
+    @XmlElement(name = "testRun")
+    private List<TestRun> testRuns = new ArrayList<>();
 
     public List<TestRun> getTestRuns() {
         return this.testRuns;

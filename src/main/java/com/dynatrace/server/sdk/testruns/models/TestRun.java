@@ -1,16 +1,13 @@
 package com.dynatrace.server.sdk.testruns.models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "testRun")
 public class TestRun {
-    //todo Date
     @XmlAttribute
-    private String creationTime;
+    private Long startTime;
     @XmlAttribute
     private String platform;
     @XmlAttribute
@@ -30,9 +27,27 @@ public class TestRun {
     private String versionRevision;
     @XmlAttribute
     private String versionBuild;
+    @XmlAttribute
+    private CreationMode creationMode;
 
-    public String getCreationTime() {
-        return this.creationTime;
+    @XmlAttribute
+    private Integer numPassed;
+    @XmlAttribute
+    private Integer numFailed;
+    @XmlAttribute
+    private Integer numVolatile;
+    @XmlAttribute
+    private Integer numImproved;
+    @XmlAttribute
+    private Integer numDegraded;
+    @XmlAttribute
+    private Integer numInvalidated;
+
+    @XmlElement(name = "testResult")
+    private List<TestResult> testResults;
+
+    public Long getStartTime() {
+        return this.startTime;
     }
 
     public String getPlatform() {
@@ -69,5 +84,61 @@ public class TestRun {
 
     public String getVersionBuild() {
         return this.versionBuild;
+    }
+
+    public CreationMode getCreationMode() {
+        return this.creationMode;
+    }
+
+    public List<TestResult> getTestResults() {
+        return this.testResults;
+    }
+
+    public Integer getNumPassed() {
+        return this.numPassed;
+    }
+
+    public Integer getNumFailed() {
+        return this.numFailed;
+    }
+
+    public Integer getNumVolatile() {
+        return this.numVolatile;
+    }
+
+    public Integer getNumImproved() {
+        return this.numImproved;
+    }
+
+    public Integer getNumDegraded() {
+        return this.numDegraded;
+    }
+
+    public Integer getNumInvalidated() {
+        return this.numInvalidated;
+    }
+
+    @Override
+    public String toString() {
+        return "TestRun{" +
+                "startTime=" + this.startTime +
+                ", platform='" + this.platform + '\'' +
+                ", systemProfile='" + this.systemProfile + '\'' +
+                ", category=" + this.category +
+                ", id='" + this.id + '\'' +
+                ", href='" + this.href + '\'' +
+                ", versionMajor='" + this.versionMajor + '\'' +
+                ", versionMinor='" + this.versionMinor + '\'' +
+                ", versionRevision='" + this.versionRevision + '\'' +
+                ", versionBuild='" + this.versionBuild + '\'' +
+                ", creationMode=" + this.creationMode +
+                ", numPassed=" + this.numPassed +
+                ", numFailed=" + this.numFailed +
+                ", numVolatile=" + this.numVolatile +
+                ", numImproved=" + this.numImproved +
+                ", numDegraded=" + this.numDegraded +
+                ", numInvalidated=" + this.numInvalidated +
+                ", testResults=" + this.testResults +
+                '}';
     }
 }

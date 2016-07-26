@@ -1,11 +1,8 @@
 package com.dynatrace.server.sdk;
 
 import org.apache.http.annotation.ThreadSafe;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -17,7 +14,7 @@ import java.security.cert.X509Certificate;
 @ThreadSafe
 public class DynatraceClient {
 
-    public static CloseableHttpClient buildClient(ServerConfiguration configuration) {
+    public static HttpClientBuilder clientBuilder(ServerConfiguration configuration) {
         HttpClientBuilder builder = HttpClients.custom();
 
         // marks all certificates as trusted
@@ -35,7 +32,7 @@ public class DynatraceClient {
             }
         }
 
-        return builder.build();
+        return builder;
     }
 
     private final CloseableHttpClient client;
@@ -43,7 +40,12 @@ public class DynatraceClient {
 
     public DynatraceClient(ServerConfiguration configuration) {
         this.configuration = configuration;
-        this.client = buildClient(configuration);
+        this.client = clientBuilder(configuration).build();
+    }
+
+    public DynatraceClient(ServerConfiguration configuration, CloseableHttpClient httpClient) {
+        this.configuration = configuration;
+        this.client = httpClient;
     }
 
     public CloseableHttpClient getClient() {

@@ -93,9 +93,6 @@ public abstract class Service {
                 }
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
             }
-//                String content = EntityUtils.toString(response.getEntity());
-//                System.out.println(content);
-//                InputStream stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             try {
                 return inputStreamToObject(response.getEntity().getContent(), responseClass);
             } catch (JAXBException e) {

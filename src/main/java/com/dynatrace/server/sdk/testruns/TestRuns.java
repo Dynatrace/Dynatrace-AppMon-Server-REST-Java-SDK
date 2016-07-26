@@ -8,14 +8,19 @@ import com.dynatrace.server.sdk.testruns.models.CreateTestRunRequest;
 import com.dynatrace.server.sdk.testruns.models.FetchTestRunsRequest;
 import com.dynatrace.server.sdk.testruns.models.TestRun;
 import org.apache.http.NameValuePair;
+import org.apache.http.annotation.ThreadSafe;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Wraps Dynatrace Server TestRuns REST API providing an easy to use set of methods.
  */
+@ThreadSafe
 public class TestRuns extends Service {
     public static final String TEST_RUNS_EP = "/rest/management/profiles/%s/testruns/%s";
 
@@ -66,11 +71,32 @@ public class TestRuns extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public TestRuns fetchTestRuns(FetchTestRunsRequest request) throws ServerConnectionException, ServerResponseException {
-        List<NameValuePair> nvps = request.getParameters();
+    public com.dynatrace.server.sdk.testruns.models.TestRuns fetchTestRuns(FetchTestRunsRequest request) throws ServerConnectionException, ServerResponseException {
+        ArrayList<NameValuePair> nvps = new ArrayList<>();
+        if (request.getStartTime() != null) {
+            nvps.add(new BasicNameValuePair("startTime", String.valueOf(request.getStartTime())));
+        }
+        if (request.getEndTime() != null) {
+            nvps.add(new BasicNameValuePair("endTime", String.valueOf(request.getEndTime())));
+        }
+        if (request.getExtend() != null) {
+            nvps.add(new BasicNameValuePair("extend", request.getExtend().getInternal()));
+        }
+        if (request.getMaxTestRuns() != null) {
+            nvps.add(new BasicNameValuePair("lastNTestruns", String.valueOf(request.getMaxTestRuns())));
+        }
+        if (request.getMaxBuilds() != null) {
+            nvps.add(new BasicNameValuePair("lastNBuilds", String.valueOf(request.getMaxBuilds())));
+        }
+
+        for (Map.Entry<String, List<String>> filter : request.getFilters().entrySet()) {
+            for (String value : filter.getValue()) {
+                nvps.add(new BasicNameValuePair(filter.getKey(), value));
+            }
+        }
         try {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), nvps.toArray(new NameValuePair[nvps.size()]));
-            return this.doGetRequest(uri, TestRuns.class);
+            return this.doGetRequest(uri, com.dynatrace.server.sdk.testruns.models.TestRuns.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid system profile format", e);
         }

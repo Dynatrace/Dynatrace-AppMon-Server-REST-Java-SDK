@@ -20,7 +20,7 @@ public interface ServerConfiguration extends Credentials, Principal {
 
     /**
      * Indicates whether to validate certificates.
-     * Useful for development machines, should return false in production environment.
+     * Useful to disable for development machines, should return true in production environment.
      */
     boolean isValidateCertificates();
 }

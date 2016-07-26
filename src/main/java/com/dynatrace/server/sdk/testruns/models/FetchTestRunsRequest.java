@@ -1,11 +1,6 @@
 package com.dynatrace.server.sdk.testruns.models;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class FetchTestRunsRequest {
 
@@ -23,14 +18,18 @@ public class FetchTestRunsRequest {
         }
     }
 
-    private final String systemProfile;
+    private String systemProfile;
     private Long startTime;
     private Long endTime;
     private Integer maxTestRuns;
     private Integer maxBuilds;
     private Extension extend;
 
-    private ArrayList<NameValuePair> additionalParameters = new ArrayList<>();
+    private HashMap<String, List<String>> filters = new HashMap<>();
+
+    // Required by Jaxb
+    public FetchTestRunsRequest() {
+    }
 
     public FetchTestRunsRequest(String systemProfile) {
         this.systemProfile = systemProfile;
@@ -40,8 +39,12 @@ public class FetchTestRunsRequest {
         return this.systemProfile;
     }
 
+    public void setSystemProfile(String systemProfile) {
+        this.systemProfile = systemProfile;
+    }
+
     /**
-     * @return
+     * @return Start timestamp of timeframe, in milisecond since epoch (January 1, 1970 UTC).
      */
     public Long getStartTime() {
         return this.startTime;
@@ -115,60 +118,43 @@ public class FetchTestRunsRequest {
         this.extend = extend;
     }
 
-    public List<NameValuePair> getAdditionalParameters() {
-        return this.additionalParameters;
+    public void setVersionBuildFilter(String... versionBuilds) {
+        this.filters.put("versionBuild", Arrays.asList(versionBuilds));
     }
 
-    /**
-     * Adds an additional parameter based on it's {@link ParameterType}, multiple values for a single type can be added.
-     * @param values values to add
-     * @param <T> value type
-     */
-    public <T> void addAdditionalParameter(ParameterType<T> type, T... values) {
-        for (T val : values) {
-            this.additionalParameters.add(new BasicNameValuePair(type.getInternal(), val.toString()));
-        }
+    public void setVersionMajorFilter(String... versionMajors) {
+        this.filters.put("versionMajor", Arrays.asList(versionMajors));
     }
 
-    public List<NameValuePair> getParameters() {
-        ArrayList<NameValuePair> nvps = new ArrayList<>(this.additionalParameters);
-        if (this.getStartTime() != null) {
-            nvps.add(new BasicNameValuePair("startTime", String.valueOf(this.getStartTime())));
-        }
-        if (this.getEndTime() != null) {
-            nvps.add(new BasicNameValuePair("endTime", String.valueOf(this.getEndTime())));
-        }
-        if (this.getExtend() != null) {
-            nvps.add(new BasicNameValuePair("extend", this.getExtend().getInternal()));
-        }
-        if (this.getMaxTestRuns() != null) {
-            nvps.add(new BasicNameValuePair("lastNTestruns", String.valueOf(this.getMaxTestRuns())));
-        }
-        if (this.getMaxBuilds() != null) {
-            nvps.add(new BasicNameValuePair("lastNBuilds", String.valueOf(this.getMaxBuilds())));
-        }
-        return nvps;
+    public void setVersionMilestoneFilter(String... versionMilestones) {
+        this.filters.put("versionMilestone", Arrays.asList(versionMilestones));
     }
 
-    public static class ParameterType<T> {
-        public static final ParameterType<String> VERSION_BUILD = new ParameterType<>("versionBuild");
-        public static final ParameterType<String> VERSION_MAJOR = new ParameterType<>("versionMajor");
-        public static final ParameterType<String> VERSION_MILESTONE = new ParameterType<>("versionMilestone");
-        public static final ParameterType<String> VERSION_MINOR = new ParameterType<>("versionMinor");
-        public static final ParameterType<TestCategory> TEST_CATEGORY = new ParameterType<>("category");
-        public static final ParameterType<String> AGENT_GROUP = new ParameterType<>("agentGroup");
-        public static final ParameterType<String> MARKER_NAME = new ParameterType<>("markerName");
-        public static final ParameterType<String> PLATFORM = new ParameterType<>("platform");
-
-        private final String internal;
-
-        public ParameterType(String internal) {
-            this.internal = internal;
-        }
-
-        public String getInternal() {
-            return this.internal;
-        }
+    public void setVersionMinorFilter(String... versionMinors) {
+        this.filters.put("versionMinor", Arrays.asList(versionMinors));
     }
 
+    public void setCategoryFilter(TestCategory... categories) {
+        ArrayList<String> cats = new ArrayList<>();
+        for (TestCategory cat : categories) {
+            cats.add(cat.getInternal());
+        }
+        this.filters.put("category", cats);
+    }
+
+    public void setAgentGroupFilter(String... agentGroups) {
+        this.filters.put("agentGroup", Arrays.asList(agentGroups));
+    }
+
+    public void setMarkerNameFilter(String... markerNames) {
+        this.filters.put("markerName", Arrays.asList(markerNames));
+    }
+
+    public void setPlatformFilter(String... platforms) {
+        this.filters.put("platform", Arrays.asList(platforms));
+    }
+
+    public HashMap<String, List<String>> getFilters() {
+        return this.filters;
+    }
 }

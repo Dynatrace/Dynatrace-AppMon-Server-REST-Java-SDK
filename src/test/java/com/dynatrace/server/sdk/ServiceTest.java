@@ -89,7 +89,7 @@ public class ServiceTest {
         this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 49153, false))) {
         };
         try {
-            this.service.doGetRequest(this.service.buildURI("/"), null);
+            this.service.doGetRequest(this.service.buildURI("/"));
         } catch (ServerConnectionException e) {
             assertTrue(e.getCause() instanceof HttpHostConnectException);
         }
@@ -100,7 +100,7 @@ public class ServiceTest {
         this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "INVALID", 8080, false))) {
         };
         try {
-            this.service.doGetRequest(this.service.buildURI("/"), null);
+            this.service.doGetRequest(this.service.buildURI("/"));
             fail("Exception was expected to be thrown");
         } catch (ServerConnectionException e) {
             assertTrue(e.getCause() instanceof UnknownHostException);

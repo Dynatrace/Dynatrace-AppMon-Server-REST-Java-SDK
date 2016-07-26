@@ -72,10 +72,11 @@ public abstract class Service {
         return uriBuilder.build();
     }
 
-    protected <T> T doRequest(HttpUriRequest request, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
+    protected CloseableHttpResponse doRequest(HttpUriRequest request) throws ServerConnectionException, ServerResponseException {
         request.setHeader("Accept", "application/xml");
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
-        try (CloseableHttpResponse response = this.client.getClient().execute(request)) {
+        try {
+            CloseableHttpResponse response = this.client.getClient().execute(request);
             if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
                 String error = null;
                 // dynatrace often returns an error message along with a status code
@@ -93,17 +94,21 @@ public abstract class Service {
                 }
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
             }
-            try {
-                return inputStreamToObject(response.getEntity().getContent(), responseClass);
-            } catch (JAXBException e) {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not unmarshall response into given object", e);
-            }
+            return response;
         } catch (IOException e) {
             throw new ServerConnectionException("Could not connect to Dynatrace Server", e);
         }
     }
 
-    protected <T> T doPostRequest(URI uri, Object entity, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
+    protected <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
+        try {
+            return inputStreamToObject(response.getEntity().getContent(), responseClass);
+        } catch (IOException | JAXBException e) {
+            throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not unmarshall response into given object", e);
+        }
+    }
+
+    protected CloseableHttpResponse doPostRequest(URI uri, Object entity) throws ServerConnectionException, ServerResponseException {
         HttpPost post = new HttpPost(uri);
         try {
             post.setEntity(new StringEntity(objectToString(entity)));
@@ -112,11 +117,26 @@ public abstract class Service {
         }
 
         post.setHeader("Content-Type", "application/xml");
-        return this.doRequest(post, responseClass);
+        return this.doRequest(post);
+    }
+
+    protected <T> T doPostRequest(URI uri, Object entity, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
+        try (CloseableHttpResponse response = this.doPostRequest(uri, entity)) {
+            return this.parseResponse(response, responseClass);
+        } catch (IOException e) {
+            throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);
+        }
+    }
+
+    protected CloseableHttpResponse doGetRequest(URI uri) throws ServerConnectionException, ServerResponseException {
+        return this.doRequest(new HttpGet(uri));
     }
 
     protected <T> T doGetRequest(URI uri, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-        HttpGet get = new HttpGet(uri);
-        return this.doRequest(get, responseClass);
+        try (CloseableHttpResponse response = this.doGetRequest(uri)) {
+            return this.parseResponse(response, responseClass);
+        } catch (IOException e) {
+            throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);
+        }
     }
 }

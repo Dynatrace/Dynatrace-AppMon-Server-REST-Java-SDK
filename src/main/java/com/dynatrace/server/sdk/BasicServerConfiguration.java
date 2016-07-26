@@ -7,7 +7,6 @@ import java.security.Principal;
 
 /**
  * A basic immutable implementation of {@link ServerConfiguration} interface.
- * Immutable and thus thread-safe.
  *
  * @author Maciej Mionskowski
  */
@@ -42,9 +41,9 @@ public class BasicServerConfiguration implements ServerConfiguration {
      * <dd>{@value DEFAULT_CONNECTION_TIMEOUT}</dd>
      * </dl>
      *
-     * @param name                 - server's username
-     * @param password             - server's password
-     * @param validateCertificates - whether to validate certificates
+     * @param name                 server's username
+     * @param password             server's password
+     * @param validateCertificates whether to validate certificates
      */
     public BasicServerConfiguration(String name, String password, boolean validateCertificates) {
         this(name, password, DEFAULT_SSL, DEFAULT_HOST, DEFAULT_PORT, validateCertificates, DEFAULT_CONNECTION_TIMEOUT);
@@ -65,8 +64,8 @@ public class BasicServerConfiguration implements ServerConfiguration {
      * <dd>{@value DEFAULT_CONNECTION_TIMEOUT}</dd>
      * </dl>
      *
-     * @param name     - server's username
-     * @param password - server's password
+     * @param name     server's username
+     * @param password server's password
      */
     public BasicServerConfiguration(String name, String password) {
         this(name, password, DEFAULT_SSL, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_VALIDATE_CERTIFICATES, DEFAULT_CONNECTION_TIMEOUT);
@@ -75,13 +74,13 @@ public class BasicServerConfiguration implements ServerConfiguration {
     /**
      * Constructs BasicServerConfiguration with given parameters
      *
-     * @param name                 - server's username
-     * @param password             - server's password
-     * @param host                 - server's host
-     * @param ssl                  - whether to preceed hostname with https:// or leave http://
-     * @param port                 - server's port
-     * @param validateCertificates - whether to validate certificates
-     * @param connectionTimeout    - connection timeout in milliseconds
+     * @param name                 server's username
+     * @param password             server's password
+     * @param host                 server's host
+     * @param ssl                  whether to preceed hostname with https:// or leave http://
+     * @param port                 server's port
+     * @param validateCertificates whether to validate certificates
+     * @param connectionTimeout    connection timeout in milliseconds
      */
     public BasicServerConfiguration(String name, String password, boolean ssl, String host, int port, boolean validateCertificates, int connectionTimeout) {
         this.name = name;

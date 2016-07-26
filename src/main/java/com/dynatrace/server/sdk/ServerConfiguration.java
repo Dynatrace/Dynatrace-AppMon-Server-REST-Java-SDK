@@ -18,11 +18,15 @@ public interface ServerConfiguration extends Credentials, Principal {
 
     int getPort();
 
+    /**
+     * @return the connection timeout in milliseconds
+     */
     int getTimeout();
 
     /**
      * Indicates whether to validate certificates.
      * Useful to disable for development machines, should return true in production environment.
+     * @return whether to validate certificates
      */
     boolean isValidateCertificates();
 }

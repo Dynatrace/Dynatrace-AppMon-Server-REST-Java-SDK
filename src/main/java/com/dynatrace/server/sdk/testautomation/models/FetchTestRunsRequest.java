@@ -1,4 +1,4 @@
-package com.dynatrace.server.sdk.testruns.models;
+package com.dynatrace.server.sdk.testautomation.models;
 
 import java.util.*;
 
@@ -77,7 +77,7 @@ public class FetchTestRunsRequest {
     }
 
     /**
-     * @return Max number of testruns to be returned in this call.
+     * @return Max number of test runs to be returned in this call.
      */
     public Integer getMaxTestRuns() {
         return this.maxTestRuns;

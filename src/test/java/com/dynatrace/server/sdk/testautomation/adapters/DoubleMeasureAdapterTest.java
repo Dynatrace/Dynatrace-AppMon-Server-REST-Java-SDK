@@ -1,4 +1,4 @@
-package com.dynatrace.server.sdk.testruns.adapters;
+package com.dynatrace.server.sdk.testautomation.adapters;
 
 import org.junit.Test;
 
@@ -17,8 +17,8 @@ public class DoubleMeasureAdapterTest {
 
     @Test
     public void unmarshall() throws Exception {
-        assertThat(this.dma.marshal(Double.POSITIVE_INFINITY), is("Infinity"));
-        assertThat(this.dma.marshal(Double.NEGATIVE_INFINITY), is("-Infinity"));
+        assertThat(this.dma.marshal(Double.POSITIVE_INFINITY), is("INF"));
+        assertThat(this.dma.marshal(Double.NEGATIVE_INFINITY), is("-INF"));
         assertThat(this.dma.marshal(-15.2), is("-15.2"));
     }
 }

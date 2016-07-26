@@ -1,12 +1,13 @@
-package com.dynatrace.server.sdk.testruns;
+package com.dynatrace.server.sdk.testautomation;
 
 import com.dynatrace.server.sdk.DynatraceClient;
 import com.dynatrace.server.sdk.Service;
 import com.dynatrace.server.sdk.exceptions.ServerConnectionException;
 import com.dynatrace.server.sdk.exceptions.ServerResponseException;
-import com.dynatrace.server.sdk.testruns.models.CreateTestRunRequest;
-import com.dynatrace.server.sdk.testruns.models.FetchTestRunsRequest;
-import com.dynatrace.server.sdk.testruns.models.TestRun;
+import com.dynatrace.server.sdk.testautomation.models.CreateTestRunRequest;
+import com.dynatrace.server.sdk.testautomation.models.FetchTestRunsRequest;
+import com.dynatrace.server.sdk.testautomation.models.TestRun;
+import com.dynatrace.server.sdk.testautomation.models.TestRuns;
 import org.apache.http.NameValuePair;
 import org.apache.http.annotation.ThreadSafe;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,13 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Wraps Dynatrace Server TestRuns REST API providing an easy to use set of methods.
+ * Wraps Dynatrace Server TestAutomation REST API providing an easy to use set of methods.
  */
 @ThreadSafe
-public class TestRuns extends Service {
+public class TestAutomation extends Service {
     public static final String TEST_RUNS_EP = "/rest/management/profiles/%s/testruns/%s";
 
-    public TestRuns(DynatraceClient client) {
+    public TestAutomation(DynatraceClient client) {
         super(client);
     }
 
@@ -71,7 +72,7 @@ public class TestRuns extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public com.dynatrace.server.sdk.testruns.models.TestRuns fetchTestRuns(FetchTestRunsRequest request) throws ServerConnectionException, ServerResponseException {
+    public TestRuns fetchTestRuns(FetchTestRunsRequest request) throws ServerConnectionException, ServerResponseException {
         ArrayList<NameValuePair> nvps = new ArrayList<>();
         if (request.getStartTime() != null) {
             nvps.add(new BasicNameValuePair("startTime", String.valueOf(request.getStartTime())));
@@ -96,7 +97,7 @@ public class TestRuns extends Service {
         }
         try {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), nvps.toArray(new NameValuePair[nvps.size()]));
-            return this.doGetRequest(uri, com.dynatrace.server.sdk.testruns.models.TestRuns.class);
+            return this.doGetRequest(uri, TestRuns.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid system profile format", e);
         }

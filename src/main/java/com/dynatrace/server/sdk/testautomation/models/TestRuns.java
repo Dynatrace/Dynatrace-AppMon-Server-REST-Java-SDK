@@ -1,4 +1,4 @@
-package com.dynatrace.server.sdk.testruns.models;
+package com.dynatrace.server.sdk.testautomation.models;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

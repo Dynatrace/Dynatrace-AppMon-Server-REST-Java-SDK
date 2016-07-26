@@ -2,8 +2,8 @@ package com.dynatrace.server.sdk;
 
 import com.dynatrace.server.sdk.exceptions.ServerConnectionException;
 import com.dynatrace.server.sdk.exceptions.ServerResponseException;
-import com.dynatrace.server.sdk.testruns.models.TestCategory;
-import com.dynatrace.server.sdk.testruns.models.TestRun;
+import com.dynatrace.server.sdk.testautomation.models.TestCategory;
+import com.dynatrace.server.sdk.testautomation.models.TestRun;
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.http.conn.HttpHostConnectException;

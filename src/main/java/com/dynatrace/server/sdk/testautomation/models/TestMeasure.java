@@ -1,6 +1,6 @@
-package com.dynatrace.server.sdk.testruns.models;
+package com.dynatrace.server.sdk.testautomation.models;
 
-import com.dynatrace.server.sdk.testruns.adapters.DoubleMeasureAdapter;
+import com.dynatrace.server.sdk.testautomation.adapters.DoubleMeasureAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

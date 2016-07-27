@@ -284,7 +284,6 @@ public class AgentInformation {
                 ", agentGroupLabel='" + agentGroupLabel + '\'' +
                 ", licenseOk=" + licenseOk +
                 ", collectorinformation=" + collectorinformation +
-                ", deployedSensorsInformation=" + deployedSensorsInformation +
                 ", agentVersion='" + agentVersion + '\'' +
                 ", processorCount=" + processorCount +
                 ", isvLicenseSupported=" + isvLicenseSupported +

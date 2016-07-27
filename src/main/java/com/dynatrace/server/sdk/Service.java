@@ -79,8 +79,8 @@ public abstract class Service {
     }
 
     protected CloseableHttpResponse doRequest(HttpRequestBase request) throws ServerConnectionException, ServerResponseException {
-        request.setHeader("Accept", "application/xml");
-        request.setHeader("Accept", "text/xml");
+        request.setHeader("Accept", "*/xml");
+
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
         try {
             CloseableHttpResponse response = this.client.getClient().execute(request);

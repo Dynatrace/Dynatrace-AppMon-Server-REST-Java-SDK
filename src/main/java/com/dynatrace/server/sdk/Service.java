@@ -5,10 +5,7 @@ import com.dynatrace.server.sdk.exceptions.ServerResponseException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.xml.sax.InputSource;
@@ -124,6 +121,21 @@ public abstract class Service {
 
     protected <T> T doPostRequest(URI uri, HttpEntity entity, String contentType, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
         try (CloseableHttpResponse response = this.doPostRequest(uri, entity, contentType)) {
+            return this.parseResponse(response, responseClass);
+        } catch (IOException e) {
+            throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);
+        }
+    }
+
+    protected CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity, String contentType) throws ServerConnectionException, ServerResponseException {
+        HttpPut put = new HttpPut(uri);
+        put.setEntity(entity);
+        put.setHeader("Content-Type", contentType);
+        return this.doRequest(put);
+    }
+
+    protected <T> T doPutRequest(URI uri, HttpEntity entity, String contentType, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
+        try (CloseableHttpResponse response = this.doPutRequest(uri, entity, contentType)) {
             return this.parseResponse(response, responseClass);
         } catch (IOException e) {
             throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);

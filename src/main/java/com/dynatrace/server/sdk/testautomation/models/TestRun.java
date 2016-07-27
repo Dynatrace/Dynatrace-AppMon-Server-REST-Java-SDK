@@ -1,6 +1,7 @@
 package com.dynatrace.server.sdk.testautomation.models;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -44,7 +45,7 @@ public class TestRun {
     private Integer numInvalidated;
 
     @XmlElement(name = "testResult")
-    private List<TestResult> testResults;
+    private List<TestResult> testResults = new ArrayList<>();
 
     public Long getStartTime() {
         return this.startTime;
@@ -94,27 +95,27 @@ public class TestRun {
         return this.testResults;
     }
 
-    public Integer getNumPassed() {
+    public Integer getPassedCount() {
         return this.numPassed;
     }
 
-    public Integer getNumFailed() {
+    public Integer getFailedCount() {
         return this.numFailed;
     }
 
-    public Integer getNumVolatile() {
+    public Integer getVolatileCount() {
         return this.numVolatile;
     }
 
-    public Integer getNumImproved() {
+    public Integer getImprovedCount() {
         return this.numImproved;
     }
 
-    public Integer getNumDegraded() {
+    public Integer getDegradedCount() {
         return this.numDegraded;
     }
 
-    public Integer getNumInvalidated() {
+    public Integer getInvalidatedCount() {
         return this.numInvalidated;
     }
 

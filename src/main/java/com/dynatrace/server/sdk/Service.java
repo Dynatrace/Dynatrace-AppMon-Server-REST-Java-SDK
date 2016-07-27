@@ -103,7 +103,7 @@ public abstract class Service {
             }
             return response;
         } catch (IOException e) {
-            throw new ServerConnectionException("Could not connect to Dynatrace Server", e);
+            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
         }
     }
 
@@ -126,7 +126,7 @@ public abstract class Service {
         try (CloseableHttpResponse response = this.doPostRequest(uri, entity, contentType)) {
             return this.parseResponse(response, responseClass);
         } catch (IOException e) {
-            throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);
+            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
         }
     }
 
@@ -138,7 +138,7 @@ public abstract class Service {
         try (CloseableHttpResponse response = this.doGetRequest(uri)) {
             return this.parseResponse(response, responseClass);
         } catch (IOException e) {
-            throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);
+            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
         }
     }
 }

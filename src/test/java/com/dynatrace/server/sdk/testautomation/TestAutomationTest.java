@@ -63,8 +63,8 @@ public class TestAutomationTest {
                                 "</testRun>")));
         TestRun tr = this.testAutomation.fetchTestRun("Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc");
         assertThat(tr.getId(), is("078e961b-9e6e-44ec-ab12-ab0d31be93fc"));
-        assertThat(tr.getNumPassed(), is(3));
-        assertThat(tr.getNumFailed(), is(1));
+        assertThat(tr.getPassedCount(), is(3));
+        assertThat(tr.getFailedCount(), is(1));
         assertThat(tr.getSystemProfile(), is("Test"));
         assertThat(tr.getCreationMode(), is(CreationMode.MANUAL));
         assertThat(tr.getCategory(), is(TestCategory.UNIT));

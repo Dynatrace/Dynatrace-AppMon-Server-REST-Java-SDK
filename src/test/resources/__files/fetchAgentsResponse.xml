@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<agents>
+    <agentinformation>
+        <agentConfigured>true</agentConfigured>
+        <agentGroup>Payment Backend (.NET)</agentGroup>
+        <agentGroupId>Payment Backend (.NET)</agentGroupId>
+        <agentId>945367843</agentId>
+        <agentInstanceName>dotNetBackend_easyTravel@tag00944657691:6036</agentInstanceName>
+        <agentMappingId>dotNETBackend_easyTravel</agentMappingId>
+        <agentProperties>
+            <agentBootstrapVersion>6.3.0.1305</agentBootstrapVersion>
+            <agentHost>TAG00944657691</agentHost>
+            <agentHostAddress>127.0.0.1</agentHostAddress>
+            <agentId>38592b23</agentId>
+            <agentPlatform>Windows</agentPlatform>
+            <agentVersion>6.3.4.1034</agentVersion>
+            <applicationServerDetected>false</applicationServerDetected>
+            <applicationServerVersionDetected>false</applicationServerVersionDetected>
+            <cellNameDetected>false</cellNameDetected>
+            <clrVendor>Microsoft Corporation</clrVendor>
+            <clrVersion>v2.0.50727</clrVersion>
+            <commandLine>"C:\Program Files (x86)\dynaTrace\easyTravel\dotNET\cassini20\UltiDevCassinWebServer2.exe" /run "C:\Program Files (x86)\dynaTrace\easyTravel\dotNET\dotNetPaymentBackend" WebService\PaymentService.asmx 9010 nobrowser -propertyfile "C:\Users\some.user\.dynaTrace\easyTravel 2.0.0\easyTravel\tmp\easyTravelConfig5534948657307800136.properties"</commandLine>
+            <commandLineMayBeTruncated>true</commandLineMayBeTruncated>
+            <hasCommandLine>true</hasCommandLine>
+            <hasWorkingDirectory>true</hasWorkingDirectory>
+            <hotSensorPlaceable>false</hotSensorPlaceable>
+            <instrumentationState>Unknown (-1)</instrumentationState>
+            <logFileLocation>c:/program files/dynatrace/dynatrace 6.3/log/dt_dotNetBackend_easyTravel_6036.0.log</logFileLocation>
+            <maximumMemory>8471023616</maximumMemory>
+            <operatingSystem>Windows 10</operatingSystem>
+            <osArchitecture>x64</osArchitecture>
+            <osEdition>Standard</osEdition>
+            <osHyperVFriendly>Unknown</osHyperVFriendly>
+            <osProductId>Unknown</osProductId>
+            <osVersion>10.0.10586</osVersion>
+            <processors>4</processors>
+            <runtimeVersion>CP852</runtimeVersion>
+            <startDate>Wed Jul 27 12:02:57 CEST 2016</startDate>
+            <startUp>248916954115260</startUp>
+            <workingDirectory>C:/Program Files (x86)/dynaTrace/easyTravel/dotNET/dotNetPaymentBackend</workingDirectory>
+        </agentProperties>
+        <capture>true</capture>
+        <captureCPUTimes>false</captureCPUTimes>
+        <classLoadCount>0</classLoadCount>
+        <collectorinformation>
+            <connected>true</connected>
+            <embedded>false</embedded>
+            <host>tag00944657691.clients.dynatrace.org</host>
+            <name>dynaTrace Collector</name>
+            <version>6.3.4.1034</version>
+        </collectorinformation>
+        <collectorName>dynaTrace Collector</collectorName>
+        <configuration>Default</configuration>
+        <configurationId>Default</configurationId>
+        <connected>false</connected>
+        <counterSkipEvents>-1</counterSkipEvents>
+        <counterSkipExecPaths>-1</counterSkipExecPaths>
+        <eventCount>-1</eventCount>
+        <fromCmdb>false</fromCmdb>
+        <host>tag00944657691</host>
+        <hotUpdateCritical>true</hotUpdateCritical>
+        <hotUpdateable>false</hotUpdateable>
+        <instanceName>dotNetBackend_easyTravel@tag00944657691:6036</instanceName>
+        <isvLicenseSupported>false</isvLicenseSupported>
+        <licenseOk>true</licenseOk>
+        <name>dotNetBackend_easyTravel</name>
+        <processId>6036</processId>
+        <processorCount>4</processorCount>
+        <required>false</required>
+        <skippedEvents>-1</skippedEvents>
+        <skippedPurePaths>-1</skippedPurePaths>
+        <sourceGroupId>Payment Backend (.NET)</sourceGroupId>
+        <startupTimeUTC>1469613777527</startupTimeUTC>
+        <supportsHotSensorPlacement>false</supportsHotSensorPlacement>
+        <syncThreshold>0.0</syncThreshold>
+        <systemProfile>easyTravel</systemProfile>
+        <systemProfileName>easyTravel</systemProfileName>
+        <technologyType>.NET</technologyType>
+        <technologyTypeId>2</technologyTypeId>
+        <timestamp>1469613777057</timestamp>
+        <totalClassLoadCount>0</totalClassLoadCount>
+        <totalCpuTime>0.0</totalCpuTime>
+        <totalExecutionTime>0.0</totalExecutionTime>
+        <totalPurePathCount>0</totalPurePathCount>
+        <virtualTimeUTC>1469613777527</virtualTimeUTC>
+        <vmVendor>Microsoft Corporation</vmVendor>
+        <vmVersionString>v2.0.50727</vmVersionString>
+    </agentinformation>
+    <agentinformation>
+        <agentConfigured>true</agentConfigured>
+        <agentGroup>CreditCardAuthorization (C++)</agentGroup>
+        <agentGroupId>CreditCardAuthorization (C++)</agentGroupId>
+        <agentId>-844978579</agentId>
+        <agentInstanceName>CreditCardAuthorization_easyTravel@tag00944657691:10688</agentInstanceName>
+        <agentMappingId>CreditCardAuthorization_easyTravel</agentMappingId>
+        <agentProperties>
+            <agentBootstrapVersion>6.3.0.1305</agentBootstrapVersion>
+            <agentHost>TAG00944657691</agentHost>
+            <agentHostAddress>127.0.0.1</agentHostAddress>
+            <agentId>cda2a66d</agentId>
+            <agentPlatform>Windows</agentPlatform>
+            <agentVersion>6.3.4.1034</agentVersion>
+            <hotSensorPlaceable>false</hotSensorPlaceable>
+            <instrumentationState>Unknown (-1)</instrumentationState>
+            <logFileLocation>c:/program files/dynatrace/dynatrace 6.3/log/dt_CreditCardAuthorization_easyTravel_10688.0.log</logFileLocation>
+            <maximumMemory>8471023616</maximumMemory>
+            <operatingSystem>Windows 10</operatingSystem>
+            <osArchitecture>x64</osArchitecture>
+            <osEdition>Standard</osEdition>
+            <osHyperVFriendly>Unknown</osHyperVFriendly>
+            <osProductId>Unknown</osProductId>
+            <osVersion>10.0.10586</osVersion>
+            <processors>4</processors>
+            <runtimeVersion>CP852</runtimeVersion>
+            <startDate>Wed Jul 27 12:02:57 CEST 2016</startDate>
+            <startUp>248916705913566</startUp>
+        </agentProperties>
+        <capture>true</capture>
+        <captureCPUTimes>false</captureCPUTimes>
+        <classLoadCount>0</classLoadCount>
+        <collectorinformation>
+            <connected>true</connected>
+            <embedded>false</embedded>
+            <host>tag00944657691.clients.dynatrace.org</host>
+            <name>dynaTrace Collector</name>
+            <version>6.3.4.1034</version>
+        </collectorinformation>
+        <collectorName>dynaTrace Collector</collectorName>
+        <configuration>Default</configuration>
+        <configurationId>Default</configurationId>
+        <connected>true</connected>
+        <counterSkipEvents>-1</counterSkipEvents>
+        <counterSkipExecPaths>-1</counterSkipExecPaths>
+        <eventCount>0</eventCount>
+        <fromCmdb>false</fromCmdb>
+        <host>tag00944657691</host>
+        <hotUpdateCritical>true</hotUpdateCritical>
+        <hotUpdateable>false</hotUpdateable>
+        <instanceName>CreditCardAuthorization_easyTravel@tag00944657691:10688</instanceName>
+        <isvLicenseSupported>false</isvLicenseSupported>
+        <licenseOk>true</licenseOk>
+        <name>CreditCardAuthorization_easyTravel</name>
+        <processId>10688</processId>
+        <processorCount>4</processorCount>
+        <required>false</required>
+        <skippedEvents>-1</skippedEvents>
+        <skippedPurePaths>-1</skippedPurePaths>
+        <sourceGroupId>CreditCardAuthorization (C++)</sourceGroupId>
+        <startupTimeUTC>1469613777442</startupTimeUTC>
+        <supportsHotSensorPlacement>false</supportsHotSensorPlacement>
+        <syncThreshold>0.0</syncThreshold>
+        <systemProfile>easyTravel</systemProfile>
+        <systemProfileName>easyTravel</systemProfileName>
+        <technologyType>Native</technologyType>
+        <technologyTypeId>4</technologyTypeId>
+        <timestamp>1469613777057</timestamp>
+        <totalClassLoadCount>0</totalClassLoadCount>
+        <totalCpuTime>0.0</totalCpuTime>
+        <totalExecutionTime>0.0</totalExecutionTime>
+        <totalPurePathCount>0</totalPurePathCount>
+        <virtualTimeUTC>1469613777442</virtualTimeUTC>
+        <vmVendor>unknown</vmVendor>
+        <vmVersionString>unknown</vmVersionString>
+    </agentinformation>
+</agents>

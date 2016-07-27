@@ -105,19 +105,16 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <shadeTestJar>true</shadeTestJar>
-                    <minimizeJar>true</minimizeJar>
                     <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-                    <shadeSourcesContent>true</shadeSourcesContent>
                     <artifactSet>
-                        <includes>
-                            <include>org.apache.httpcomponents:*</include>
-                        </includes>
+                        <!-- <includes>
+                             <include>org.apache.httpcomponents:*</include>
+                         </includes>-->
                     </artifactSet>
                     <relocations>
                         <relocation>
-                            <pattern>org.apache.http</pattern>
-                            <shadedPattern>${project.groupId}.apache.http</shadedPattern>
+                            <pattern>org.apache</pattern>
+                            <shadedPattern>${project.groupId}.org.apache</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

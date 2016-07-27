@@ -119,6 +119,21 @@ Sessions sessions = new Sessions(DynatraceClient);
 - [Live Sessions(REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175966050)
 
 
+### <a name="agentsandcollectors"></a>Agents and Collectors
+
+#### Creation
+
+```java
+import com.dynatrace.sdk.server.agentadncollectors.AgentsAndCollectors
+//...
+AgentsAndCollectors agentsAndCollectors = new AgentsAndCollectors(DynatraceClient);
+```
+
+#### Wiki entries 
+
+- [Agents and Collectors (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965912)
+
+
 ## Building
 In order to build the library, one must execute `mvn clean install` or `mvn clean package`.
 

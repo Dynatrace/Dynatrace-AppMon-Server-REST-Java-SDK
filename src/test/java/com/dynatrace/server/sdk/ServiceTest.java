@@ -6,6 +6,7 @@ import com.dynatrace.server.sdk.testautomation.models.TestCategory;
 import com.dynatrace.server.sdk.testautomation.models.TestRun;
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -91,7 +92,7 @@ public class ServiceTest {
         try {
             this.service.doGetRequest(this.service.buildURI("/"));
         } catch (ServerConnectionException e) {
-            assertTrue(e.getCause() instanceof HttpHostConnectException);
+            assertTrue((e.getCause() instanceof HttpHostConnectException) || (e.getCause() instanceof ConnectTimeoutException));
         }
     }
 

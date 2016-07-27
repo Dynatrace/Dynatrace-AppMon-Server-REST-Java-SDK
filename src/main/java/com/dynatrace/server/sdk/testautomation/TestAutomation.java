@@ -32,7 +32,7 @@ public class TestAutomation extends Service {
     /**
      * Registers a {@link TestRun} on a Dynatrace server.
      *
-     * @param request - {@link CreateTestRunRequest} - configuration parameters
+     * @param request {@link CreateTestRunRequest} - configuration parameters
      * @return a {@link TestRun} object, containing a {@code testRunId}, which can be used in {@link } as well as other parameters.
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
@@ -49,8 +49,8 @@ public class TestAutomation extends Service {
     /**
      * Fetches a single {@link TestRun} based on it's {@code testRunId} and {@code systemProfile}.
      *
-     * @param systemProfile - {@link TestRun}'s system profile
-     * @param testRunId     - {@link TestRun}'s id
+     * @param systemProfile {@link TestRun}'s system profile
+     * @param testRunId     {@link TestRun}'s id
      * @return {@link TestRun} instance or {@code null} if no {@link TestRun} matching given parameters has been found
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided

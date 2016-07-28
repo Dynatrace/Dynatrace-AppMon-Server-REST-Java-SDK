@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <name>Dynatrace Server SDK</name>
     <description>Provides an easy to use integration with Dynatrace Server</description>
-    <groupId>com.dynatrace.server</groupId>
+    <groupId>com.dynatrace.sdk</groupId>
     <artifactId>server-rest-sdk</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
@@ -106,11 +106,6 @@
                 </executions>
                 <configuration>
                     <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-                    <artifactSet>
-                        <!-- <includes>
-                             <include>org.apache.httpcomponents:*</include>
-                         </includes>-->
-                    </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.apache</pattern>

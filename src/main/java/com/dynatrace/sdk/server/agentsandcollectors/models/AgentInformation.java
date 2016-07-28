@@ -38,7 +38,12 @@ public class AgentInformation {
 
     private CollectorInformation collectorinformation;
     private AgentPropertiesInformation agentProperties;
-    private List<DeployedSensorInformation> deployedSensorsInformation;
+
+    @XmlElement(name = "agentGroup")
+    private String agentGroupLabel;
+
+    @XmlElement(name = "configuration")
+    private String configurationName;
 
     private Boolean connected;
     private Boolean capture;
@@ -50,21 +55,20 @@ public class AgentInformation {
     private Integer agentId;
     private Integer processId;
     private String technologyType;
-    private Byte techTypeConstant;
+    private Byte technologyTypeId;
     private String host;
     private Long eventCount;
     private Integer classLoadCount;
     private Integer totalClassLoadCount;
     private Boolean isHotUpdateable;
     private String licenseInformation;
-    private Long counterSkipEvents;
-    private Long counterSkipExecPaths;
+    private Long skippedEvents;
+    private Long skippedPurePaths;
     private Double totalExecutionTime;
     private Double totalCpuTime;
     private Long totalPurePathCount;
+    private String systemProfile;
     private String systemProfileName;
-    private String profileConfigurationName;
-    private String agentGroupLabel;
     private String agentVersion;
     private Integer processorCount;
     private Boolean isvLicenseSupported;
@@ -84,8 +88,9 @@ public class AgentInformation {
     private Boolean hotUpdateCritical;
     private Boolean hotUpdateable;
     private Long timestamp;
-    private Long virtualTime;
+    private Long virtualTimeUTC;
     private Boolean captureCPUTimes;
+    private Boolean supportsHotSensorPlacement;
 
     /* getters */
     public String getName() {
@@ -108,8 +113,8 @@ public class AgentInformation {
         return this.technologyType;
     }
 
-    public byte getTechTypeConstant() {
-        return this.techTypeConstant;
+    public byte getTechnologyTypeId() {
+        return this.technologyTypeId;
     }
 
     public String getHost() {
@@ -133,15 +138,15 @@ public class AgentInformation {
     }
 
     public Boolean isHotUpdateable() {
-        return this.isHotUpdateable;
+        return this.hotUpdateable;
     }
 
     public Long getTimestamp() {
         return this.timestamp;
     }
 
-    public Long getVirtualTime() {
-        return this.virtualTime;
+    public Long getVirtualTimeUTC() {
+        return this.virtualTimeUTC;
     }
 
     public Boolean isCaptureCPUTimes() {
@@ -160,12 +165,12 @@ public class AgentInformation {
         return this.capture;
     }
 
-    public Long getCounterSkipEvents() {
-        return this.counterSkipEvents;
+    public Long getSkippedEvents() {
+        return this.skippedEvents;
     }
 
-    public Long getCounterSkipExecPaths() {
-        return this.counterSkipExecPaths;
+    public Long getSkippedPurePaths() {
+        return this.skippedPurePaths;
     }
 
     public Double getTotalExecutionTime() {
@@ -184,8 +189,8 @@ public class AgentInformation {
         return this.systemProfileName;
     }
 
-    public String getProfileConfigurationName() {
-        return this.profileConfigurationName;
+    public String getConfigurationName() {
+        return this.configurationName;
     }
 
     public String getAgentGroupLabel() {
@@ -198,10 +203,6 @@ public class AgentInformation {
 
     public CollectorInformation getCollectorinformation() {
         return this.collectorinformation;
-    }
-
-    public List<DeployedSensorInformation> getDeployedSensorsInformation() {
-        return this.deployedSensorsInformation;
     }
 
     public String getAgentVersion() {
@@ -276,6 +277,14 @@ public class AgentInformation {
         return this.hotUpdateCritical;
     }
 
+    public Boolean isHotSensorPlacementSupported() {
+        return this.supportsHotSensorPlacement;
+    }
+
+    public String getSystemProfile() {
+        return systemProfile;
+    }
+
     @Override
     public String toString() {
         return "AgentInformation{" +
@@ -284,7 +293,7 @@ public class AgentInformation {
                 ", agentId=" + agentId +
                 ", processId=" + processId +
                 ", technologyType='" + technologyType + '\'' +
-                ", techTypeConstant=" + techTypeConstant +
+                ", technologyTypeId=" + technologyTypeId +
                 ", host='" + host + '\'' +
                 ", eventCount=" + eventCount +
                 ", classLoadCount=" + classLoadCount +
@@ -293,17 +302,16 @@ public class AgentInformation {
                 ", isHotUpdateable=" + isHotUpdateable +
                 ", licenseInformation='" + licenseInformation + '\'' +
                 ", capture=" + capture +
-                ", counterSkipEvents=" + counterSkipEvents +
-                ", counterSkipExecPaths=" + counterSkipExecPaths +
+                ", skippedEvents=" + skippedEvents +
+                ", skippedPurePaths=" + skippedPurePaths +
                 ", totalExecutionTime=" + totalExecutionTime +
                 ", totalCpuTime=" + totalCpuTime +
                 ", totalPurePathCount=" + totalPurePathCount +
                 ", systemProfileName='" + systemProfileName + '\'' +
-                ", profileConfigurationName='" + profileConfigurationName + '\'' +
+                ", configurationName='" + configurationName + '\'' +
                 ", agentGroupLabel='" + agentGroupLabel + '\'' +
                 ", licenseOk=" + licenseOk +
                 ", collectorinformation=" + collectorinformation +
-                ", deployedSensorsInformation=" + deployedSensorsInformation +
                 ", agentVersion='" + agentVersion + '\'' +
                 ", processorCount=" + processorCount +
                 ", isvLicenseSupported=" + isvLicenseSupported +
@@ -324,7 +332,7 @@ public class AgentInformation {
                 ", hotUpdateCritical=" + hotUpdateCritical +
                 ", hotUpdateable=" + hotUpdateable +
                 ", timestamp=" + timestamp +
-                ", virtualTime=" + virtualTime +
+                ", virtualTimeUTC=" + virtualTimeUTC +
                 ", captureCPUTimes=" + captureCPUTimes +
                 ", agentProperties=" + agentProperties +
                 '}';

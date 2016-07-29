@@ -52,6 +52,8 @@ import java.util.ArrayList;
  */
 public class Sessions extends Service {
     public static final String SESSIONS_EP = "/rest/management/profiles/%s/%s";
+    public static final String REANALYZE_SESSION_EP = "/rest/management/sessions/%s/reanalyze";
+    public static final String REANALYZE_SESSION_STATUS_EP = "/rest/management/sessions/%s/reanalyze/finished";
 
     public Sessions(DynatraceClient client) {
         super(client);
@@ -137,6 +139,46 @@ public class Sessions extends Service {
             }
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid profileName[%s] format.", profileName), e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not close http response", e);
+        }
+    }
+
+    /**
+     *  Requests start reanalyzing a session with the name (@param sessionName)
+     *
+     *  @param sessionName - session name to reanalyze
+     *  @return value that describes that the specified session could be found and session reanalysis started successfully
+     */
+    public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
+        try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_EP, sessionName)))) {
+            try (InputStream is = response.getEntity().getContent()) {
+                return Service.compileValueExpression().evaluate(new InputSource(is)).equals("true");
+            } catch (XPathExpressionException | IOException e) {
+                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+            }
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format.", sessionName), e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not close http response", e);
+        }
+    }
+
+    /**
+     *  Queries reanalysis status of the session with the name (@param sessionName)
+     *
+     *  @param sessionName - session name to query
+     *  @return value that describes that session reanalysis is finished
+     */
+    public boolean getReanalysisStatus(String sessionName) throws ServerResponseException, ServerConnectionException {
+        try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)))) {
+            try (InputStream is = response.getEntity().getContent()) {
+                return Service.compileValueExpression().evaluate(new InputSource(is)).equals("true");
+            } catch (XPathExpressionException | IOException e) {
+                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+            }
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format.", sessionName), e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
         }

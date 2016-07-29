@@ -77,13 +77,13 @@ public class CollectorInformation {
     @Override
     public String toString() {
         return "CollectorInformation{" +
-                "href='" + this.href + '\'' +
-                ", embedded=" + this.embedded +
-                ", name='" + this.name + '\'' +
-                ", host='" + this.host + '\'' +
-                ", connected=" + this.connected +
-                ", local=" + this.local +
-                ", version='" + this.version + '\'' +
+                "href='" + href + '\'' +
+                ", embedded=" + embedded +
+                ", name='" + name + '\'' +
+                ", host='" + host + '\'' +
+                ", connected=" + connected +
+                ", local=" + local +
+                ", version='" + version + '\'' +
                 '}';
     }
 }

@@ -60,8 +60,8 @@ public class AgentsAndCollectorsTest {
                         .withStatus(200)
                         .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>")));
 
-        assertThat(this.agentsAndCollectors.hotSensorPlacement(1234), is(false));
-        assertThat(this.agentsAndCollectors.hotSensorPlacement(5678), is(true));
+        assertThat(agentsAndCollectors.hotSensorPlacement(1234), is(false));
+        assertThat(agentsAndCollectors.hotSensorPlacement(5678), is(true));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class AgentsAndCollectorsTest {
                         )));
 
 
-        CollectorInformation ci = this.agentsAndCollectors.fetchCollector("Embedded dynaTrace Collector@GRABS");
+        CollectorInformation ci = agentsAndCollectors.fetchCollector("Embedded dynaTrace Collector@GRABS");
         assertThat(ci.getHref(), is("https://localhost:8021/rest/management/collectors/Embedded%20dynaTrace%20Collector@GRABS"));
         assertThat(ci.getName(), is("Embedded dynaTrace Collector"));
         assertThat(ci.getHost(), is("GRABS"));
@@ -98,7 +98,7 @@ public class AgentsAndCollectorsTest {
         assertThat(ci.isLocal(), is(true));
 
         try {
-            ci = this.agentsAndCollectors.fetchCollector("1234");
+            ci = agentsAndCollectors.fetchCollector("1234");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getStatusCode(), is(404));
@@ -131,7 +131,7 @@ public class AgentsAndCollectorsTest {
                                 "  </collectorinformation>\n" +
                                 "</collectors>")));
 
-        Collectors c = this.agentsAndCollectors.fetchCollectors();
+        Collectors c = agentsAndCollectors.fetchCollectors();
         assertThat(c.getCollectors().size(), is(2));
 
         CollectorInformation ci = c.getCollectors().get(0);
@@ -167,11 +167,11 @@ public class AgentsAndCollectorsTest {
                         .withStatus(404)
                         .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"No collector 'Another Collector' found\"/>")));
 
-        Boolean result = this.agentsAndCollectors.restartCollector("Embedded dynaTrace Collector");
+        Boolean result = agentsAndCollectors.restartCollector("Embedded dynaTrace Collector");
         assertThat(result, is(true));
 
         try {
-            this.agentsAndCollectors.restartCollector("Another Collector");
+            agentsAndCollectors.restartCollector("Another Collector");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getStatusCode(), is(404));
@@ -193,11 +193,11 @@ public class AgentsAndCollectorsTest {
                         .withStatus(404)
                         .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"No collector 'Another Collector' found\"/>")));
 
-        Boolean result = this.agentsAndCollectors.shutdownCollector("Embedded dynaTrace Collector");
+        Boolean result = agentsAndCollectors.shutdownCollector("Embedded dynaTrace Collector");
         assertThat(result, is(true));
 
         try {
-            this.agentsAndCollectors.shutdownCollector("Another Collector");
+            agentsAndCollectors.shutdownCollector("Another Collector");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getStatusCode(), is(404));
@@ -212,7 +212,7 @@ public class AgentsAndCollectorsTest {
                         .withStatus(200)
                         .withBodyFile("fetchAgentsResponse.xml")));
 
-        Agents agents = this.agentsAndCollectors.fetchAgents();
+        Agents agents = agentsAndCollectors.fetchAgents();
         assertThat(agents.getAgents().size(), is(2));
 
         /* general agent information */

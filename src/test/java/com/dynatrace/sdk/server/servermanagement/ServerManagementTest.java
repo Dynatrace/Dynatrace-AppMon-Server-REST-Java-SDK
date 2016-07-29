@@ -55,7 +55,7 @@ public class ServerManagementTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
                         )));
 
-        Boolean result = this.serverManagement.restart();
+        Boolean result = serverManagement.restart();
         assertThat(result, is(true));
 
         ServerManagement invalidServerManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));
@@ -77,7 +77,7 @@ public class ServerManagementTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
                         )));
 
-        Boolean result = this.serverManagement.shutdown();
+        Boolean result = serverManagement.shutdown();
         assertThat(result, is(true));
 
         ServerManagement invalidServerManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));

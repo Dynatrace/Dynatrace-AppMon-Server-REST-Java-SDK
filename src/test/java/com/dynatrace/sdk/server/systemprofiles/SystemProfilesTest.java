@@ -70,18 +70,18 @@ public class SystemProfilesTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile configuration 'unknownconfiguration' not found\"/>"
                         )));
 
-        Boolean result = this.systemProfiles.activateProfileConfiguration("profile", "configuration");
+        Boolean result = systemProfiles.activateProfileConfiguration("profile", "configuration");
         assertThat(result, is(true));
 
         try {
-            result = this.systemProfiles.activateProfileConfiguration("unknownprofile", "configuration");
+            result = systemProfiles.activateProfileConfiguration("unknownprofile", "configuration");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getMessage(), new StringContains("unknownprofile"));
         }
 
         try {
-            result = this.systemProfiles.activateProfileConfiguration("profile", "unknownconfiguration");
+            result = systemProfiles.activateProfileConfiguration("profile", "unknownconfiguration");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getMessage(), new StringContains("unknownconfiguration"));
@@ -105,11 +105,11 @@ public class SystemProfilesTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile 'unknownprofile' not found\"/>"
                         )));
 
-        Boolean result = this.systemProfiles.enableProfile("profile");
+        Boolean result = systemProfiles.enableProfile("profile");
         assertThat(result, is(true));
 
         try {
-            result = this.systemProfiles.enableProfile("unknownprofile");
+            result = systemProfiles.enableProfile("unknownprofile");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getMessage(), new StringContains("unknownprofile"));
@@ -133,11 +133,11 @@ public class SystemProfilesTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile 'unknownprofile' not found\"/>"
                         )));
 
-        Boolean result = this.systemProfiles.disableProfile("profile");
+        Boolean result = systemProfiles.disableProfile("profile");
         assertThat(result, is(true));
 
         try {
-            result = this.systemProfiles.disableProfile("unknownprofile");
+            result = systemProfiles.disableProfile("unknownprofile");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getMessage(), new StringContains("unknownprofile"));

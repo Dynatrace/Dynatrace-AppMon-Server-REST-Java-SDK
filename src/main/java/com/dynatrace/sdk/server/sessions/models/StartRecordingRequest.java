@@ -108,17 +108,4 @@ public class StartRecordingRequest {
     public void addLabel(String label) {
         this.labels.add(label);
     }
-
-    @Override
-    public String toString() {
-        return "StartRecordingRequest{" +
-                "systemProfile='" + this.systemProfile + '\'' +
-                ", presentableName='" + this.presentableName + '\'' +
-                ", description='" + this.description + '\'' +
-                ", isTimestampAllowed=" + this.isTimestampAllowed +
-                ", recordingOption=" + this.recordingOption +
-                ", isSessionLocked=" + this.isSessionLocked +
-                ", labels=" + this.labels +
-                '}';
-    }
 }

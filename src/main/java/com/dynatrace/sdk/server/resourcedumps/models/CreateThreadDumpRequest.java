@@ -43,7 +43,7 @@ public class CreateThreadDumpRequest {
     }
 
     public String getSystemProfile() {
-        return this.systemProfile;
+        return systemProfile;
     }
 
     public void setSystemProfile(String systemProfile) {
@@ -51,7 +51,7 @@ public class CreateThreadDumpRequest {
     }
 
     public String getAgentName() {
-        return this.agentName;
+        return agentName;
     }
 
     public void setAgentName(String agentName) {
@@ -59,7 +59,7 @@ public class CreateThreadDumpRequest {
     }
 
     public String getHostName() {
-        return this.hostName;
+        return hostName;
     }
 
     public void setHostName(String hostName) {
@@ -67,7 +67,7 @@ public class CreateThreadDumpRequest {
     }
 
     public Integer getProcessId() {
-        return this.processId;
+        return processId;
     }
 
     public void setProcessId(Integer processId) {
@@ -75,13 +75,13 @@ public class CreateThreadDumpRequest {
     }
 
     public Boolean isSessionLocked() {
-        return this.isSessionLocked;
+        return isSessionLocked;
     }
 
     /**
      * @param sessionLocked - true to lock the session that is recorded, otherwise false.
      */
     public void setSessionLocked(Boolean sessionLocked) {
-        this.isSessionLocked = sessionLocked;
+        isSessionLocked = sessionLocked;
     }
 }

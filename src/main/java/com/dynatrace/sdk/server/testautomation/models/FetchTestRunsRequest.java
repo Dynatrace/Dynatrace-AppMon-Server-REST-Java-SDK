@@ -185,17 +185,4 @@ public class FetchTestRunsRequest {
     public HashMap<String, List<String>> getFilters() {
         return this.filters;
     }
-
-    @Override
-    public String toString() {
-        return "FetchTestRunsRequest{" +
-                "systemProfile='" + this.systemProfile + '\'' +
-                ", startTime=" + this.startTime +
-                ", endTime=" + this.endTime +
-                ", maxTestRuns=" + this.maxTestRuns +
-                ", maxBuilds=" + this.maxBuilds +
-                ", extend=" + this.extend +
-                ", filters=" + this.filters +
-                '}';
-    }
 }

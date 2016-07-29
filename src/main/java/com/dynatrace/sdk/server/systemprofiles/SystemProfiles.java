@@ -53,16 +53,6 @@ public class SystemProfiles extends Service {
     public static final String PROFILE_ENABLE_EP = "/rest/management/profiles/%s/enable";
     public static final String PROFILE_DISABLE_EP = "/rest/management/profiles/%s/disable";
 
-    private static final XPathExpression SIMPLE_RESULT_EXPRESSION;
-
-    static {
-        try {
-            SIMPLE_RESULT_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/result/@value");
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     protected SystemProfiles(DynatraceClient client) {
         super(client);
     }
@@ -84,7 +74,7 @@ public class SystemProfiles extends Service {
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
             } catch (XPathExpressionException e) {
                 // if it occurs, it means result == false
             } catch (IOException e) {
@@ -113,7 +103,7 @@ public class SystemProfiles extends Service {
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
             } catch (XPathExpressionException e) {
                 // if it occurs, it means result == false
             } catch (IOException e) {
@@ -142,7 +132,7 @@ public class SystemProfiles extends Service {
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
             } catch (XPathExpressionException e) {
                 // if it occurs, it means result == false
             } catch (IOException e) {

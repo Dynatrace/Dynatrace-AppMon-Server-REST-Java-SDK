@@ -54,15 +54,6 @@ import java.util.ArrayList;
  */
 public class Sessions extends Service {
     public static final String SESSIONS_EP = "/rest/management/profiles/%s/%s";
-    private static final XPathExpression VALUE_EXPRESSION;
-
-    static {
-        try {
-            VALUE_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/result/@value");
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public Sessions(DynatraceClient client) {
         super(client);

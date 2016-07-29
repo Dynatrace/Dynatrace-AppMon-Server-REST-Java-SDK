@@ -56,16 +56,6 @@ import java.util.ArrayList;
 public class ResourceDumps extends Service {
     public static final String CREATE_THREAD_DUMP_EP = "/rest/management/profiles/%s/threaddump";
 
-    private static final XPathExpression SIMPLE_RESULT_EXPRESSION;
-
-    static {
-        try {
-            SIMPLE_RESULT_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/result/@value");
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     protected ResourceDumps(DynatraceClient client) {
         super(client);
     }
@@ -96,7 +86,7 @@ public class ResourceDumps extends Service {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
             try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(CREATE_THREAD_DUMP_EP, request.getSystemProfile())), entity, entity.getContentType().getValue())) {
                 try (InputStream is = response.getEntity().getContent()) {
-                    return SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                    return VALUE_EXPRESSION.evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
                 }

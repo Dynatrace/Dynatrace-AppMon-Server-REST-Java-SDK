@@ -58,16 +58,6 @@ public class AgentsAndCollectors extends Service {
     public static final String COLLECTOR_RESTART_EP = "/rest/management/collector/%s/restart";
     public static final String COLLECTOR_SHUTDOWN_EP = "/rest/management/collector/%s/shutdown";
 
-    private static final XPathExpression SIMPLE_RESULT_EXPRESSION;
-
-    static {
-        try {
-            SIMPLE_RESULT_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/result/@value");
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public AgentsAndCollectors(DynatraceClient client) {
         super(client);
     }
@@ -138,7 +128,7 @@ public class AgentsAndCollectors extends Service {
 
             try (InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
             } catch (XPathExpressionException e) {
                 // if it occurs, it means result == false
             } catch (IOException e) {
@@ -167,7 +157,7 @@ public class AgentsAndCollectors extends Service {
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                     // xpath is reasonable for parsing such a small entity
-                    result = SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                    result = VALUE_EXPRESSION.evaluate(new InputSource(is));
             } catch (XPathExpressionException e) {
                 // if it occurs, it means result == false
             } catch (IOException e) {
@@ -196,7 +186,7 @@ public class AgentsAndCollectors extends Service {
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = SIMPLE_RESULT_EXPRESSION.evaluate(new InputSource(is));
+                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
             } catch (XPathExpressionException e) {
                 // if it occurs, it means result == false
             } catch (IOException e) {
@@ -208,10 +198,4 @@ public class AgentsAndCollectors extends Service {
             throw new IllegalArgumentException("Invalid collectorName", e);
         }
     }
-
-
-
-
-
-
 }

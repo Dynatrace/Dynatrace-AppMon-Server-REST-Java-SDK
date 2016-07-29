@@ -54,11 +54,20 @@ import java.net.URISyntaxException;
 
 public abstract class Service {
     private static final XPathExpression ERROR_EXPRESSION;
+    protected static final XPathExpression VALUE_EXPRESSION;
     public static final String XML_CONTENT_TYPE = "application/xml";
 
     static {
         try {
             ERROR_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/error/@reason");
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static {
+        try {
+            VALUE_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/result/@value");
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }

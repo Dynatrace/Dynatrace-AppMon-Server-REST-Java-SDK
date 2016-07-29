@@ -32,6 +32,8 @@ import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.resourcedumps.models.CreateThreadDumpRequest;
+import com.dynatrace.sdk.server.resourcedumps.models.GetThreadDumpStatus;
+import com.dynatrace.sdk.server.resourcedumps.models.GetThreadDumpStatusMessage;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.hamcrest.core.StringContains;
 import org.junit.Rule;
@@ -92,6 +94,52 @@ public class ResourceDumpsTest {
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getMessage(), new StringContains("easyTravelBackendNotFound"));
+        }
+    }
+
+    @Test
+    public void getThreadDumpStatus() throws Exception {
+        stubFor(get(urlPathEqualTo(String.format(ResourceDumps.GET_THREAD_DUMP_STATUS_EP, "easyTravel", "Thread Dump [12345678]")))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(
+                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                        "<result value=\"true\">\n" +
+                                        "  <success>true</success>\n" +
+                                        "  <message language=\"en\"><text>SUCCESS</text></message>\n" +
+                                        "  <message language=\"de\"><text>OK</text></message>\n" +
+                                        "</result>"
+                        )));
+
+        GetThreadDumpStatus response = resourceDumps.getThreadDumpStatus("easyTravel", "Thread Dump [12345678]");
+        assertThat(response.getSuccess(), is(true));
+        assertThat(response.getMessages().size(), is(2));
+
+        GetThreadDumpStatusMessage message = response.getMessages().get(0);
+        assertThat(message.getLanguage(), is("en"));
+        assertThat(message.getText(), is("SUCCESS"));
+
+        message = response.getMessages().get(1);
+        assertThat(message.getLanguage(), is("de"));
+        assertThat(message.getText(), is("OK"));
+    }
+
+
+    @Test
+    public void getThreadDumpStatusWithException() throws Exception {
+        stubFor(get(urlPathEqualTo(String.format(ResourceDumps.GET_THREAD_DUMP_STATUS_EP, "easyTravel", "Not-existent Dump [12345678]")))
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withBody(
+                                "<error reason=\"Unable to find monitor for task with ID 'Not-existent Dump [12345678]' on system profile 'easyTravel'\"/>"
+                        )));
+
+        try {
+            GetThreadDumpStatus response = resourceDumps.getThreadDumpStatus("easyTravel", "Not-existent Dump [12345678]");
+            fail("Exception was expected to be thrown");
+        } catch (ServerResponseException ex) {
+            assertThat(ex.getStatusCode(), is(404));
+            assertThat(ex.getMessage(), new StringContains("Not-existent Dump [12345678]"));
         }
     }
 }

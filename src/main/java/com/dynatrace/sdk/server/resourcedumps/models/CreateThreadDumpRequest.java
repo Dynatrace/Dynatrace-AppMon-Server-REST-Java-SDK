@@ -81,7 +81,7 @@ public class CreateThreadDumpRequest {
     /**
      * @param sessionLocked - true to lock the session that is recorded, otherwise false.
      */
-    public void setSessionLocked(Boolean sessionLocked) {
+    public void setSessionLocked(boolean sessionLocked) {
         this.isSessionLocked = sessionLocked;
     }
 }

@@ -75,7 +75,7 @@ public class StartRecordingRequest {
     /**
      * @param timestampAllowed - {@code true} to append timestamp information to the recorded session name, otherwise {@code false}.
      */
-    public void setTimestampAllowed(Boolean timestampAllowed) {
+    public void setTimestampAllowed(boolean timestampAllowed) {
         this.isTimestampAllowed = timestampAllowed;
     }
 
@@ -94,7 +94,7 @@ public class StartRecordingRequest {
     /**
      * @param sessionLocked - true to lock the session that is recorded, otherwise false.
      */
-    public void setSessionLocked(Boolean sessionLocked) {
+    public void setSessionLocked(boolean sessionLocked) {
         this.isSessionLocked = sessionLocked;
     }
 

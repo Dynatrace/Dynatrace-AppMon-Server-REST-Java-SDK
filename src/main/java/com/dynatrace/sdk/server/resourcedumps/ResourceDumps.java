@@ -33,6 +33,8 @@ import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.resourcedumps.models.CreateThreadDumpRequest;
+import com.dynatrace.sdk.server.resourcedumps.models.GetThreadDumpStatus;
+import com.dynatrace.sdk.server.resourcedumps.models.GetThreadDumpStatusMessage;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -43,8 +45,10 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Wraps a Resource Dumps REST API, providing an easy to use set of methods to control server.
@@ -53,6 +57,7 @@ import java.util.ArrayList;
 
 public class ResourceDumps extends Service {
     public static final String CREATE_THREAD_DUMP_EP = "/rest/management/profiles/%s/threaddump";
+    public static final String GET_THREAD_DUMP_STATUS_EP = "/rest/management/profiles/%s/threaddumpcreated/%s";
 
     protected ResourceDumps(DynatraceClient client) {
         super(client);
@@ -93,6 +98,23 @@ public class ResourceDumps extends Service {
             throw new IllegalArgumentException("Invalid parameters format", e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
+        }
+    }
+
+
+    /**
+     * Requests a thread dump status for a specific {@param systemProfile} and (@param scheduleId).
+     *
+     * @param profileName - system profile name
+     * @param scheduleId  - previously requested Thread Dump schedule ID
+     * @return {@link GetThreadDumpStatus} instance containing a {@link List} of {@link GetThreadDumpStatusMessage}
+     */
+    public GetThreadDumpStatus getThreadDumpStatus(String profileName, String scheduleId) throws ServerConnectionException, ServerResponseException {
+        try {
+            URI uri = this.buildURI(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId));
+            return this.doGetRequest(uri, GetThreadDumpStatus.class);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or scheduleId[%s] format.", profileName, scheduleId), e);
         }
     }
 }

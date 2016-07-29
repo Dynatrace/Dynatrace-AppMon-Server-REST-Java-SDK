@@ -39,9 +39,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -86,9 +84,9 @@ public class ResourceDumps extends Service {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
             try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(CREATE_THREAD_DUMP_EP, request.getSystemProfile())), entity, entity.getContentType().getValue())) {
                 try (InputStream is = response.getEntity().getContent()) {
-                    return VALUE_EXPRESSION.evaluate(new InputSource(is));
+                    return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response: " + e.getMessage(), e);
                 }
             }
         } catch (UnsupportedEncodingException | URISyntaxException e) {

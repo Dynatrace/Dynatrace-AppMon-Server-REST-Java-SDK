@@ -28,10 +28,10 @@
 
 package com.dynatrace.sdk.server.agentsandcollectors;
 
-import com.dynatrace.sdk.server.agentsandcollectors.models.Agents;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.agentsandcollectors.models.AgentInformation;
+import com.dynatrace.sdk.server.agentsandcollectors.models.Agents;
 import com.dynatrace.sdk.server.agentsandcollectors.models.CollectorInformation;
 import com.dynatrace.sdk.server.agentsandcollectors.models.Collectors;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
@@ -39,9 +39,7 @@ import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.xml.sax.InputSource;
 
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -119,7 +117,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean hotSensorPlacement(Integer agentId) throws ServerConnectionException, ServerResponseException {
+    public boolean hotSensorPlacement(Integer agentId) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(HOT_SENSOR_PLACEMENT_EP, agentId));
             CloseableHttpResponse response = this.doGetRequest(uri);
@@ -128,9 +126,11 @@ public class AgentsAndCollectors extends Service {
 
             try (InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -147,19 +147,21 @@ public class AgentsAndCollectors extends Service {
      * @param collectorName - name of the Collector
      * @return {@link Boolean} that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
-     * @throws ServerResponseException whenever parsing a response fails or invalid status code is provided
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean restartCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
+    public boolean restartCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(COLLECTOR_RESTART_EP, collectorName));
             String result = null;
 
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
-                    // xpath is reasonable for parsing such a small entity
-                    result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                // xpath is reasonable for parsing such a small entity
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -186,9 +188,11 @@ public class AgentsAndCollectors extends Service {
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

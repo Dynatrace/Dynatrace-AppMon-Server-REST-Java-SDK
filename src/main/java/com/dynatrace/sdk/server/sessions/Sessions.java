@@ -39,9 +39,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.InputSource;
 
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -90,7 +88,7 @@ public class Sessions extends Service {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
             try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "startrecording")), entity, entity.getContentType().getValue())) {
                 try (InputStream is = response.getEntity().getContent()) {
-                    return VALUE_EXPRESSION.evaluate(new InputSource(is));
+                    return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
                 }
@@ -113,7 +111,7 @@ public class Sessions extends Service {
     public String stopRecording(String profileName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, profileName, "stoprecording")))) {
             try (InputStream is = response.getEntity().getContent()) {
-                return VALUE_EXPRESSION.evaluate(new InputSource(is));
+                return Service.compileValueExpression().evaluate(new InputSource(is));
             } catch (XPathExpressionException | IOException e) {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
             }
@@ -133,9 +131,9 @@ public class Sessions extends Service {
     public boolean clear(String profileName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, profileName, "clear")))) {
             try (InputStream is = response.getEntity().getContent()) {
-                return VALUE_EXPRESSION.evaluate(new InputSource(is)).equals("true");
+                return Service.compileValueExpression().evaluate(new InputSource(is)).equals("true");
             } catch (XPathExpressionException | IOException e) {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
+                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
             }
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid profileName[%s] format.", profileName), e);

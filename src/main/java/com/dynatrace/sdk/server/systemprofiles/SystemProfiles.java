@@ -35,9 +35,7 @@ import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.xml.sax.InputSource;
 
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -60,13 +58,13 @@ public class SystemProfiles extends Service {
     /**
      * Activate a System Profile configuration, so that all others are set to inactive
      *
-     * @param profileName - name of the System Profile
+     * @param profileName       - name of the System Profile
      * @param configurationName - name of the Configuration to activate
      * @return {@link Boolean} that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean activateProfileConfiguration(String profileName, String configurationName) throws ServerConnectionException, ServerResponseException {
+    public boolean activateProfileConfiguration(String profileName, String configurationName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(ACTIVATE_PROFILE_CONFIGURATION_EP, profileName, configurationName));
             String result = null;
@@ -74,9 +72,11 @@ public class SystemProfiles extends Service {
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -95,7 +95,7 @@ public class SystemProfiles extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean enableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
+    public boolean enableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(PROFILE_ENABLE_EP, profileName));
             String result = null;
@@ -103,13 +103,14 @@ public class SystemProfiles extends Service {
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
             return (result != null) && (result.equals("true"));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid profileName", e);
@@ -124,6 +125,7 @@ public class SystemProfiles extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+
     public Boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(PROFILE_DISABLE_EP, profileName));
@@ -132,9 +134,11 @@ public class SystemProfiles extends Service {
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

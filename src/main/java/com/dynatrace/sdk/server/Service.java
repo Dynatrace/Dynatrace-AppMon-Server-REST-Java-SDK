@@ -53,21 +53,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public abstract class Service {
-    private static final XPathExpression ERROR_EXPRESSION;
-    protected static final XPathExpression VALUE_EXPRESSION;
     public static final String XML_CONTENT_TYPE = "application/xml";
+    private final DynatraceClient client;
 
-    static {
-        try {
-            ERROR_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/error/@reason");
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
+    protected Service(DynatraceClient client) {
+        this.client = client;
     }
 
-    static {
+    protected static XPathExpression compileValueExpression() {
         try {
-            VALUE_EXPRESSION = XPathFactory.newInstance().newXPath().compile("/result/@value");
+            return XPathFactory.newInstance().newXPath().compile("/result/@value");
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }
@@ -96,12 +91,6 @@ public abstract class Service {
         }
     }
 
-    private final DynatraceClient client;
-
-    protected Service(DynatraceClient client) {
-        this.client = client;
-    }
-
     protected URI buildURI(String path, NameValuePair... params) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
@@ -125,7 +114,7 @@ public abstract class Service {
                 // as a reason in exception
                 try (InputStream is = response.getEntity().getContent()) {
                     // xpath is reasonable for parsing such a small entity
-                    error = ERROR_EXPRESSION.evaluate(new InputSource(is));
+                    error = XPathFactory.newInstance().newXPath().compile("/error/@reason").evaluate(new InputSource(is));
                 } catch (XPathExpressionException e) {
                     // error message might not exist
                 }

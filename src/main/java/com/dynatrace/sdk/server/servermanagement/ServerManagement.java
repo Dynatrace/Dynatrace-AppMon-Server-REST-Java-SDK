@@ -63,7 +63,7 @@ public class ServerManagement extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean restart() throws ServerConnectionException, ServerResponseException {
+    public boolean restart() throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(SERVER_RESTART_EP);
             String result = null;
@@ -71,9 +71,11 @@ public class ServerManagement extends Service {
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -91,7 +93,7 @@ public class ServerManagement extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean shutdown() throws ServerConnectionException, ServerResponseException {
+    public boolean shutdown() throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(SERVER_SHUTDOWN_EP);
             String result = null;
@@ -99,9 +101,11 @@ public class ServerManagement extends Service {
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
-                result = VALUE_EXPRESSION.evaluate(new InputSource(is));
-            } catch (XPathExpressionException e) {
-                // if it occurs, it means result == false
+                try {
+                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -118,4 +118,38 @@ public class SessionsTest {
             assertThat(e.getMessage(), is(errorReason));
         }
     }
+
+    @Test
+    public void reanalyze() throws Exception {
+        stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_EP, "test")))
+                .willReturn(aResponse()
+                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<result value=\"true\"/>")));
+        stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_EP, "non-existent")))
+                .willReturn(aResponse()
+                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<result value=\"false\"/>")));
+
+        boolean result = this.sessions.reanalyze("test");
+        assertThat(result, is(true));
+        result = this.sessions.reanalyze("non-existent");
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void getReanalysisStatus() throws Exception {
+        stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_STATUS_EP, "test")))
+                .willReturn(aResponse()
+                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<result value=\"true\"/>")));
+        stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_STATUS_EP, "non-existent")))
+                .willReturn(aResponse()
+                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<result value=\"false\"/>")));
+
+        boolean result = this.sessions.getReanalysisStatus("test");
+        assertThat(result, is(true));
+        result = this.sessions.getReanalysisStatus("non-existent");
+        assertThat(result, is(false));
+    }
 }

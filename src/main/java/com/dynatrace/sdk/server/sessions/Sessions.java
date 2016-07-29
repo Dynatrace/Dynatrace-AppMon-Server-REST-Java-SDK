@@ -105,7 +105,7 @@ public class Sessions extends Service {
                 }
             }
         } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid parameters format", e);
+            throw new IllegalArgumentException("Invalid parameters format " + nvps.toString(), e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
         }
@@ -127,7 +127,7 @@ public class Sessions extends Service {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
             }
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid profileName format.", e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format.", profileName), e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
         }
@@ -147,7 +147,7 @@ public class Sessions extends Service {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
             }
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid profileName format.", e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format.", profileName), e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
         }

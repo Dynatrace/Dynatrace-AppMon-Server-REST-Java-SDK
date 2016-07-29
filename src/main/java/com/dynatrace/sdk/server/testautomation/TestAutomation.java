@@ -31,11 +31,11 @@ package com.dynatrace.sdk.server.testautomation;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
-import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
-import com.dynatrace.sdk.server.testautomation.models.TestRuns;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
 import com.dynatrace.sdk.server.testautomation.models.FetchTestRunsRequest;
 import com.dynatrace.sdk.server.testautomation.models.TestRun;
+import com.dynatrace.sdk.server.testautomation.models.TestRuns;
 import org.apache.http.NameValuePair;
 import org.apache.http.annotation.ThreadSafe;
 import org.apache.http.message.BasicNameValuePair;
@@ -70,7 +70,7 @@ public class TestAutomation extends Service {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""));
             return this.doPostRequest(uri, Service.xmlObjectToEntity(request), Service.XML_CONTENT_TYPE, TestRun.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid system profile format", e);
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format", request.getSystemProfile()), e);
         }
     }
 
@@ -88,7 +88,7 @@ public class TestAutomation extends Service {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, systemProfile, testRunId));
             return this.doGetRequest(uri, TestRun.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid system profile or testRunId format", e);
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] or testRunId[%s] format", systemProfile, testRunId), e);
         }
     }
 
@@ -127,7 +127,7 @@ public class TestAutomation extends Service {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), nvps.toArray(new NameValuePair[nvps.size()]));
             return this.doGetRequest(uri, TestRuns.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid system profile format", e);
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format", request.getSystemProfile()), e);
         }
     }
 }

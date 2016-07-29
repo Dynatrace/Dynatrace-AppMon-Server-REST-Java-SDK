@@ -33,6 +33,7 @@ import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.sessions.models.StartRecordingRequest;
+import com.dynatrace.sdk.server.sessions.models.StoreSessionRequest;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -145,10 +146,10 @@ public class Sessions extends Service {
     }
 
     /**
-     *  Requests start reanalyzing a session with the name (@param sessionName)
+     * Requests start reanalyzing a session with the name (@param sessionName)
      *
-     *  @param sessionName - session name to reanalyze
-     *  @return value that describes that the specified session could be found and session reanalysis started successfully
+     * @param sessionName - session name to reanalyze
+     * @return value that describes that the specified session could be found and session reanalysis started successfully
      */
     public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_EP, sessionName)))) {
@@ -165,10 +166,10 @@ public class Sessions extends Service {
     }
 
     /**
-     *  Queries reanalysis status of the session with the name (@param sessionName)
+     * Queries reanalysis status of the session with the name (@param sessionName)
      *
-     *  @param sessionName - session name to query
-     *  @return value that describes that session reanalysis is finished
+     * @param sessionName - session name to query
+     * @return value that describes that session reanalysis is finished
      */
     public boolean getReanalysisStatus(String sessionName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)))) {
@@ -179,6 +180,56 @@ public class Sessions extends Service {
             }
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format.", sessionName), e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not close http response", e);
+        }
+    }
+
+    /**
+     *  Store all time series and PurePaths in the Server's memory to a stored session
+     *  for a specific {@link StoreSessionRequest#getSystemProfile() system profile}.
+     *  <strong>
+     *     The timeframe parameters {@link StoreSessionRequest#timeframeStart} and {@link StoreSessionRequest#timeframeEnd}
+     *     must be formatted according to ISO 8601, without a time zone specification, in the form yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss.S
+     * </strong>
+     *
+     * @param request - session parameters
+     * @return session name
+     */
+    public String store(StoreSessionRequest request) throws ServerConnectionException, ServerResponseException {
+        ArrayList<NameValuePair> nvps = new ArrayList<>();
+        if (request.isAppendTimestamp() != null) {
+            nvps.add(new BasicNameValuePair("appendTimestamp", String.valueOf(request.isAppendTimestamp())));
+        }
+        if (request.getRecordingOption() != null) {
+            nvps.add(new BasicNameValuePair("recordingOption", request.getRecordingOption().getInternal()));
+        }
+        if (request.isSessionLocked() != null) {
+            nvps.add(new BasicNameValuePair("isSessionLocked", String.valueOf(request.isSessionLocked())));
+        }
+        if (request.getTimeframeStart() != null) {
+            nvps.add(new BasicNameValuePair("timeframeStart", request.getTimeframeStart()));
+        }
+        if (request.getTimeframeEnd() != null) {
+            nvps.add(new BasicNameValuePair("timeframeEnd", request.getTimeframeEnd()));
+        }
+        if (request.getStoredSessionName() != null) {
+            nvps.add(new BasicNameValuePair("storedSessionName", request.getStoredSessionName()));
+        }
+        for (String label : request.getLabels()) {
+            nvps.add(new BasicNameValuePair("label", label));
+        }
+
+        try {
+            try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "storepurepaths"), nvps.toArray(new BasicNameValuePair[nvps.size()])))) {
+                try (InputStream is = response.getEntity().getContent()) {
+                    return Service.compileValueExpression().evaluate(new InputSource(is));
+                } catch (XPathExpressionException | IOException e) {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
+                }
+            }
+        } catch (UnsupportedEncodingException | URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid parameters format " + nvps.toString(), e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
         }

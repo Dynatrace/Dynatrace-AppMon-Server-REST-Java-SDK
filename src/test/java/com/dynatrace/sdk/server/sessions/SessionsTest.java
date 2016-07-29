@@ -33,9 +33,16 @@ import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.sessions.models.StartRecordingRequest;
+import com.dynatrace.sdk.server.sessions.models.StoreSessionRequest;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -151,5 +158,41 @@ public class SessionsTest {
         assertThat(result, is(true));
         result = this.sessions.getReanalysisStatus("non-existent");
         assertThat(result, is(false));
+    }
+
+    @Test
+    public void store() throws Exception {
+        ArrayList<NameValuePair> nvps = new ArrayList<>();
+        nvps.add(new BasicNameValuePair("appendTimestamp", String.valueOf(true)));
+        nvps.add(new BasicNameValuePair("recordingOption", RecordingOption.TIME_SERIES.getInternal()));
+        nvps.add(new BasicNameValuePair("isSessionLocked", String.valueOf(true)));
+        nvps.add(new BasicNameValuePair("timeframeStart", "2016-01-02'T'12:34:56.789"));
+        nvps.add(new BasicNameValuePair("timeframeEnd", "2016-01-03'T'12:34:56.789"));
+        nvps.add(new BasicNameValuePair("storedSessionName", "session"));
+        nvps.add(new BasicNameValuePair("label", "Label1"));
+        nvps.add(new BasicNameValuePair("label", "Label2"));
+
+        URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setPath(String.format(Sessions.SESSIONS_EP, "test", "storepurepaths"));
+        uriBuilder.setParameters(nvps);
+        String uri = uriBuilder.build().toString();
+
+        stubFor(get(urlEqualTo(uri))
+                .willReturn(aResponse()
+                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<result value=\"test\"/>")));
+
+        StoreSessionRequest request = new StoreSessionRequest("test");
+        request.setAppendTimestamp(true);
+        request.setSessionLocked(true);
+        request.addLabel("Label1");
+        request.addLabel("Label2");
+        request.setTimeframeStart("2016-01-02'T'12:34:56.789");
+        request.setTimeframeEnd("2016-01-03'T'12:34:56.789");
+        request.setStoredSessionName("session");
+        request.setRecordingOption(RecordingOption.TIME_SERIES);
+
+        String sessionName = this.sessions.store(request);
+        assertThat(sessionName, is("test"));
     }
 }

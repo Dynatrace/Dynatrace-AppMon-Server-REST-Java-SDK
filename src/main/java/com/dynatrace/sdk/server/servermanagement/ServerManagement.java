@@ -35,9 +35,7 @@ import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.xml.sax.InputSource;
 
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -66,13 +64,13 @@ public class ServerManagement extends Service {
     public boolean restart() throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(SERVER_RESTART_EP);
-            String result = null;
 
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -80,7 +78,7 @@ public class ServerManagement extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid request", e);
         }
@@ -96,13 +94,13 @@ public class ServerManagement extends Service {
     public boolean shutdown() throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(SERVER_SHUTDOWN_EP);
-            String result = null;
 
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -110,7 +108,7 @@ public class ServerManagement extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid request", e);
         }

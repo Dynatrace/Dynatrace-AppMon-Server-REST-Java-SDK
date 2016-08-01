@@ -36,28 +36,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = GetThreadDumpStatus.ROOT_ELEMENT_NAME)
-public class GetThreadDumpStatus {
+@XmlRootElement(name = ThreadDumpStatus.ROOT_ELEMENT_NAME)
+public class ThreadDumpStatus {
     public static final String ROOT_ELEMENT_NAME = "result";
 
     private Boolean success;
 
-    @XmlElementRef(name = GetThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
-    private List<GetThreadDumpStatusMessage> messages = new ArrayList<>();
+    @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
+    private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
 
     public Boolean getSuccess() {
-        return success;
+        return this.success;
     }
 
-    public List<GetThreadDumpStatusMessage> getMessages() {
-        return messages;
+    public List<ThreadDumpStatusMessage> getMessages() {
+        return this.messages;
     }
 
     @Override
     public String toString() {
-        return "GetThreadDumpStatus{" +
-                "success=" + success +
-                ", messages=" + messages +
+        return "ThreadDumpStatus{" +
+                "success=" + this.success +
+                ", messages=" + this.messages +
                 '}';
     }
 }

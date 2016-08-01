@@ -67,13 +67,12 @@ public class SystemProfiles extends Service {
     public boolean activateProfileConfiguration(String profileName, String configurationName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(ACTIVATE_PROFILE_CONFIGURATION_EP, profileName, configurationName));
-            String result = null;
-
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -81,7 +80,6 @@ public class SystemProfiles extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid profileName or configurationName", e);
         }
@@ -98,20 +96,19 @@ public class SystemProfiles extends Service {
     public boolean enableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(PROFILE_ENABLE_EP, profileName));
-            String result = null;
-
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return (result != null) && (result.equals("true"));
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid profileName", e);
         }
@@ -129,13 +126,12 @@ public class SystemProfiles extends Service {
     public Boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(PROFILE_DISABLE_EP, profileName));
-            String result = null;
-
             try (CloseableHttpResponse response = this.doGetRequest(uri);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -143,7 +139,7 @@ public class SystemProfiles extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid profileName", e);
         }

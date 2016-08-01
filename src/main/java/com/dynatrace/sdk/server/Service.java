@@ -87,7 +87,7 @@ public abstract class Service {
             marshaller.marshal(object, writer);
             return new StringEntity(writer.getBuffer().toString());
         } catch (JAXBException | UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Provided request couldn't be serialized.", e);
+            throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
         }
     }
 
@@ -164,7 +164,7 @@ public abstract class Service {
         try (CloseableHttpResponse response = this.doPutRequest(uri, entity, contentType)) {
             return this.parseResponse(response, responseClass);
         } catch (IOException e) {
-            throw new ServerConnectionException("Could not connect to Dynatrace Server.", e);
+            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
         }
     }
 

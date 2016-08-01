@@ -29,7 +29,6 @@
 package com.dynatrace.sdk.server.agentsandcollectors.models;
 
 import javax.xml.bind.annotation.*;
-import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = AgentInformation.ROOT_ELEMENT_NAME)
@@ -282,59 +281,59 @@ public class AgentInformation {
     }
 
     public String getSystemProfile() {
-        return systemProfile;
+        return this.systemProfile;
     }
 
     @Override
     public String toString() {
         return "AgentInformation{" +
-                "name='" + name + '\'' +
-                ", startupTimeUTC=" + startupTimeUTC +
-                ", agentId=" + agentId +
-                ", processId=" + processId +
-                ", technologyType='" + technologyType + '\'' +
-                ", technologyTypeId=" + technologyTypeId +
-                ", host='" + host + '\'' +
-                ", eventCount=" + eventCount +
-                ", classLoadCount=" + classLoadCount +
-                ", totalClassLoadCount=" + totalClassLoadCount +
-                ", connected=" + connected +
-                ", isHotUpdateable=" + isHotUpdateable +
-                ", licenseInformation='" + licenseInformation + '\'' +
-                ", capture=" + capture +
-                ", skippedEvents=" + skippedEvents +
-                ", skippedPurePaths=" + skippedPurePaths +
-                ", totalExecutionTime=" + totalExecutionTime +
-                ", totalCpuTime=" + totalCpuTime +
-                ", totalPurePathCount=" + totalPurePathCount +
-                ", systemProfileName='" + systemProfileName + '\'' +
-                ", configurationName='" + configurationName + '\'' +
-                ", agentGroupLabel='" + agentGroupLabel + '\'' +
-                ", licenseOk=" + licenseOk +
-                ", collectorinformation=" + collectorinformation +
-                ", agentVersion='" + agentVersion + '\'' +
-                ", processorCount=" + processorCount +
-                ", isvLicenseSupported=" + isvLicenseSupported +
-                ", vmVersionString='" + vmVersionString + '\'' +
-                ", vmVendor='" + vmVendor + '\'' +
-                ", configurationId='" + configurationId + '\'' +
-                ", agentMappingId='" + agentMappingId + '\'' +
-                ", agentGroupId='" + agentGroupId + '\'' +
-                ", sourceGroupId='" + sourceGroupId + '\'' +
-                ", licenseFlagsToString='" + licenseFlagsToString + '\'' +
-                ", collectorName='" + collectorName + '\'' +
-                ", agentConfigured=" + agentConfigured +
-                ", agentInstanceName='" + agentInstanceName + '\'' +
-                ", instanceName='" + instanceName + '\'' +
-                ", syncThreshold=" + syncThreshold +
-                ", fromCmdb=" + fromCmdb +
-                ", required=" + required +
-                ", hotUpdateCritical=" + hotUpdateCritical +
-                ", hotUpdateable=" + hotUpdateable +
-                ", timestamp=" + timestamp +
-                ", virtualTimeUTC=" + virtualTimeUTC +
-                ", captureCPUTimes=" + captureCPUTimes +
-                ", agentProperties=" + agentProperties +
+                "name='" + this.name + '\'' +
+                ", startupTimeUTC=" + this.startupTimeUTC +
+                ", agentId=" + this.agentId +
+                ", processId=" + this.processId +
+                ", technologyType='" + this.technologyType + '\'' +
+                ", technologyTypeId=" + this.technologyTypeId +
+                ", host='" + this.host + '\'' +
+                ", eventCount=" + this.eventCount +
+                ", classLoadCount=" + this.classLoadCount +
+                ", totalClassLoadCount=" + this.totalClassLoadCount +
+                ", connected=" + this.connected +
+                ", isHotUpdateable=" + this.isHotUpdateable +
+                ", licenseInformation='" + this.licenseInformation + '\'' +
+                ", capture=" + this.capture +
+                ", skippedEvents=" + this.skippedEvents +
+                ", skippedPurePaths=" + this.skippedPurePaths +
+                ", totalExecutionTime=" + this.totalExecutionTime +
+                ", totalCpuTime=" + this.totalCpuTime +
+                ", totalPurePathCount=" + this.totalPurePathCount +
+                ", systemProfileName='" + this.systemProfileName + '\'' +
+                ", configurationName='" + this.configurationName + '\'' +
+                ", agentGroupLabel='" + this.agentGroupLabel + '\'' +
+                ", licenseOk=" + this.licenseOk +
+                ", collectorinformation=" + this.collectorinformation +
+                ", agentVersion='" + this.agentVersion + '\'' +
+                ", processorCount=" + this.processorCount +
+                ", isvLicenseSupported=" + this.isvLicenseSupported +
+                ", vmVersionString='" + this.vmVersionString + '\'' +
+                ", vmVendor='" + this.vmVendor + '\'' +
+                ", configurationId='" + this.configurationId + '\'' +
+                ", agentMappingId='" + this.agentMappingId + '\'' +
+                ", agentGroupId='" + this.agentGroupId + '\'' +
+                ", sourceGroupId='" + this.sourceGroupId + '\'' +
+                ", licenseFlagsToString='" + this.licenseFlagsToString + '\'' +
+                ", collectorName='" + this.collectorName + '\'' +
+                ", agentConfigured=" + this.agentConfigured +
+                ", agentInstanceName='" + this.agentInstanceName + '\'' +
+                ", instanceName='" + this.instanceName + '\'' +
+                ", syncThreshold=" + this.syncThreshold +
+                ", fromCmdb=" + this.fromCmdb +
+                ", required=" + this.required +
+                ", hotUpdateCritical=" + this.hotUpdateCritical +
+                ", hotUpdateable=" + this.hotUpdateable +
+                ", timestamp=" + this.timestamp +
+                ", virtualTimeUTC=" + this.virtualTimeUTC +
+                ", captureCPUTimes=" + this.captureCPUTimes +
+                ", agentProperties=" + this.agentProperties +
                 '}';
     }
 }

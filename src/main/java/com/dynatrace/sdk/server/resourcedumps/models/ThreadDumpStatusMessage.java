@@ -34,8 +34,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = GetThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
-public class GetThreadDumpStatusMessage {
+@XmlRootElement(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
+public class ThreadDumpStatusMessage {
     public static final String ROOT_ELEMENT_NAME = "message";
 
     private String text;
@@ -44,18 +44,18 @@ public class GetThreadDumpStatusMessage {
     private String language;
 
     public String getLanguage() {
-        return language;
+        return this.language;
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     @Override
     public String toString() {
-        return "GetThreadDumpStatusMessage{" +
-                "language='" + language + '\'' +
-                ", text='" + text + '\'' +
+        return "ThreadDumpStatusMessage{" +
+                "language='" + this.language + '\'' +
+                ", text='" + this.text + '\'' +
                 '}';
     }
 }

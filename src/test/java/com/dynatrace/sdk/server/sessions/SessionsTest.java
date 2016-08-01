@@ -42,7 +42,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -119,7 +118,7 @@ public class SessionsTest {
                         .withStatus(404)
                         .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"" + errorReason + "\"/>")));
         try {
-            String sessionName = this.sessions.startRecording(new StartRecordingRequest("test"));
+            this.sessions.startRecording(new StartRecordingRequest("test"));
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getMessage(), is(errorReason));

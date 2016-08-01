@@ -221,7 +221,7 @@ public class Sessions extends Service {
         }
 
         try {
-            try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "storepurepaths"), nvps.toArray(new BasicNameValuePair[nvps.size()])))) {
+            try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "storepurepaths"), nvps.toArray(new NameValuePair[nvps.size()])))) {
                 try (InputStream is = response.getEntity().getContent()) {
                     return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {

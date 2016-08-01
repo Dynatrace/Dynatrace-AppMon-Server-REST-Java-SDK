@@ -55,13 +55,13 @@ public class ServerManagementTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
                         )));
 
-        Boolean result = serverManagement.restart();
+        Boolean result = this.serverManagement.restart();
         assertThat(result, is(true));
 
         ServerManagement invalidServerManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));
 
         try {
-            result = invalidServerManagement.restart();
+            invalidServerManagement.restart();
             fail("Exception was expected to be thrown");
         } catch (ServerConnectionException ex) {
             assertThat(ex.getMessage(), new StringContains("localhost__invalid"));
@@ -77,13 +77,13 @@ public class ServerManagementTest {
                                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
                         )));
 
-        Boolean result = serverManagement.shutdown();
+        Boolean result = this.serverManagement.shutdown();
         assertThat(result, is(true));
 
         ServerManagement invalidServerManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));
 
         try {
-            result = invalidServerManagement.shutdown();
+            invalidServerManagement.shutdown();
             fail("Exception was expected to be thrown");
         } catch (ServerConnectionException ex) {
             assertThat(ex.getMessage(), new StringContains("localhost__invalid"));

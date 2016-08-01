@@ -32,8 +32,8 @@ import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.resourcedumps.models.CreateThreadDumpRequest;
-import com.dynatrace.sdk.server.resourcedumps.models.GetThreadDumpStatus;
-import com.dynatrace.sdk.server.resourcedumps.models.GetThreadDumpStatusMessage;
+import com.dynatrace.sdk.server.resourcedumps.models.ThreadDumpStatus;
+import com.dynatrace.sdk.server.resourcedumps.models.ThreadDumpStatusMessage;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.hamcrest.core.StringContains;
 import org.junit.Rule;
@@ -90,7 +90,7 @@ public class ResourceDumpsTest {
         request.setSessionLocked(false);
 
         try {
-            String scheduleId = this.resourceDumps.createThreadDump(request);
+            this.resourceDumps.createThreadDump(request);
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getMessage(), new StringContains("easyTravelBackendNotFound"));
@@ -111,11 +111,11 @@ public class ResourceDumpsTest {
                                         "</result>"
                         )));
 
-        GetThreadDumpStatus response = resourceDumps.getThreadDumpStatus("easyTravel", "Thread Dump [12345678]");
+        ThreadDumpStatus response = this.resourceDumps.getThreadDumpStatus("easyTravel", "Thread Dump [12345678]");
         assertThat(response.getSuccess(), is(true));
         assertThat(response.getMessages().size(), is(2));
 
-        GetThreadDumpStatusMessage message = response.getMessages().get(0);
+        ThreadDumpStatusMessage message = response.getMessages().get(0);
         assertThat(message.getLanguage(), is("en"));
         assertThat(message.getText(), is("SUCCESS"));
 
@@ -135,7 +135,7 @@ public class ResourceDumpsTest {
                         )));
 
         try {
-            GetThreadDumpStatus response = resourceDumps.getThreadDumpStatus("easyTravel", "Not-existent Dump [12345678]");
+            this.resourceDumps.getThreadDumpStatus("easyTravel", "Not-existent Dump [12345678]");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
             assertThat(ex.getStatusCode(), is(404));

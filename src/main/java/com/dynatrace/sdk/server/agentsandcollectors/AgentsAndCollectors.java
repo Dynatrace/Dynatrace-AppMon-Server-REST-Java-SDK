@@ -69,7 +69,7 @@ public class AgentsAndCollectors extends Service {
      */
     public Agents fetchAgents() throws ServerConnectionException, ServerResponseException {
         try {
-            URI uri = this.buildURI(String.format(AGENTS_EP));
+            URI uri = this.buildURI(AGENTS_EP);
             return this.doGetRequest(uri, Agents.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid uri format", e);
@@ -122,12 +122,12 @@ public class AgentsAndCollectors extends Service {
             URI uri = this.buildURI(String.format(HOT_SENSOR_PLACEMENT_EP, agentId));
             CloseableHttpResponse response = this.doGetRequest(uri);
 
-            String result = null;
 
             try (InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -135,7 +135,7 @@ public class AgentsAndCollectors extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid agentId", e);
         }
@@ -152,13 +152,13 @@ public class AgentsAndCollectors extends Service {
     public boolean restartCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(COLLECTOR_RESTART_EP, collectorName));
-            String result = null;
 
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -166,7 +166,7 @@ public class AgentsAndCollectors extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid collectorName", e);
         }
@@ -183,13 +183,12 @@ public class AgentsAndCollectors extends Service {
     public Boolean shutdownCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(COLLECTOR_SHUTDOWN_EP, collectorName));
-            String result = null;
-
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
-                    result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
+                    return result != null && result.equals("true");
                 } catch (XPathExpressionException e) {
                     throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
                 }
@@ -197,7 +196,6 @@ public class AgentsAndCollectors extends Service {
                 throw new RuntimeException(e);
             }
 
-            return (result != null) && (result.equals("true"));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid collectorName", e);
         }

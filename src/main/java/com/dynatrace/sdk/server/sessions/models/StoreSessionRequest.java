@@ -35,7 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Store Session Request class required for {@link Sessions#store} method
@@ -79,7 +78,7 @@ public class StoreSessionRequest {
         return this.isSessionLocked;
     }
 
-    public void setSessionLocked(Boolean sessionLocked) {
+    public void setSessionLocked(boolean sessionLocked) {
         this.isSessionLocked = sessionLocked;
     }
 
@@ -87,7 +86,7 @@ public class StoreSessionRequest {
         return this.appendTimestamp;
     }
 
-    public void setAppendTimestamp(Boolean appendTimestamp) {
+    public void setAppendTimestamp(boolean appendTimestamp) {
         this.appendTimestamp = appendTimestamp;
     }
 
@@ -136,13 +135,13 @@ public class StoreSessionRequest {
     @Override
     public String toString() {
         return "StoreSessionRequest{" +
-                "systemProfile='" + systemProfile + '\'' +
-                ", recordingOption=" + recordingOption +
-                ", isSessionLocked=" + isSessionLocked +
-                ", appendTimestamp=" + appendTimestamp +
-                ", timeframeStart='" + timeframeStart + '\'' +
-                ", timeframeEnd='" + timeframeEnd + '\'' +
-                ", storedSessionName='" + storedSessionName + '\'' +
+                "systemProfile='" + this.systemProfile + '\'' +
+                ", recordingOption=" + this.recordingOption +
+                ", isSessionLocked=" + this.isSessionLocked +
+                ", appendTimestamp=" + this.appendTimestamp +
+                ", timeframeStart='" + this.timeframeStart + '\'' +
+                ", timeframeEnd='" + this.timeframeEnd + '\'' +
+                ", storedSessionName='" + this.storedSessionName + '\'' +
                 ", labels=" + this.labels +
                 '}';
     }

@@ -45,7 +45,6 @@ import java.net.URISyntaxException;
  * Wraps a Server Management REST API, providing an easy to use set of methods to control server.
  * <a href="https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965889">Community Page</a>
  */
-
 public class ServerManagement extends Service {
     public static final String SERVER_RESTART_EP = "/rest/management/server/restart";
     public static final String SERVER_SHUTDOWN_EP = "/rest/management/server/shutdown";

@@ -42,15 +42,17 @@ public enum RecordingOption {
         this.internal = internal;
     }
 
-    public String getInternal() {
-        return this.internal;
+    public static RecordingOption fromInternal(String internal) {
+        for (RecordingOption cat : RecordingOption.values()) {
+            if (cat.getInternal().equals(internal)) {
+                return cat;
+            }
+        }
+        throw new IllegalArgumentException(String.format("No RecordingOption with internal name: %s found", internal));
     }
 
-    @Override
-    public String toString() {
-        return "RecordingOption{" +
-                "internal='" + this.internal + '\'' +
-                '}';
+    public String getInternal() {
+        return this.internal;
     }
 }
 

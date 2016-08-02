@@ -50,7 +50,17 @@ public enum SessionType {
         this.internal = internal;
     }
 
+    public static SessionType fromInternal(String internal) {
+        for (SessionType cat : SessionType.values()) {
+            if (cat.getInternal().equals(internal)) {
+                return cat;
+            }
+        }
+        throw new IllegalArgumentException(String.format("No SessionType with internal name: %s found", internal));
+    }
+
     public String getInternal() {
         return this.internal;
     }
+
 }

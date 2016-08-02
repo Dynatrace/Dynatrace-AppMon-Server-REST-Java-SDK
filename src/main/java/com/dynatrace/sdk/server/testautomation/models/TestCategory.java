@@ -52,6 +52,15 @@ public enum TestCategory {
         this.internal = internal;
     }
 
+    public static TestCategory fromInternal(String internal) {
+        for (TestCategory cat : TestCategory.values()) {
+            if (cat.getInternal().equals(internal)) {
+                return cat;
+            }
+        }
+        throw new IllegalArgumentException(String.format("No TestCategory with internal name: %s found", internal));
+    }
+
     public String getInternal() {
         return this.internal;
     }

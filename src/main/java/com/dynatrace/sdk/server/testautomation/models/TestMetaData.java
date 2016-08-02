@@ -40,6 +40,15 @@ public class TestMetaData {
     @XmlAnyAttribute
     private Map<QName, Object> entries = new HashMap<>();
 
+    public TestMetaData(Map<String, String> entries) {
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            this.setValue(entry.getKey(), entry.getValue());
+        }
+    }
+
+    public TestMetaData() {
+    }
+
     public void setValue(String name, String value) {
         this.entries.put(new QName(name), value);
     }

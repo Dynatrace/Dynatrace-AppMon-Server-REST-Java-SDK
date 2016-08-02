@@ -48,6 +48,15 @@ public enum StoredSessionType {
         this.internal = internal;
     }
 
+    public static StoredSessionType fromInternal(String internal) {
+        for (StoredSessionType cat : StoredSessionType.values()) {
+            if (cat.getInternal().equals(internal)) {
+                return cat;
+            }
+        }
+        throw new IllegalArgumentException(String.format("No StoredSessionType with internal name: %s found", internal));
+    }
+
     public String getInternal() {
         return this.internal;
     }

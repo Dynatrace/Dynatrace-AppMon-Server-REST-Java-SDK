@@ -52,6 +52,15 @@ public enum JobState {
         this.internal = internal;
     }
 
+    public static JobState fromInternal(String internal) {
+        for (JobState cat : JobState.values()) {
+            if (cat.getInternal().equals(internal)) {
+                return cat;
+            }
+        }
+        throw new IllegalArgumentException(String.format("No SessionType with internal name: %s found", internal));
+    }
+
     public String getInternal() {
         return this.internal;
     }

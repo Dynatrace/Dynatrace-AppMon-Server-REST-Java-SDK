@@ -91,7 +91,7 @@ public class Sessions extends Service {
         }
         try {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
-            try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "startrecording")), entity, entity.getContentType().getValue())) {
+            try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "startrecording")), entity)) {
                 try (InputStream is = response.getEntity().getContent()) {
                     return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {

@@ -153,7 +153,7 @@ public class AgentsAndCollectors extends Service {
         try {
             URI uri = this.buildURI(String.format(COLLECTOR_RESTART_EP, collectorName));
 
-            try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
+            try (CloseableHttpResponse response = this.doPostRequest(uri, null);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
@@ -183,7 +183,7 @@ public class AgentsAndCollectors extends Service {
     public boolean shutdownCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(COLLECTOR_SHUTDOWN_EP, collectorName));
-            try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
+            try (CloseableHttpResponse response = this.doPostRequest(uri, null);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {

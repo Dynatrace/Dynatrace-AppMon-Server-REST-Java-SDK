@@ -65,7 +65,7 @@ public class ServerManagement extends Service {
         try {
             URI uri = this.buildURI(SERVER_RESTART_EP);
 
-            try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
+            try (CloseableHttpResponse response = this.doPostRequest(uri, null);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
@@ -95,7 +95,7 @@ public class ServerManagement extends Service {
         try {
             URI uri = this.buildURI(SERVER_SHUTDOWN_EP);
 
-            try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
+            try (CloseableHttpResponse response = this.doPostRequest(uri, null);
                  InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {

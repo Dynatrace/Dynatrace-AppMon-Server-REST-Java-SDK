@@ -68,7 +68,7 @@ public class TestAutomation extends Service {
     public TestRun createTestRun(CreateTestRunRequest request) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""));
-            return this.doPostRequest(uri, Service.xmlObjectToEntity(request), Service.XML_CONTENT_TYPE, TestRun.class);
+            return this.doPostRequest(uri, Service.xmlObjectToEntity(request), TestRun.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid system profile[%s] format: %s", request.getSystemProfile(), e.getMessage()), e);
         }

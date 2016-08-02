@@ -53,7 +53,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public abstract class Service {
-    public static final String XML_CONTENT_TYPE = "application/xml";
+    protected static final String XML_CONTENT_TYPE = "application/xml";
     private final DynatraceClient client;
 
     protected Service(DynatraceClient client) {
@@ -85,7 +85,9 @@ public abstract class Service {
             JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.marshal(object, writer);
-            return new StringEntity(writer.getBuffer().toString());
+            StringEntity entity = new StringEntity(writer.getBuffer().toString());
+            entity.setContentType("application/xml");
+            return entity;
         } catch (JAXBException | UnsupportedEncodingException e) {
             throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
         }
@@ -138,15 +140,14 @@ public abstract class Service {
         }
     }
 
-    protected CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity, String contentType) throws ServerConnectionException, ServerResponseException {
+    protected CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
         HttpPost post = new HttpPost(uri);
         post.setEntity(entity);
-        post.setHeader("Content-Type", contentType);
         return this.doRequest(post);
     }
 
-    protected <T> T doPostRequest(URI uri, HttpEntity entity, String contentType, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-        try (CloseableHttpResponse response = this.doPostRequest(uri, entity, contentType)) {
+    protected <T> T doPostRequest(URI uri, HttpEntity entity, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
+        try (CloseableHttpResponse response = this.doPostRequest(uri, entity)) {
             return this.parseResponse(response, responseClass);
         } catch (IOException e) {
             throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);

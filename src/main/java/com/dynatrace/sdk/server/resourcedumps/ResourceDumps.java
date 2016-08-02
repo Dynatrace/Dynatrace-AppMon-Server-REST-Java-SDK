@@ -88,7 +88,7 @@ public class ResourceDumps extends Service {
 
         try {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
-            try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(CREATE_THREAD_DUMP_EP, request.getSystemProfile())), entity, entity.getContentType().getValue())) {
+            try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(CREATE_THREAD_DUMP_EP, request.getSystemProfile())), entity)) {
                 try (InputStream is = response.getEntity().getContent()) {
                     return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {

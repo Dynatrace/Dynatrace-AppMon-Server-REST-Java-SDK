@@ -51,6 +51,10 @@ public class CreateTestRunRequest {
     private String versionBuild;
     @XmlAttribute
     private String versionMilestone;
+    @XmlAttribute
+    private String marker;
+    @XmlAttribute
+    private String agentGroup;
 
     @XmlElement
     private TestMetaData additionalMetaData;
@@ -136,18 +140,36 @@ public class CreateTestRunRequest {
         this.additionalMetaData = additionalMetaData;
     }
 
+    public String getMarker() {
+        return marker;
+    }
+
+    public void setMarker(String marker) {
+        this.marker = marker;
+    }
+
+    public String getAgentGroup() {
+        return agentGroup;
+    }
+
+    public void setAgentGroup(String agentGroup) {
+        this.agentGroup = agentGroup;
+    }
+
     @Override
     public String toString() {
         return "CreateTestRunRequest{" +
-                "platform='" + this.platform + '\'' +
-                ", systemProfile='" + this.systemProfile + '\'' +
-                ", category=" + this.category +
-                ", versionMajor='" + this.versionMajor + '\'' +
-                ", versionMinor='" + this.versionMinor + '\'' +
-                ", versionRevision='" + this.versionRevision + '\'' +
-                ", versionBuild='" + this.versionBuild + '\'' +
-                ", versionMilestone='" + this.versionMilestone + '\'' +
-                ", additionalMetaData=" + this.additionalMetaData +
+                "platform='" + platform + '\'' +
+                ", systemProfile='" + systemProfile + '\'' +
+                ", category=" + category +
+                ", versionMajor='" + versionMajor + '\'' +
+                ", versionMinor='" + versionMinor + '\'' +
+                ", versionRevision='" + versionRevision + '\'' +
+                ", versionBuild='" + versionBuild + '\'' +
+                ", versionMilestone='" + versionMilestone + '\'' +
+                ", marker='" + marker + '\'' +
+                ", agentGroup='" + agentGroup + '\'' +
+                ", additionalMetaData=" + additionalMetaData +
                 '}';
     }
 }

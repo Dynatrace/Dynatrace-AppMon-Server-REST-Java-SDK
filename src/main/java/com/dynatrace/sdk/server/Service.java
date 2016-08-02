@@ -53,7 +53,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public abstract class Service {
-    protected static final String XML_CONTENT_TYPE = "application/xml";
     private final DynatraceClient client;
 
     protected Service(DynatraceClient client) {

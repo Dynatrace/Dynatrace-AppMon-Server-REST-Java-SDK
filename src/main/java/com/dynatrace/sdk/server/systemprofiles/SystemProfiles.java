@@ -140,7 +140,6 @@ public class SystemProfiles extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-
     public boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(PROFILE_DISABLE_EP, profileName));

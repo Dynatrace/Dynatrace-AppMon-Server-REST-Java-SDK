@@ -40,6 +40,10 @@ import org.apache.http.ssl.SSLContextBuilder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+/**
+ * The main entry point holding HTTPClient and Configuration
+ * It is advised to cache the instance and pass it to all services
+ */
 @ThreadSafe
 public class DynatraceClient {
     public static HttpClientBuilder clientBuilder(ServerConfiguration configuration) {

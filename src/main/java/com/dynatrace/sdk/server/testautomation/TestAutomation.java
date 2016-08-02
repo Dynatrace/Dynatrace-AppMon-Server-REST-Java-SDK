@@ -70,7 +70,7 @@ public class TestAutomation extends Service {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""));
             return this.doPostRequest(uri, Service.xmlObjectToEntity(request), Service.XML_CONTENT_TYPE, TestRun.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format", request.getSystemProfile()), e);
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format: %s", request.getSystemProfile(), e.getMessage()), e);
         }
     }
 
@@ -88,7 +88,7 @@ public class TestAutomation extends Service {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, systemProfile, testRunId));
             return this.doGetRequest(uri, TestRun.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid system profile[%s] or testRunId[%s] format", systemProfile, testRunId), e);
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] or testRunId[%s] format: %s", systemProfile, testRunId, e.getMessage()), e);
         }
     }
 
@@ -127,7 +127,7 @@ public class TestAutomation extends Service {
             URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), nvps.toArray(new NameValuePair[nvps.size()]));
             return this.doGetRequest(uri, TestRuns.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format", request.getSystemProfile()), e);
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format: %s", request.getSystemProfile(), e.getMessage()), e);
         }
     }
 }

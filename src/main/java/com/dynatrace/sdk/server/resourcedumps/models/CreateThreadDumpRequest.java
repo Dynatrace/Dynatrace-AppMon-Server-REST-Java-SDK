@@ -84,4 +84,15 @@ public class CreateThreadDumpRequest {
     public void setSessionLocked(boolean sessionLocked) {
         this.isSessionLocked = sessionLocked;
     }
+
+    @Override
+    public String toString() {
+        return "CreateThreadDumpRequest{" +
+                "systemProfile='" + this.systemProfile + '\'' +
+                ", agentName='" + this.agentName + '\'' +
+                ", hostName='" + this.hostName + '\'' +
+                ", processId=" + this.processId +
+                ", isSessionLocked=" + this.isSessionLocked +
+                '}';
+    }
 }

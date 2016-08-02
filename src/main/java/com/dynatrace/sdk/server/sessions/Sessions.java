@@ -93,11 +93,11 @@ public class Sessions extends Service {
                 try (InputStream is = response.getEntity().getContent()) {
                     return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response: " + e.getMessage(), e);
                 }
             }
         } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid parameters format " + nvps.toString(), e);
+            throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", nvps.toString(), e.getMessage()), e);
         } catch (IOException e) {
             throw new RuntimeException("Could not close http response", e);
         }
@@ -119,9 +119,9 @@ public class Sessions extends Service {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
             }
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format.", profileName), e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format: %s", profileName, e.getMessage()), e);
         } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
+            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
         }
     }
 
@@ -139,9 +139,9 @@ public class Sessions extends Service {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
             }
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format.", profileName), e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format: %s", profileName, e.getMessage()), e);
         } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
+            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
         }
     }
 
@@ -159,9 +159,9 @@ public class Sessions extends Service {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
             }
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format.", sessionName), e);
+            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format: %s", sessionName, e.getMessage()), e);
         } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
+            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
         }
     }
 
@@ -179,18 +179,18 @@ public class Sessions extends Service {
                 throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
             }
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format.", sessionName), e);
+            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format: %s", sessionName, e.getMessage()), e);
         } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
+            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
         }
     }
 
     /**
-     *  Store all time series and PurePaths in the Server's memory to a stored session
-     *  for a specific {@link StoreSessionRequest#getSystemProfile() system profile}.
-     *  <strong>
-     *     The timeframe parameters {@link StoreSessionRequest#timeframeStart} and {@link StoreSessionRequest#timeframeEnd}
-     *     must be formatted according to ISO 8601, without a time zone specification, in the form yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss.S
+     * Store all time series and PurePaths in the Server's memory to a stored session
+     * for a specific {@link StoreSessionRequest#getSystemProfile() system profile}.
+     * <strong>
+     * The timeframe parameters {@link StoreSessionRequest#timeframeStart} and {@link StoreSessionRequest#timeframeEnd}
+     * must be formatted according to ISO 8601, without a time zone specification, in the form yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss.S
      * </strong>
      *
      * @param request - session parameters
@@ -225,13 +225,13 @@ public class Sessions extends Service {
                 try (InputStream is = response.getEntity().getContent()) {
                     return Service.compileValueExpression().evaluate(new InputSource(is));
                 } catch (XPathExpressionException | IOException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response: " + e.getMessage(), e);
                 }
             }
         } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid parameters format " + nvps.toString(), e);
+            throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", nvps.toString(), e.getMessage()), e);
         } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
+            throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
         }
     }
 }

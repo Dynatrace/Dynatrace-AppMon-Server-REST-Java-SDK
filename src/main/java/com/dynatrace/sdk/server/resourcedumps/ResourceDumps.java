@@ -94,9 +94,9 @@ public class ResourceDumps extends Service {
                 }
             }
         } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid parameters format", e);
+            throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", request, e.getMessage()), e);
         } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
+            throw new RuntimeException(String.format("Could not close http response: %s", e.getMessage()), e);
         }
     }
 
@@ -113,7 +113,7 @@ public class ResourceDumps extends Service {
             URI uri = this.buildURI(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId));
             return this.doGetRequest(uri, ThreadDumpStatus.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or scheduleId[%s] format.", profileName, scheduleId), e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or scheduleId[%s] format: %s", profileName, scheduleId, e.getMessage()), e);
         }
     }
 }

@@ -48,4 +48,12 @@ public class Profiles {
     public List<SystemProfile> getProfiles() {
         return this.profiles;
     }
+
+    @Override
+    public String toString() {
+        return "Profiles{" +
+                "href='" + this.href + '\'' +
+                ", profiles=" + this.profiles +
+                '}';
+    }
 }

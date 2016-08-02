@@ -42,4 +42,11 @@ public class Agents {
     public List<AgentInformation> getAgents() {
         return this.agents;
     }
+
+    @Override
+    public String toString() {
+        return "Agents{" +
+                "agents=" + this.agents +
+                '}';
+    }
 }

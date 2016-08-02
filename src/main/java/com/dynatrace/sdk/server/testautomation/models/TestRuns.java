@@ -44,4 +44,11 @@ public class TestRuns {
     public List<TestRun> getTestRuns() {
         return this.testRuns;
     }
+
+    @Override
+    public String toString() {
+        return "TestRuns{" +
+                "testRuns=" + this.testRuns +
+                '}';
+    }
 }

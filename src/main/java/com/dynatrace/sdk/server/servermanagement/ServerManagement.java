@@ -80,7 +80,7 @@ public class ServerManagement extends Service {
 
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid request", e);
+            throw new IllegalArgumentException(String.format("Invalid uri: %s", e.getMessage()), e);
         }
     }
 
@@ -110,7 +110,7 @@ public class ServerManagement extends Service {
 
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid request", e);
+            throw new IllegalArgumentException(String.format("Invalid uri: %s", e.getMessage()), e);
         }
     }
 }

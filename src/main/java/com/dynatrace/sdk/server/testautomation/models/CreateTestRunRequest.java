@@ -135,4 +135,19 @@ public class CreateTestRunRequest {
     public void setAdditionalMetaData(TestMetaData additionalMetaData) {
         this.additionalMetaData = additionalMetaData;
     }
+
+    @Override
+    public String toString() {
+        return "CreateTestRunRequest{" +
+                "platform='" + this.platform + '\'' +
+                ", systemProfile='" + this.systemProfile + '\'' +
+                ", category=" + this.category +
+                ", versionMajor='" + this.versionMajor + '\'' +
+                ", versionMinor='" + this.versionMinor + '\'' +
+                ", versionRevision='" + this.versionRevision + '\'' +
+                ", versionBuild='" + this.versionBuild + '\'' +
+                ", versionMilestone='" + this.versionMilestone + '\'' +
+                ", additionalMetaData=" + this.additionalMetaData +
+                '}';
+    }
 }

@@ -45,5 +45,12 @@ public enum RecordingOption {
     public String getInternal() {
         return this.internal;
     }
+
+    @Override
+    public String toString() {
+        return "RecordingOption{" +
+                "internal='" + this.internal + '\'' +
+                '}';
+    }
 }
 

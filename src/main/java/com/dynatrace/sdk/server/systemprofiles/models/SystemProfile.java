@@ -49,4 +49,13 @@ public class SystemProfile {
     public String getHref() {
         return this.href;
     }
+
+    @Override
+    public String toString() {
+        return "SystemProfile{" +
+                "isRecording=" + this.isRecording +
+                ", id='" + this.id + '\'' +
+                ", href='" + this.href + '\'' +
+                '}';
+    }
 }

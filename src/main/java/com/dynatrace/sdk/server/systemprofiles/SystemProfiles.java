@@ -99,7 +99,7 @@ public class SystemProfiles extends Service {
             }
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or configurationName[%s]", profileName, configurationName), e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or configurationName[%s]: %s", profileName, configurationName, e.getMessage()), e);
         }
     }
 
@@ -128,7 +128,7 @@ public class SystemProfiles extends Service {
             }
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName: %s", profileName), e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
         }
     }
 
@@ -159,7 +159,7 @@ public class SystemProfiles extends Service {
 
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName: %s", profileName), e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
         }
     }
 

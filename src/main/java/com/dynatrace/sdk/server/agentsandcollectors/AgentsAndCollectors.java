@@ -72,7 +72,7 @@ public class AgentsAndCollectors extends Service {
             URI uri = this.buildURI(AGENTS_EP);
             return this.doGetRequest(uri, Agents.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid uri format", e);
+            throw new IllegalArgumentException(String.format("Invalid uri format: %s", e.getMessage()), e);
         }
     }
 
@@ -88,7 +88,7 @@ public class AgentsAndCollectors extends Service {
             URI uri = this.buildURI(String.format(COLLECTORS_EP, ""));
             return this.doGetRequest(uri, Collectors.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid uri format", e);
+            throw new IllegalArgumentException(String.format("Invalid uri format: %s", e.getMessage()), e);
         }
     }
 
@@ -105,7 +105,7 @@ public class AgentsAndCollectors extends Service {
             URI uri = this.buildURI(String.format(COLLECTORS_EP, collectorAndHostName));
             return this.doGetRequest(uri, CollectorInformation.class);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid collectorAndHostName format", e);
+            throw new IllegalArgumentException(String.format("Invalid collectorAndHostname[%s] format: %s", collectorAndHostName, e.getMessage()), e);
         }
     }
 
@@ -113,11 +113,11 @@ public class AgentsAndCollectors extends Service {
      * Performs a Hot Sensor Placement on a Dynatrace Agent
      *
      * @param agentId - Dynatrace Agent ID
-     * @return {@link Boolean} instance describes that the request was executed successfully
+     * @return boolean describing if the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public boolean hotSensorPlacement(Integer agentId) throws ServerConnectionException, ServerResponseException {
+    public boolean hotSensorPlacement(int agentId) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(HOT_SENSOR_PLACEMENT_EP, agentId));
             CloseableHttpResponse response = this.doGetRequest(uri);
@@ -137,7 +137,7 @@ public class AgentsAndCollectors extends Service {
 
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid agentId", e);
+            throw new IllegalArgumentException(String.format("Invalid agentId[%s] format: %s", agentId, e.getMessage()), e);
         }
     }
 
@@ -145,7 +145,7 @@ public class AgentsAndCollectors extends Service {
      * Performs restart of the Collector
      *
      * @param collectorName - name of the Collector
-     * @return {@link Boolean} that describes that the request was executed successfully
+     * @return boolean describing if the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
@@ -168,7 +168,7 @@ public class AgentsAndCollectors extends Service {
 
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid collectorName", e);
+            throw new IllegalArgumentException(String.format("Invalid collectorName[%s]: %s", collectorName, e.getMessage()), e);
         }
     }
 
@@ -176,11 +176,11 @@ public class AgentsAndCollectors extends Service {
      * Performs shutdown of the Collector
      *
      * @param collectorName - name of the Collector
-     * @return {@link Boolean} instance describes that the request was executed successfully
+     * @return boolean describing if the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public Boolean shutdownCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
+    public boolean shutdownCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(COLLECTOR_SHUTDOWN_EP, collectorName));
             try (CloseableHttpResponse response = this.doPostRequest(uri, null, Service.XML_CONTENT_TYPE);
@@ -197,7 +197,7 @@ public class AgentsAndCollectors extends Service {
             }
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid collectorName", e);
+            throw new IllegalArgumentException(String.format("Invalid collectorName[%s]: %s", collectorName, e.getMessage()), e);
         }
     }
 }

@@ -46,4 +46,12 @@ public class Collectors {
     public List<CollectorInformation> getCollectors() {
         return this.collectors;
     }
+
+    @Override
+    public String toString() {
+        return "Collectors{" +
+                "href='" + this.href + '\'' +
+                ", collectors=" + this.collectors +
+                '}';
+    }
 }

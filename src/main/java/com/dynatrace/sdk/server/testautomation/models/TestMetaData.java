@@ -47,4 +47,11 @@ public class TestMetaData {
     public Map<QName, Object> getValues() {
         return this.entries;
     }
+
+    @Override
+    public String toString() {
+        return "TestMetaData{" +
+                "entries=" + this.entries +
+                '}';
+    }
 }

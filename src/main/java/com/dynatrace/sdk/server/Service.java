@@ -134,7 +134,7 @@ public abstract class Service {
         try {
             return xmlInputStreamToObject(response.getEntity().getContent(), responseClass);
         } catch (IOException | JAXBException e) {
-            throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not unmarshall response into given object", e);
+            throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Could not unmarshall response into given object: %s", e.getMessage()), e);
         }
     }
 

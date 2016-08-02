@@ -26,38 +26,38 @@
  * DAMAGE.
  */
 
-package com.dynatrace.sdk.server.resourcedumps.models;
+package com.dynatrace.sdk.server.memorydumps.models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
+import com.dynatrace.sdk.server.sessions.models.SessionType;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = ThreadDumpStatus.ROOT_ELEMENT_NAME)
-public class ThreadDumpStatus {
-    public static final String ROOT_ELEMENT_NAME = "result";
+import javax.xml.bind.annotation.XmlAttribute;
 
-    private Boolean success;
+public class SessionReference {
+    @XmlAttribute
+    private String href;
+    @XmlAttribute(name = "sessionid")
+    private String sessionId;
+    @XmlAttribute(name = "sessiontype")
+    private SessionType sessionType;
 
-    @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
-    private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
-
-    public Boolean isSuccessful() {
-        return this.success;
+    public String getHref() {
+        return this.href;
     }
 
-    public List<ThreadDumpStatusMessage> getMessages() {
-        return this.messages;
+    public String getSessionId() {
+        return this.sessionId;
+    }
+
+    public SessionType getSessionType() {
+        return this.sessionType;
     }
 
     @Override
     public String toString() {
-        return "ThreadDumpStatus{" +
-                "success=" + this.success +
-                ", messages=" + this.messages +
+        return "SessionReference{" +
+                "href='" + this.href + '\'' +
+                ", sessionId='" + this.sessionId + '\'' +
+                ", sessionType=" + this.sessionType +
                 '}';
     }
 }

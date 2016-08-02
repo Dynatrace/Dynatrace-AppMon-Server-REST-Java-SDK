@@ -112,7 +112,7 @@ public class ResourceDumpsTest {
                         )));
 
         ThreadDumpStatus response = this.resourceDumps.getThreadDumpStatus("easyTravel", "Thread Dump [12345678]");
-        assertThat(response.getSuccess(), is(true));
+        assertThat(response.isSuccessful(), is(true));
         assertThat(response.getMessages().size(), is(2));
 
         ThreadDumpStatusMessage message = response.getMessages().get(0);

@@ -60,8 +60,8 @@ public class AgentsAndCollectorsTest {
                         .withStatus(200)
                         .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>")));
 
-        assertThat(this.agentsAndCollectors.hotSensorPlacement(1234), is(false));
-        assertThat(this.agentsAndCollectors.hotSensorPlacement(5678), is(true));
+        assertThat(this.agentsAndCollectors.placeHotSensor(1234), is(false));
+        assertThat(this.agentsAndCollectors.placeHotSensor(5678), is(true));
     }
 
     @Test

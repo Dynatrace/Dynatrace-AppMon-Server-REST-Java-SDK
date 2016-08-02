@@ -26,38 +26,40 @@
  * DAMAGE.
  */
 
-package com.dynatrace.sdk.server.resourcedumps.models;
+package com.dynatrace.sdk.server.memorydumps.models;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
 
+@XmlRootElement(name = "agentpattern")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = ThreadDumpStatus.ROOT_ELEMENT_NAME)
-public class ThreadDumpStatus {
-    public static final String ROOT_ELEMENT_NAME = "result";
+public class AgentPattern {
+    @XmlElement(name = "agentname")
+    private String agentName;
+    private String hostname;
+    @XmlElement(name = "processid")
+    private Integer processId;
 
-    private Boolean success;
-
-    @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
-    private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
-
-    public Boolean isSuccessful() {
-        return this.success;
+    public String getAgentName() {
+        return this.agentName;
     }
 
-    public List<ThreadDumpStatusMessage> getMessages() {
-        return this.messages;
+    public String getHostname() {
+        return this.hostname;
+    }
+
+    public Integer getProcessId() {
+        return this.processId;
     }
 
     @Override
     public String toString() {
-        return "ThreadDumpStatus{" +
-                "success=" + this.success +
-                ", messages=" + this.messages +
+        return "AgentPattern{" +
+                "agentName='" + this.agentName + '\'' +
+                ", hostname='" + this.hostname + '\'' +
+                ", processId=" + this.processId +
                 '}';
     }
 }

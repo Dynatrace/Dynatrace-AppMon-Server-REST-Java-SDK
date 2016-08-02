@@ -117,7 +117,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public boolean hotSensorPlacement(int agentId) throws ServerConnectionException, ServerResponseException {
+    public boolean placeHotSensor(int agentId) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(HOT_SENSOR_PLACEMENT_EP, agentId));
             CloseableHttpResponse response = this.doGetRequest(uri);

@@ -26,38 +26,31 @@
  * DAMAGE.
  */
 
-package com.dynatrace.sdk.server.resourcedumps.models;
+package com.dynatrace.sdk.server.sessions.models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = ThreadDumpStatus.ROOT_ELEMENT_NAME)
-public class ThreadDumpStatus {
-    public static final String ROOT_ELEMENT_NAME = "result";
+@XmlEnum(String.class)
+@XmlType
+public enum SessionType {
+    @XmlEnumValue("live")
+    LIVE("live"),
+    @XmlEnumValue("stored")
+    STORED("stored"),
+    @XmlEnumValue("server")
+    SERVER("server"),
+    @XmlEnumValue("untyped")
+    UNTYPED("untyped");
 
-    private Boolean success;
+    private final String internal;
 
-    @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
-    private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
-
-    public Boolean isSuccessful() {
-        return this.success;
+    SessionType(String internal) {
+        this.internal = internal;
     }
 
-    public List<ThreadDumpStatusMessage> getMessages() {
-        return this.messages;
-    }
-
-    @Override
-    public String toString() {
-        return "ThreadDumpStatus{" +
-                "success=" + this.success +
-                ", messages=" + this.messages +
-                '}';
+    public String getInternal() {
+        return this.internal;
     }
 }

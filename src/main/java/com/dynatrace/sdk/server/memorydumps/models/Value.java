@@ -26,38 +26,34 @@
  * DAMAGE.
  */
 
-package com.dynatrace.sdk.server.resourcedumps.models;
+package com.dynatrace.sdk.server.memorydumps.models;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = ThreadDumpStatus.ROOT_ELEMENT_NAME)
-public class ThreadDumpStatus {
-    public static final String ROOT_ELEMENT_NAME = "result";
+public class Value {
+    @XmlAttribute
+    private String unit;
 
-    private Boolean success;
+    @XmlValue
+    private Integer value;
 
-    @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
-    private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
-
-    public Boolean isSuccessful() {
-        return this.success;
+    public String getUnit() {
+        return this.unit;
     }
 
-    public List<ThreadDumpStatusMessage> getMessages() {
-        return this.messages;
+    public Integer getValue() {
+        return this.value;
     }
 
     @Override
     public String toString() {
-        return "ThreadDumpStatus{" +
-                "success=" + this.success +
-                ", messages=" + this.messages +
+        return "Value{" +
+                "unit='" + this.unit + '\'' +
+                ", value=" + this.value +
                 '}';
     }
 }

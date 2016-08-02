@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<memorydumpjob id="Memory Dump [5552484470037]">
+    <storedsessiontype>memdump_simple</storedsessiontype>
+    <state>finished</state>
+    <ispostprocessed>true</ispostprocessed>
+    <issessionlocked>true</issessionlocked>
+    <iscaptureprimitives>true</iscaptureprimitives>
+    <iscapturestrings>true</iscapturestrings>
+    <isdogc>true</isdogc>
+    <progress unit="percent">100</progress>
+    <duration unit="MILLISECONDS">526</duration>
+    <agentpattern>
+        <agentname>JavaWorld</agentname>
+        <hostname>lnz124984d01</hostname>
+        <processid>9508</processid>
+    </agentpattern>
+    <sessionreference href="https://localhost:8021/rest/management/profiles/JavaWorld/memorydumps/20130521074603_0" sessionid="JavaWorld/20130521074603_0.memdump" sessiontype="stored"/>
+</memorydumpjob>

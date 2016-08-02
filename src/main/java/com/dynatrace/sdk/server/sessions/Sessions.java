@@ -66,6 +66,8 @@ public class Sessions extends Service {
      *
      * @param request - session parameters
      * @return session name
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String startRecording(StartRecordingRequest request) throws ServerConnectionException, ServerResponseException {
         ArrayList<NameValuePair> nvps = new ArrayList<>();
@@ -110,6 +112,8 @@ public class Sessions extends Service {
      *
      * @param profileName - profile name to stop the session of
      * @return session name
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String stopRecording(String profileName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, profileName, "stoprecording")))) {
@@ -130,6 +134,9 @@ public class Sessions extends Service {
      * <strong>Clearing a session is not possible if Continuous Transaction Storage is enabled.</strong>
      *
      * @param profileName - profile name to clean the live session of
+     * @return a boolean indicating whether clearing a session was successful
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean clear(String profileName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, profileName, "clear")))) {
@@ -150,6 +157,10 @@ public class Sessions extends Service {
      *
      * @param sessionName - session name to reanalyze
      * @return value that describes that the specified session could be found and session reanalysis started successfully
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_EP, sessionName)))) {
@@ -170,6 +181,10 @@ public class Sessions extends Service {
      *
      * @param sessionName - session name to query
      * @return value that describes that session reanalysis is finished
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean getReanalysisStatus(String sessionName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)))) {
@@ -195,6 +210,8 @@ public class Sessions extends Service {
      *
      * @param request - session parameters
      * @return session name
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String store(StoreSessionRequest request) throws ServerConnectionException, ServerResponseException {
         ArrayList<NameValuePair> nvps = new ArrayList<>();

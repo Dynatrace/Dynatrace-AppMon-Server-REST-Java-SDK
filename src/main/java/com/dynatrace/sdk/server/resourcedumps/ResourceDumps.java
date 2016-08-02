@@ -65,8 +65,10 @@ public class ResourceDumps extends Service {
     /**
      * Requests a thread dump for a specific {@link CreateThreadDumpRequest#getSystemProfile() system profile}.
      *
-     * @param request - parameters of the Agent for which the thread dump will be created
+     * @param request parameters of the Agent for which the thread dump will be created
      * @return schedule ID
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String createThreadDump(CreateThreadDumpRequest request) throws ServerConnectionException, ServerResponseException {
         ArrayList<NameValuePair> nvps = new ArrayList<>();
@@ -102,11 +104,13 @@ public class ResourceDumps extends Service {
 
 
     /**
-     * Requests a thread dump status for a specific {@param systemProfile} and (@param scheduleId).
+     * Requests a thread dump status for a specific {@code systemProfile} and {@code scheduleId}.
      *
-     * @param profileName - system profile name
-     * @param scheduleId  - previously requested Thread Dump schedule ID
+     * @param profileName system profile name
+     * @param scheduleId  previously requested Thread Dump schedule ID
      * @return {@link ThreadDumpStatus} instance containing a {@link List} of {@link ThreadDumpStatusMessage}
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public ThreadDumpStatus getThreadDumpStatus(String profileName, String scheduleId) throws ServerConnectionException, ServerResponseException {
         try {

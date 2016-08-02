@@ -31,6 +31,8 @@ package com.dynatrace.sdk.server.systemprofiles;
 import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
+import com.dynatrace.sdk.server.systemprofiles.models.SystemProfile;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.hamcrest.core.StringContains;
 import org.junit.Rule;
@@ -45,6 +47,24 @@ public class SystemProfilesTest {
     @Rule
     public WireMockRule wireMock = new WireMockRule();
     private SystemProfiles systemProfiles = new SystemProfiles(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 2000)));
+
+    @Test
+    public void getSystemProfiles() throws Exception {
+        stubFor(get(urlPathEqualTo(SystemProfiles.PROFILES_EP)).willReturn(aResponse().withBody(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n" +
+                        "<profiles href=\"https://localhost:8021/rest/management/profiles\">\n" +
+                        "    <systemprofile isrecording=\"false\" id=\"dynaTrace Self-Monitoring\" href=\"https://localhost:8021/rest/management/profiles/dynaTrace%20Self-Monitoring\"/>\n" +
+                        "    <systemprofile isrecording=\"true\" id=\"easyTravel\" href=\"http://localhost:8020/rest/management/profiles/easyTravel\"/>\n" +
+                        "</profiles>"
+        )));
+        Profiles profiles = this.systemProfiles.getSystemProfiles();
+        assertThat(profiles.getHref(), is("https://localhost:8021/rest/management/profiles"));
+        assertThat(profiles.getProfiles().size(), is(2));
+        SystemProfile profile = profiles.getProfiles().get(1);
+        assertThat(profile.isRecording(), is(true));
+        assertThat(profile.getId(), is("easyTravel"));
+        assertThat(profile.getHref(), is("http://localhost:8020/rest/management/profiles/easyTravel"));
+    }
 
     @Test
     public void activateProfileConfiguration() throws Exception {

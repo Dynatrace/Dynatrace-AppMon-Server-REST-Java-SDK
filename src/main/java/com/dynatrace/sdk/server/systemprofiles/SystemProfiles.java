@@ -32,6 +32,7 @@ import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.xml.sax.InputSource;
 
@@ -50,9 +51,26 @@ public class SystemProfiles extends Service {
     public static final String ACTIVATE_PROFILE_CONFIGURATION_EP = "/rest/management/profiles/%s/configurations/%s/activate";
     public static final String PROFILE_ENABLE_EP = "/rest/management/profiles/%s/enable";
     public static final String PROFILE_DISABLE_EP = "/rest/management/profiles/%s/disable";
+    public static final String PROFILES_EP = "/rest/management/profiles";
 
     protected SystemProfiles(DynatraceClient client) {
         super(client);
+    }
+
+    /**
+     * Lists all System Profiles of the Dynatrace Server
+     *
+     * @return {@link Profiles} instance containing a list of available system profiles
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     */
+    public Profiles getSystemProfiles() throws ServerConnectionException, ServerResponseException {
+        try {
+            URI uri = this.buildURI(PROFILES_EP);
+            return this.doGetRequest(uri, Profiles.class);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Could not build profiles endpoint for: %s", PROFILES_EP));
+        }
     }
 
     /**
@@ -60,7 +78,7 @@ public class SystemProfiles extends Service {
      *
      * @param profileName       - name of the System Profile
      * @param configurationName - name of the Configuration to activate
-     * @return {@link Boolean} that describes that the request was executed successfully
+     * @return boolean that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
@@ -81,7 +99,7 @@ public class SystemProfiles extends Service {
             }
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid profileName or configurationName", e);
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or configurationName[%s]", profileName, configurationName), e);
         }
     }
 
@@ -89,7 +107,7 @@ public class SystemProfiles extends Service {
      * Enable System Profile
      *
      * @param profileName - name of the System Profile
-     * @return {@link Boolean} that describes that the request was executed successfully
+     * @return boolean that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
@@ -110,7 +128,7 @@ public class SystemProfiles extends Service {
             }
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid profileName", e);
+            throw new IllegalArgumentException(String.format("Invalid profileName: %s", profileName), e);
         }
     }
 
@@ -118,12 +136,12 @@ public class SystemProfiles extends Service {
      * Disable System Profile
      *
      * @param profileName - name of the System Profile
-     * @return {@link Boolean} that describes that the request was executed successfully
+     * @return boolean that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
 
-    public Boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
+    public boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(PROFILE_DISABLE_EP, profileName));
             try (CloseableHttpResponse response = this.doGetRequest(uri);
@@ -141,7 +159,7 @@ public class SystemProfiles extends Service {
 
 
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid profileName", e);
+            throw new IllegalArgumentException(String.format("Invalid profileName: %s", profileName), e);
         }
     }
 

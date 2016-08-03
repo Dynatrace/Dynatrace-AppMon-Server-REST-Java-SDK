@@ -120,10 +120,8 @@ public class AgentsAndCollectors extends Service {
     public boolean placeHotSensor(int agentId) throws ServerConnectionException, ServerResponseException {
         try {
             URI uri = this.buildURI(String.format(HOT_SENSOR_PLACEMENT_EP, agentId));
-            CloseableHttpResponse response = this.doGetRequest(uri);
-
-
-            try (InputStream is = response.getEntity().getContent()) {
+            try(CloseableHttpResponse response = this.doGetRequest(uri);
+                InputStream is = response.getEntity().getContent()) {
                 // xpath is reasonable for parsing such a small entity
                 try {
                     String result = Service.compileValueExpression().evaluate(new InputSource(is));

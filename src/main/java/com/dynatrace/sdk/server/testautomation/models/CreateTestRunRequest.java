@@ -141,7 +141,7 @@ public class CreateTestRunRequest {
     }
 
     public String getMarker() {
-        return marker;
+        return this.marker;
     }
 
     public void setMarker(String marker) {
@@ -149,7 +149,7 @@ public class CreateTestRunRequest {
     }
 
     public String getAgentGroup() {
-        return agentGroup;
+        return this.agentGroup;
     }
 
     public void setAgentGroup(String agentGroup) {
@@ -159,17 +159,17 @@ public class CreateTestRunRequest {
     @Override
     public String toString() {
         return "CreateTestRunRequest{" +
-                "platform='" + platform + '\'' +
-                ", systemProfile='" + systemProfile + '\'' +
-                ", category=" + category +
-                ", versionMajor='" + versionMajor + '\'' +
-                ", versionMinor='" + versionMinor + '\'' +
-                ", versionRevision='" + versionRevision + '\'' +
-                ", versionBuild='" + versionBuild + '\'' +
-                ", versionMilestone='" + versionMilestone + '\'' +
-                ", marker='" + marker + '\'' +
-                ", agentGroup='" + agentGroup + '\'' +
-                ", additionalMetaData=" + additionalMetaData +
+                "platform='" + this.platform + '\'' +
+                ", systemProfile='" + this.systemProfile + '\'' +
+                ", category=" + this.category +
+                ", versionMajor='" + this.versionMajor + '\'' +
+                ", versionMinor='" + this.versionMinor + '\'' +
+                ", versionRevision='" + this.versionRevision + '\'' +
+                ", versionBuild='" + this.versionBuild + '\'' +
+                ", versionMilestone='" + this.versionMilestone + '\'' +
+                ", marker='" + this.marker + '\'' +
+                ", agentGroup='" + this.agentGroup + '\'' +
+                ", additionalMetaData=" + this.additionalMetaData +
                 '}';
     }
 }

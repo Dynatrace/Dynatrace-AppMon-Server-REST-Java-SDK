@@ -33,12 +33,14 @@ import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
 import com.dynatrace.sdk.server.systemprofiles.models.SystemProfile;
+import com.dynatrace.sdk.server.systemprofiles.models.SystemProfileMetadata;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.hamcrest.core.StringContains;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.fail;
@@ -49,8 +51,25 @@ public class SystemProfilesTest {
     private SystemProfiles systemProfiles = new SystemProfiles(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 2000)));
 
     @Test
+    public void getSystemProfileMetadata() throws Exception {
+        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILES_EP, "test"))).willReturn(aResponse().withBody("<systemprofile enabled=\"true\" isInteractiveLicensed=\"true\" isrecording=\"true\" id=\"easyTravel\" href=\"https://localhost:8021/rest/management/profiles/easyTravel\">\n" +
+                "    <agentgroupsreference href=\"https://localhost:8021/rest/management/profiles/easyTravel/agentgroups\"/>\n" +
+                "    <description>Profile for the easyTravel demo application.</description>\n" +
+                "</systemprofile>")));
+        SystemProfileMetadata meta = this.systemProfiles.getSystemProfileMetadata("test");
+        assertThat(meta.isEnabled(), is(true));
+        assertThat(meta.getId(), is("easyTravel"));
+        assertThat(meta.getHref(), is("https://localhost:8021/rest/management/profiles/easyTravel"));
+        assertThat(meta.isRecording(), is(true));
+        assertThat(meta.isInteractiveLicensed(), is(true));
+        assertThat(meta.getDescription(), is("Profile for the easyTravel demo application."));
+        assertThat(meta.getAgentGroupsReference(), notNullValue());
+        assertThat(meta.getAgentGroupsReference().getHref(), is("https://localhost:8021/rest/management/profiles/easyTravel/agentgroups"));
+    }
+
+    @Test
     public void getSystemProfiles() throws Exception {
-        stubFor(get(urlPathEqualTo(SystemProfiles.PROFILES_EP)).willReturn(aResponse().withBody(
+        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILES_EP, ""))).willReturn(aResponse().withBody(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n" +
                         "<profiles href=\"https://localhost:8021/rest/management/profiles\">\n" +
                         "    <systemprofile isrecording=\"false\" id=\"dynaTrace Self-Monitoring\" href=\"https://localhost:8021/rest/management/profiles/dynaTrace%20Self-Monitoring\"/>\n" +

@@ -33,6 +33,7 @@ import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
+import com.dynatrace.sdk.server.systemprofiles.models.SystemProfileMetadata;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.xml.sax.InputSource;
 
@@ -51,7 +52,7 @@ public class SystemProfiles extends Service {
     public static final String ACTIVATE_PROFILE_CONFIGURATION_EP = "/rest/management/profiles/%s/configurations/%s/activate";
     public static final String PROFILE_ENABLE_EP = "/rest/management/profiles/%s/enable";
     public static final String PROFILE_DISABLE_EP = "/rest/management/profiles/%s/disable";
-    public static final String PROFILES_EP = "/rest/management/profiles";
+    public static final String PROFILES_EP = "/rest/management/profiles/%s";
 
     public SystemProfiles(DynatraceClient client) {
         super(client);
@@ -66,10 +67,27 @@ public class SystemProfiles extends Service {
      */
     public Profiles getSystemProfiles() throws ServerConnectionException, ServerResponseException {
         try {
-            URI uri = this.buildURI(PROFILES_EP);
+            URI uri = this.buildURI(String.format(PROFILES_EP, ""));
             return this.doGetRequest(uri, Profiles.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Could not build profiles endpoint for: %s", PROFILES_EP));
+        }
+    }
+
+    /**
+     * Fetches a {@link SystemProfileMetadata} associated with given {@code profileName}
+     *
+     * @param profileName to get the metadata of
+     * @return {@link SystemProfileMetadata} of a specific {@code profileName}
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     */
+    public SystemProfileMetadata getSystemProfileMetadata(String profileName) throws ServerConnectionException, ServerResponseException {
+        try {
+            URI uri = this.buildURI(String.format(PROFILES_EP, profileName));
+            return this.doGetRequest(uri, SystemProfileMetadata.class);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
         }
     }
 

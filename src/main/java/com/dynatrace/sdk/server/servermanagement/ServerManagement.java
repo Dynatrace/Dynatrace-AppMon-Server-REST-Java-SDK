@@ -49,7 +49,7 @@ public class ServerManagement extends Service {
     public static final String SERVER_RESTART_EP = "/rest/management/server/restart";
     public static final String SERVER_SHUTDOWN_EP = "/rest/management/server/shutdown";
 
-    protected ServerManagement(DynatraceClient client) {
+    public ServerManagement(DynatraceClient client) {
         super(client);
     }
 

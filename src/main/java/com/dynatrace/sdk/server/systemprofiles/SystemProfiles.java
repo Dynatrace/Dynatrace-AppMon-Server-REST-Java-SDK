@@ -53,7 +53,7 @@ public class SystemProfiles extends Service {
     public static final String PROFILE_DISABLE_EP = "/rest/management/profiles/%s/disable";
     public static final String PROFILES_EP = "/rest/management/profiles";
 
-    protected SystemProfiles(DynatraceClient client) {
+    public SystemProfiles(DynatraceClient client) {
         super(client);
     }
 

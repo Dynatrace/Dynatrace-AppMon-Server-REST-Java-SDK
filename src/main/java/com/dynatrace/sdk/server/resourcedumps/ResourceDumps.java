@@ -58,7 +58,7 @@ public class ResourceDumps extends Service {
     public static final String CREATE_THREAD_DUMP_EP = "/rest/management/profiles/%s/threaddump";
     public static final String GET_THREAD_DUMP_STATUS_EP = "/rest/management/profiles/%s/threaddumpcreated/%s";
 
-    protected ResourceDumps(DynatraceClient client) {
+    public ResourceDumps(DynatraceClient client) {
         super(client);
     }
 

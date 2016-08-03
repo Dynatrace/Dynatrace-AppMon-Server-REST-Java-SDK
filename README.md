@@ -9,6 +9,11 @@ This library provides an easy to use Java implementation of Dynatrace Server RES
 - [Services](#services)
     - [Test Automation](#testautomation)
     - [Sessions](#sessions)
+    - [Agents And Collectors](#agentsandcollectors)
+    - [System Profiles](#systemprofiles)
+    - [Server Management](#servermanagement)
+    - [Resource Dumps](#resourcedumps)
+    - [Memory Dumps](#memorydumps)
 - [Building](#building) 
     - [Running tests](#tests)
 
@@ -17,8 +22,8 @@ Manual installation is currently required, maven repository might be available i
 The wrapper comes with Apache's HttpComponents shaded inside, thus you don't have to worry about library dependencies.
 
 ### Maven
-- Download the latest artifact from [Releases](/releases)
-- Put the artifact under */repo/com/dynatrace/sdk*
+- Download the latest artifact from [Releases](https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/releases)
+- Put the artifact and *pom.xml* under */repo/com/dynatrace/sdk/server-rest-sdk/0.0.1*
 - Add the following code to the *&lt;repositories&gt;* section:
 
 ```xml
@@ -129,9 +134,64 @@ import com.dynatrace.sdk.server.agentadncollectors.AgentsAndCollectors
 AgentsAndCollectors agentsAndCollectors = new AgentsAndCollectors(DynatraceClient);
 ```
 
-#### Wiki entries 
+#### Wiki entries
 
 - [Agents and Collectors (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965912)
+
+### <a name="systemprofiles"></a>System Profiles
+
+#### Creation
+
+```java
+import com.dynatrace.sdk.server.systemprofiles.SystemProfiles
+//...
+SystemProfiles systemProfiles = new SystemProfiles(DynatraceClient);
+```
+
+#### Wiki entries
+
+- [System Profiles (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175966053)
+
+### <a name="servermanagement"></a>Server Management
+
+#### Creation
+
+```java
+import com.dynatrace.sdk.server.servermanagement.ServerManagement
+//...
+ServerManagement serverManagement = new ServerManagement(DynatraceClient);
+```
+
+#### Wiki entries
+
+- [ServerManagement (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965889)
+
+### <a name="resourcedumps"></a>Resource Dumps
+
+#### Creation
+
+```java
+import com.dynatrace.sdk.server.resourcedumps.ResourceDumps
+//...
+ResourceDumps resourceDumps = new ResourceDumps(DynatraceClient);
+```
+
+#### Wiki entries
+
+- [ResourceDumps (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965955)
+
+### <a name="memorydumps"></a>Memory Dumps
+#### Creation
+
+```java
+import com.dynatrace.sdk.server.memorydumps.MemoryDumps
+//...
+MemoryDumps resourceDumps = new MemoryDumps(DynatraceClient);
+```
+
+#### Wiki entries
+
+- [MemoryDumps (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965955)
 
 
 ## Building

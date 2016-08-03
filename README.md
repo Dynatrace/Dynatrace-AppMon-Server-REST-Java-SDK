@@ -1,4 +1,4 @@
-# Dynatrace Server SDK
+# Dynatrace Server SDK [![Build Status](https://travis-ci.org/Dynatrace/Dynatrace-Server-REST-Java-SDK.svg?branch=master)](https://travis-ci.org/Dynatrace/Dynatrace-Server-REST-Java-SDK)
 
 This library provides an easy to use Java implementation of Dynatrace Server REST API.
 

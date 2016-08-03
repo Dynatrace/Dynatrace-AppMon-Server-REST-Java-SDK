@@ -159,8 +159,6 @@ public class Sessions extends Service {
      * @return value that describes that the specified session could be found and session reanalysis started successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
-     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
-     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
         try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_EP, sessionName)))) {
@@ -181,8 +179,6 @@ public class Sessions extends Service {
      *
      * @param sessionName - session name to query
      * @return value that describes that session reanalysis is finished
-     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
-     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */

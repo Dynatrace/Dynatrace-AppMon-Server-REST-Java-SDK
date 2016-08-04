@@ -51,6 +51,17 @@ public class TestResult {
     @XmlElement(name = "measure")
     private List<TestMeasure> measures;
 
+    public TestResult(Long execTime, String name, String packageName, String platform, TestStatus status, List<TestMeasure> measures) {
+        this.execTime = execTime;
+        this.name = name;
+        this.packageName = packageName;
+        this.platform = platform;
+        this.status = status;
+        this.measures = measures;
+    }
+
+    public TestResult() {}
+
     public Long getExecutionTime() {
         return this.execTime;
     }

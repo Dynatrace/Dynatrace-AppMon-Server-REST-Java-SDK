@@ -11,6 +11,13 @@ public class AgentGroupsReference {
     @XmlAttribute
     private String href;
 
+    public AgentGroupsReference(String href) {
+        this.href = href;
+    }
+
+    public AgentGroupsReference() {
+    }
+
     public String getHref() {
         return this.href;
     }

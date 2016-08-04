@@ -14,6 +14,17 @@ public class SystemProfileMetadata extends SystemProfile {
     private AgentGroupsReference agentGroupsReference;
     private String description;
 
+    public SystemProfileMetadata(Boolean isRecording, String id, String href, Boolean enabled, Boolean isInteractiveLicensed, AgentGroupsReference agentGroupsReference, String description) {
+        super(isRecording, id, href);
+        this.enabled = enabled;
+        this.isInteractiveLicensed = isInteractiveLicensed;
+        this.agentGroupsReference = agentGroupsReference;
+        this.description = description;
+    }
+
+    public SystemProfileMetadata() {
+    }
+
     public Boolean isEnabled() {
         return this.enabled;
     }

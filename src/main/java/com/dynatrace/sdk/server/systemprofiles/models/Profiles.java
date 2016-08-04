@@ -41,6 +41,14 @@ public class Profiles {
     @XmlElement(name = "systemprofile")
     private List<SystemProfile> profiles = new ArrayList<>();
 
+    public Profiles(String href, List<SystemProfile> profiles) {
+        this.href = href;
+        this.profiles = profiles;
+    }
+
+    public Profiles() {
+    }
+
     public String getHref() {
         return this.href;
     }

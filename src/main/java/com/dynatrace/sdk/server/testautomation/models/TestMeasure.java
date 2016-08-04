@@ -65,6 +65,23 @@ public class TestMeasure {
     @XmlAttribute(name = "numDegradedRuns")
     private Integer degradedRunsCount;
 
+    public TestMeasure(String name, String metricGroup, Double expectedMin, Double expectedMax, Double value, String unit, Double violationPercentage, Integer failingOrInvalidatedRunsCount, Integer validRunsCount, Integer improvedRunsCount, Integer degradedRunsCount) {
+        this.name = name;
+        this.metricGroup = metricGroup;
+        this.expectedMin = expectedMin;
+        this.expectedMax = expectedMax;
+        this.value = value;
+        this.unit = unit;
+        this.violationPercentage = violationPercentage;
+        this.failingOrInvalidatedRunsCount = failingOrInvalidatedRunsCount;
+        this.validRunsCount = validRunsCount;
+        this.improvedRunsCount = improvedRunsCount;
+        this.degradedRunsCount = degradedRunsCount;
+    }
+
+    public TestMeasure() {
+    }
+
     public String getName() {
         return this.name;
     }

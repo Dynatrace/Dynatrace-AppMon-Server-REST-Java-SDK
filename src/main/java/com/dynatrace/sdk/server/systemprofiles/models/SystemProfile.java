@@ -38,6 +38,15 @@ public class SystemProfile {
     @XmlAttribute
     private String href;
 
+    public SystemProfile(Boolean isRecording, String id, String href) {
+        this.isRecording = isRecording;
+        this.id = id;
+        this.href = href;
+    }
+
+    public SystemProfile() {
+    }
+
     public Boolean isRecording() {
         return this.isRecording;
     }

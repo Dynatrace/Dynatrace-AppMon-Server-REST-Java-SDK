@@ -162,6 +162,10 @@ public class FetchTestRunsRequest {
         this.filters.put("versionMinor", Arrays.asList(versionMinors));
     }
 
+    public void setVersionRevisionFilter(String... versionRevisions) {
+        this.filters.put("versionRevision", Arrays.asList(versionRevisions));
+    }
+
     public void setCategoryFilter(TestCategory... categories) {
         ArrayList<String> cats = new ArrayList<>();
         for (TestCategory cat : categories) {

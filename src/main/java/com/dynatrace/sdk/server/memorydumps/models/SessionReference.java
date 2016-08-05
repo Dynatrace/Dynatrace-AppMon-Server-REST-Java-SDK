@@ -40,6 +40,15 @@ public class SessionReference {
     @XmlAttribute(name = "sessiontype")
     private SessionType sessionType;
 
+    public SessionReference(String href, String sessionId, SessionType sessionType) {
+        this.href = href;
+        this.sessionId = sessionId;
+        this.sessionType = sessionType;
+    }
+
+    public SessionReference() {
+    }
+
     public String getHref() {
         return this.href;
     }

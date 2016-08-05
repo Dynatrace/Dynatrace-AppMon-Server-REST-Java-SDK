@@ -43,6 +43,14 @@ public class ThreadDumpStatusMessage {
     @XmlAttribute
     private String language;
 
+    public ThreadDumpStatusMessage(String text, String language) {
+        this.text = text;
+        this.language = language;
+    }
+
+    public ThreadDumpStatusMessage() {
+    }
+
     public String getLanguage() {
         return this.language;
     }

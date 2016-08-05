@@ -45,6 +45,14 @@ public class ThreadDumpStatus {
     @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
     private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
 
+    public ThreadDumpStatus(Boolean success, List<ThreadDumpStatusMessage> messages) {
+        this.success = success;
+        this.messages = messages;
+    }
+
+    public ThreadDumpStatus() {
+    }
+
     public Boolean isSuccessful() {
         return this.success;
     }

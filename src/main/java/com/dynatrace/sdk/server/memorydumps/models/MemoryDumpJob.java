@@ -56,6 +56,23 @@ public class MemoryDumpJob {
     @XmlElement(name = "sessionreference")
     private SessionReference sessionReference;
 
+    public MemoryDumpJob(String id, JobState state, Boolean isPostProcessed, Boolean isSessionLocked, Boolean isCapturePrimitives, Boolean isCaptureStrings, Boolean isDogc, Value progress, Value duration, AgentPattern agentPattern, SessionReference sessionReference) {
+        this.id = id;
+        this.state = state;
+        this.isPostProcessed = isPostProcessed;
+        this.isSessionLocked = isSessionLocked;
+        this.isCapturePrimitives = isCapturePrimitives;
+        this.isCaptureStrings = isCaptureStrings;
+        this.isDogc = isDogc;
+        this.progress = progress;
+        this.duration = duration;
+        this.agentPattern = agentPattern;
+        this.sessionReference = sessionReference;
+    }
+
+    public MemoryDumpJob() {
+    }
+
     public String getId() {
         return this.id;
     }

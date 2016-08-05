@@ -61,6 +61,28 @@ public class MemoryDump {
     private Integer classes;
     private Integer objects;
 
+    public MemoryDump(String resourceId, String sessionId, String name, JobState state, String description, Boolean isPostProcessed, Boolean isSessionLocked, Boolean isCapturePrimitives, Boolean isCaptureStrings, Boolean isDogc, StoredSessionType storedSessionType, AgentPattern agentPattern, Long usedMemory, Long processMemory, Integer classes, Integer objects) {
+        this.resourceId = resourceId;
+        this.sessionId = sessionId;
+        this.name = name;
+        this.state = state;
+        this.description = description;
+        this.isPostProcessed = isPostProcessed;
+        this.isSessionLocked = isSessionLocked;
+        this.isCapturePrimitives = isCapturePrimitives;
+        this.isCaptureStrings = isCaptureStrings;
+        this.isDogc = isDogc;
+        this.storedSessionType = storedSessionType;
+        this.agentPattern = agentPattern;
+        this.usedMemory = usedMemory;
+        this.processMemory = processMemory;
+        this.classes = classes;
+        this.objects = objects;
+    }
+
+    public MemoryDump() {
+    }
+
     public String getResourceId() {
         return this.resourceId;
     }

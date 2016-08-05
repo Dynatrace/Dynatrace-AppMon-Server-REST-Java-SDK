@@ -42,6 +42,15 @@ public class AgentPattern {
     @XmlElement(name = "processid")
     private Integer processId;
 
+    public AgentPattern(String agentName, String hostname, Integer processId) {
+        this.agentName = agentName;
+        this.hostname = hostname;
+        this.processId = processId;
+    }
+
+    public AgentPattern() {
+    }
+
     public String getAgentName() {
         return this.agentName;
     }

@@ -41,6 +41,14 @@ public class Value {
     @XmlValue
     private Integer value;
 
+    public Value(String unit, Integer value) {
+        this.unit = unit;
+        this.value = value;
+    }
+
+    public Value() {
+    }
+
     public String getUnit() {
         return this.unit;
     }

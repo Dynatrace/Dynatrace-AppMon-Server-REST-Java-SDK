@@ -92,6 +92,61 @@ public class AgentPropertiesInformation {
     private String asid;
     private String regionId;
 
+    public AgentPropertiesInformation(String agentHost, String agentId, String agentVersion, String agentBootstrapVersion, String agentHostAddress, String agentPlatform, String bufferCount, String bufferSaturationThreshold, String bufferSize, String clockFrequency, String cloud, String hiResClock, String hotSensorPlaceable, String hypervisor, String osHyperVFriendly, String instrumentationState, String logFileLocation, String maximumMemory, String operatingSystem, String osArchitecture, String osEdition, String osProductId, String osVersion, String processors, String recoveryEnabled, String startDate, String startUp, String timer, String applicationServerVersionDetected, String applicationServerDetected, String cellNameDetected, String clrVendor, String clrVersion, String runtimeVersion, String commandLine, String commandLineMayBeTruncated, String hasCommandLine, String workingDirectory, String hasWorkingDirectory, String smfId, String snaId, String subsystem, String jobname, String queueType, String ccsid, String zosType, String zosRelease, String asid, String regionId) {
+        this.agentHost = agentHost;
+        this.agentId = agentId;
+        this.agentVersion = agentVersion;
+        this.agentBootstrapVersion = agentBootstrapVersion;
+        this.agentHostAddress = agentHostAddress;
+        this.agentPlatform = agentPlatform;
+        this.bufferCount = bufferCount;
+        this.bufferSaturationThreshold = bufferSaturationThreshold;
+        this.bufferSize = bufferSize;
+        this.clockFrequency = clockFrequency;
+        this.cloud = cloud;
+        this.hiResClock = hiResClock;
+        this.hotSensorPlaceable = hotSensorPlaceable;
+        this.hypervisor = hypervisor;
+        this.osHyperVFriendly = osHyperVFriendly;
+        this.instrumentationState = instrumentationState;
+        this.logFileLocation = logFileLocation;
+        this.maximumMemory = maximumMemory;
+        this.operatingSystem = operatingSystem;
+        this.osArchitecture = osArchitecture;
+        this.osEdition = osEdition;
+        this.osProductId = osProductId;
+        this.osVersion = osVersion;
+        this.processors = processors;
+        this.recoveryEnabled = recoveryEnabled;
+        this.startDate = startDate;
+        this.startUp = startUp;
+        this.timer = timer;
+        this.applicationServerVersionDetected = applicationServerVersionDetected;
+        this.applicationServerDetected = applicationServerDetected;
+        this.cellNameDetected = cellNameDetected;
+        this.clrVendor = clrVendor;
+        this.clrVersion = clrVersion;
+        this.runtimeVersion = runtimeVersion;
+        this.commandLine = commandLine;
+        this.commandLineMayBeTruncated = commandLineMayBeTruncated;
+        this.hasCommandLine = hasCommandLine;
+        this.workingDirectory = workingDirectory;
+        this.hasWorkingDirectory = hasWorkingDirectory;
+        this.smfId = smfId;
+        this.snaId = snaId;
+        this.subsystem = subsystem;
+        this.jobname = jobname;
+        this.queueType = queueType;
+        this.ccsid = ccsid;
+        this.zosType = zosType;
+        this.zosRelease = zosRelease;
+        this.asid = asid;
+        this.regionId = regionId;
+    }
+
+    public AgentPropertiesInformation() {
+    }
+
     /* getters */
     public String getAgentHost() {
         return this.agentHost;

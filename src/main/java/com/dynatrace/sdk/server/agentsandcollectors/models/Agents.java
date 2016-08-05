@@ -39,6 +39,9 @@ public class Agents {
     @XmlElement(name = AgentInformation.ROOT_ELEMENT_NAME)
     private final List<AgentInformation> agents = new ArrayList<>();
 
+    public Agents() {
+    }
+
     public List<AgentInformation> getAgents() {
         return this.agents;
     }

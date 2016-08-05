@@ -91,6 +91,61 @@ public class AgentInformation {
     private Boolean captureCPUTimes;
     private Boolean supportsHotSensorPlacement;
 
+    public AgentInformation(CollectorInformation collectorinformation, AgentPropertiesInformation agentProperties, String agentGroupLabel, String configurationName, Boolean connected, Boolean capture, Boolean licenseOk, Boolean agentConfigured, Long startupTimeUTC, String name, Integer agentId, Integer processId, String technologyType, Byte technologyTypeId, String host, Long eventCount, Integer classLoadCount, Integer totalClassLoadCount, Boolean isHotUpdateable, String licenseInformation, Long skippedEvents, Long skippedPurePaths, Double totalExecutionTime, Double totalCpuTime, Long totalPurePathCount, String systemProfile, String systemProfileName, String agentVersion, Integer processorCount, Boolean isvLicenseSupported, String vmVersionString, String vmVendor, String configurationId, String agentMappingId, String agentGroupId, String sourceGroupId, String licenseFlagsToString, String collectorName, String agentInstanceName, String instanceName, Double syncThreshold, Boolean fromCmdb, Boolean required, Boolean hotUpdateCritical, Boolean hotUpdateable, Long timestamp, Long virtualTimeUTC, Boolean captureCPUTimes, Boolean supportsHotSensorPlacement) {
+        this.collectorinformation = collectorinformation;
+        this.agentProperties = agentProperties;
+        this.agentGroupLabel = agentGroupLabel;
+        this.configurationName = configurationName;
+        this.connected = connected;
+        this.capture = capture;
+        this.licenseOk = licenseOk;
+        this.agentConfigured = agentConfigured;
+        this.startupTimeUTC = startupTimeUTC;
+        this.name = name;
+        this.agentId = agentId;
+        this.processId = processId;
+        this.technologyType = technologyType;
+        this.technologyTypeId = technologyTypeId;
+        this.host = host;
+        this.eventCount = eventCount;
+        this.classLoadCount = classLoadCount;
+        this.totalClassLoadCount = totalClassLoadCount;
+        this.isHotUpdateable = isHotUpdateable;
+        this.licenseInformation = licenseInformation;
+        this.skippedEvents = skippedEvents;
+        this.skippedPurePaths = skippedPurePaths;
+        this.totalExecutionTime = totalExecutionTime;
+        this.totalCpuTime = totalCpuTime;
+        this.totalPurePathCount = totalPurePathCount;
+        this.systemProfile = systemProfile;
+        this.systemProfileName = systemProfileName;
+        this.agentVersion = agentVersion;
+        this.processorCount = processorCount;
+        this.isvLicenseSupported = isvLicenseSupported;
+        this.vmVersionString = vmVersionString;
+        this.vmVendor = vmVendor;
+        this.configurationId = configurationId;
+        this.agentMappingId = agentMappingId;
+        this.agentGroupId = agentGroupId;
+        this.sourceGroupId = sourceGroupId;
+        this.licenseFlagsToString = licenseFlagsToString;
+        this.collectorName = collectorName;
+        this.agentInstanceName = agentInstanceName;
+        this.instanceName = instanceName;
+        this.syncThreshold = syncThreshold;
+        this.fromCmdb = fromCmdb;
+        this.required = required;
+        this.hotUpdateCritical = hotUpdateCritical;
+        this.hotUpdateable = hotUpdateable;
+        this.timestamp = timestamp;
+        this.virtualTimeUTC = virtualTimeUTC;
+        this.captureCPUTimes = captureCPUTimes;
+        this.supportsHotSensorPlacement = supportsHotSensorPlacement;
+    }
+
+    public AgentInformation() {
+    }
+
     /* getters */
     public String getName() {
         return this.name;

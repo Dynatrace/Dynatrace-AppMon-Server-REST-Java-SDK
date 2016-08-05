@@ -40,6 +40,13 @@ public class Collectors {
     @XmlAttribute
     private String href;
 
+    public Collectors(String href) {
+        this.href = href;
+    }
+
+    public Collectors() {
+    }
+
     @XmlElement(name = CollectorInformation.ROOT_ELEMENT_NAME)
     private final List<CollectorInformation> collectors = new ArrayList<>();
 

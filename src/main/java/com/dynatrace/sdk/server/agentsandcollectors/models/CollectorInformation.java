@@ -46,6 +46,19 @@ public class CollectorInformation {
     private Boolean embedded;
     private Boolean local;
 
+    public CollectorInformation(String href, String name, String host, String version, Boolean connected, Boolean embedded, Boolean local) {
+        this.href = href;
+        this.name = name;
+        this.host = host;
+        this.version = version;
+        this.connected = connected;
+        this.embedded = embedded;
+        this.local = local;
+    }
+
+    public CollectorInformation() {
+    }
+
     /* getters */
     public String getHref() { return this.href; }
 

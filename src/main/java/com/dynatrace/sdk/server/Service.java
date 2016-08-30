@@ -153,15 +153,14 @@ public abstract class Service {
         }
     }
 
-    protected CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity, String contentType) throws ServerConnectionException, ServerResponseException {
+    protected CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
         HttpPut put = new HttpPut(uri);
         put.setEntity(entity);
-        put.setHeader("Content-Type", contentType);
         return this.doRequest(put);
     }
 
-    protected <T> T doPutRequest(URI uri, HttpEntity entity, String contentType, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-        try (CloseableHttpResponse response = this.doPutRequest(uri, entity, contentType)) {
+    protected <T> T doPutRequest(URI uri, HttpEntity entity, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
+        try (CloseableHttpResponse response = this.doPutRequest(uri, entity)) {
             return this.parseResponse(response, responseClass);
         } catch (IOException e) {
             throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);

@@ -55,6 +55,8 @@ public class MemoryDumpJob {
     private AgentPattern agentPattern;
     @XmlElement(name = "sessionreference")
     private SessionReference sessionReference;
+    @XmlElement(name = "storedsessiontype")
+    private StoredSessionType storedSessionType;
 
     public MemoryDumpJob(String id, JobState state, Boolean isPostProcessed, Boolean isSessionLocked, Boolean isCapturePrimitives, Boolean isCaptureStrings, Boolean isDogc, Value progress, Value duration, AgentPattern agentPattern, SessionReference sessionReference) {
         this.id = id;
@@ -115,6 +117,54 @@ public class MemoryDumpJob {
 
     public SessionReference getSessionReference() {
         return this.sessionReference;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setState(JobState state) {
+        this.state = state;
+    }
+
+    public void setPostProcessed(Boolean postProcessed) {
+        isPostProcessed = postProcessed;
+    }
+
+    public void setSessionLocked(Boolean sessionLocked) {
+        isSessionLocked = sessionLocked;
+    }
+
+    public void setCapturePrimitives(Boolean capturePrimitives) {
+        isCapturePrimitives = capturePrimitives;
+    }
+
+    public void setCaptureStrings(Boolean captureStrings) {
+        isCaptureStrings = captureStrings;
+    }
+
+    public void setDogc(Boolean dogc) {
+        isDogc = dogc;
+    }
+
+    public void setProgress(Value progress) {
+        this.progress = progress;
+    }
+
+    public void setDuration(Value duration) {
+        this.duration = duration;
+    }
+
+    public void setAgentPattern(AgentPattern agentPattern) {
+        this.agentPattern = agentPattern;
+    }
+
+    public void setSessionReference(SessionReference sessionReference) {
+        this.sessionReference = sessionReference;
+    }
+
+    public void setStoredSessionType(StoredSessionType storedSessionType) {
+        this.storedSessionType = storedSessionType;
     }
 
     @Override

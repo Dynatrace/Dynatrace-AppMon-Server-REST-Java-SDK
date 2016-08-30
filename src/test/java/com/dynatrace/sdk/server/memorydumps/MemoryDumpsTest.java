@@ -104,4 +104,22 @@ public class MemoryDumpsTest {
         assertThat(reference.getSessionId(), is("JavaWorld/20130521074603_0.memdump"));
         assertThat(reference.getSessionType(), is(SessionType.STORED));
     }
+
+    @Test
+    public void createMemoryDumpJob() throws Exception {
+        stubFor(put(urlPathEqualTo(String.format(MemoryDumps.MEMORY_DUMP_JOB_EP, "test")))
+                .willReturn(aResponse()
+                        .withStatus(201)
+                        .withHeader("Location", "https://localhost:8021/rest/management/profiles/test/memorydumpjobs/Memory%20Dump%20%5B11880540745601%5D")));
+
+        AgentPattern agentPattern = new AgentPattern();
+        agentPattern.setAgentName("dtwsagent");
+        agentPattern.setProcessId(1234);
+
+        MemoryDumpJob memoryDumpJob = new MemoryDumpJob();
+        memoryDumpJob.setStoredSessionType(StoredSessionType.SIMPLE);
+        memoryDumpJob.setAgentPattern(agentPattern);
+
+        assertThat(memoryDumps.createMemoryDumpJob("test", memoryDumpJob), is("https://localhost:8021/rest/management/profiles/test/memorydumpjobs/Memory%20Dump%20%5B11880540745601%5D"));
+    }
 }

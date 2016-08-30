@@ -34,7 +34,10 @@ import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.memorydumps.models.MemoryDump;
 import com.dynatrace.sdk.server.memorydumps.models.MemoryDumpJob;
+import org.apache.http.Header;
+import org.apache.http.client.methods.CloseableHttpResponse;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -44,7 +47,10 @@ import java.net.URISyntaxException;
  */
 public class MemoryDumps extends Service {
     public static final String MEMORY_DUMP_EP = "/rest/management/profiles/%s/memorydumps/%s";
+    public static final String MEMORY_DUMP_JOB_EP = "/rest/management/profiles/%s/memorydumpjob";
     public static final String MEMORY_DUMP_JOBS_EP = "/rest/management/profiles/%s/memorydumpjobs/%s";
+
+    public static final String RESPONSE_LOCATION_HEADER_NAME = "Location";
 
     public MemoryDumps(DynatraceClient client) {
         super(client);
@@ -83,6 +89,35 @@ public class MemoryDumps extends Service {
             return this.doGetRequest(uri, MemoryDumpJob.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid profileName[%s] or memoryDumpJobId[%s]: %s", profileName, memoryDumpJobId, e.getMessage()), e);
+        }
+    }
+
+    /**
+     * Creates a new {@link MemoryDumpJob}
+     *
+     * @param profileName - profileName associated with {@link MemoryDump}
+     * @param parameters - memory dump job parameters
+     * @return reference to the created job
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     */
+    public String createMemoryDumpJob(String profileName, MemoryDumpJob parameters) throws ServerConnectionException, ServerResponseException {
+        try {
+            URI uri = this.buildURI(String.format(MEMORY_DUMP_JOB_EP, profileName));
+
+            try (CloseableHttpResponse response = this.doPutRequest(uri, Service.xmlObjectToEntity(parameters))) {
+                Header locationHeader = response.getLastHeader(RESPONSE_LOCATION_HEADER_NAME);
+
+                if (locationHeader != null) {
+                    return locationHeader.getValue();
+                } else {
+                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Invalid server response: %s header is not set", RESPONSE_LOCATION_HEADER_NAME));
+                }
+            } catch (IOException e) {
+                throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
+            }
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or parameters[%s]: %s", profileName, parameters, e.getMessage()), e);
         }
     }
 }

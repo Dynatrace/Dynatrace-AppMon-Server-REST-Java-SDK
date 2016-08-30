@@ -63,6 +63,18 @@ public class AgentPattern {
         return this.processId;
     }
 
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
+    }
+
     @Override
     public String toString() {
         return "AgentPattern{" +
@@ -71,4 +83,5 @@ public class AgentPattern {
                 ", processId=" + this.processId +
                 '}';
     }
+
 }

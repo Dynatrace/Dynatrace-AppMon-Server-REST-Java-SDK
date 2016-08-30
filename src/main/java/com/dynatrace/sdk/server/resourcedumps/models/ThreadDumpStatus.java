@@ -28,10 +28,7 @@
 
 package com.dynatrace.sdk.server.resourcedumps.models;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +41,9 @@ public class ThreadDumpStatus {
 
     @XmlElementRef(name = ThreadDumpStatusMessage.ROOT_ELEMENT_NAME)
     private List<ThreadDumpStatusMessage> messages = new ArrayList<>();
+
+    @XmlAttribute(name = "value")
+    private Boolean resultValue;
 
     public ThreadDumpStatus(Boolean success, List<ThreadDumpStatusMessage> messages) {
         this.success = success;
@@ -61,11 +61,14 @@ public class ThreadDumpStatus {
         return this.messages;
     }
 
+    public Boolean getResultValue() { return this.resultValue; }
+
     @Override
     public String toString() {
         return "ThreadDumpStatus{" +
                 "success=" + this.success +
                 ", messages=" + this.messages +
+                ", resultValue=" + this.resultValue +
                 '}';
     }
 }

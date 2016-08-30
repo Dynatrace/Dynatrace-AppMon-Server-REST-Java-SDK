@@ -6,7 +6,7 @@
     <description>Provides an easy to use integration with Dynatrace Server</description>
     <groupId>com.dynatrace.sdk</groupId>
     <artifactId>server-rest-sdk</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
 
     <properties>

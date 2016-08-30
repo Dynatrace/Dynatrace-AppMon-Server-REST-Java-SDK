@@ -23,7 +23,7 @@ The wrapper comes with Apache's HttpComponents shaded inside, thus you don't hav
 
 ### Maven
 - Download the latest artifact from [Releases](https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/releases)
-- Put the artifact and *pom.xml* under */repo/com/dynatrace/sdk/server-rest-sdk/0.0.1*
+- Put the artifact and *pom.xml* under */repo/com/dynatrace/sdk/server-rest-sdk/0.0.2*
 - Add the following code to the *&lt;repositories&gt;* section:
 
 ```xml
@@ -46,7 +46,7 @@ The wrapper comes with Apache's HttpComponents shaded inside, thus you don't hav
 <dependency>
     <groupId>com.dynatrace.sdk</groupId>
     <artifactId>server-rest-sdk</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 

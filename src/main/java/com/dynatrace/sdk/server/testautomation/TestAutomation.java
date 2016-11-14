@@ -52,6 +52,7 @@ import java.util.Map;
 @ThreadSafe
 public class TestAutomation extends Service {
     public static final String TEST_RUNS_EP = "/rest/management/profiles/%s/testruns/%s";
+    public static final String FINISH_TEST_RUN_EP = "/rest/management/profiles/%s/testruns/%s/finish";
 
     public TestAutomation(DynatraceClient client) {
         super(client);
@@ -71,6 +72,25 @@ public class TestAutomation extends Service {
             return this.doPostRequest(uri, Service.xmlObjectToEntity(request), TestRun.class);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid system profile[%s] format: %s", request.getSystemProfile(), e.getMessage()), e);
+        }
+    }
+
+    /**
+     * Waits for all PurePaths for given {@link TestRun} to be processed and then mark the {@link TestRun} as finished.
+     * Returns the finished {@link TestRun} as a result.
+     *
+     * @param systemProfile {@link TestRun}'s system profile
+     * @param testRunId     {@link TestRun}'s id
+     * @return {@link TestRun} instance or {@code null} if no {@link TestRun} matching given parameters has been found
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     */
+    public TestRun finishTestRun(String systemProfile, String testRunId) throws ServerConnectionException, ServerResponseException {
+        try {
+            URI uri = this.buildURI(String.format(FINISH_TEST_RUN_EP, systemProfile, testRunId));
+            return this.doPutRequest(uri, null, TestRun.class);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format("Invalid system profile[%s] or testRunId[%s] format: %s", systemProfile, testRunId, e.getMessage()), e);
         }
     }
 

@@ -22,8 +22,8 @@ Manual installation is currently required, maven repository might be available i
 The wrapper comes with Apache's HttpComponents shaded inside, thus you don't have to worry about library dependencies.
 
 ### Maven
-- Download the latest artifact from [Releases](https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/releases)
-- Put the artifact and *pom.xml* under */repo/com/dynatrace/sdk/server-rest-sdk/<latest-release>*
+- Download the latest artifact from [Releases](https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/releases). Its version number will be labeled _LATEST_VERSION_ futher in this text.
+- Put the artifact and *pom.xml* under */repo/com/dynatrace/sdk/server-rest-sdk/LATEST_VERSION*
 - Add the following code to the *&lt;repositories&gt;* section:
 
 ```xml
@@ -46,7 +46,7 @@ The wrapper comes with Apache's HttpComponents shaded inside, thus you don't hav
 <dependency>
     <groupId>com.dynatrace.sdk</groupId>
     <artifactId>server-rest-sdk</artifactId>
-    <version><latest-release></version>
+    <version>LATEST_VERSION</version>
 </dependency>
 ```
 

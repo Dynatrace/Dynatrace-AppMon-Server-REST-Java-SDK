@@ -149,4 +149,19 @@ public class TestAutomationTest {
         TestRuns testRuns = this.testAutomation.fetchTestRuns(request);
         assertThat(testRuns.getTestRuns().size(), is(5));
     }
+
+    @Test
+    public void finishTestRunShouldBeExecuted() throws Exception {
+        stubFor(put(urlPathEqualTo(String.format(TestAutomation.FINISH_TEST_RUN_EP, "Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc")))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<testRun category=\"unit\" versionBuild=\"13:42:05\" finished=\"true\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"2\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469446925361\" id=\"078e961b-9e6e-44ec-ab12-ab0d31be93fc\" numPassed=\"3\" numFailed=\"1\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"Test\" creationMode=\"MANUAL\">\n" +
+                                "  <testResult name=\"ITDaoTest.testRemoveDestinations\" status=\"passed\" exectime=\"1469446929087\" package=\"com.compuware.apm.samples.simplewebapp\" platform=\"Linux 4.4.13-1-MANJARO x86_64\">\n" +
+                                "    <measure name=\"Count\" metricGroup=\"Exceptions\" value=\"2.0\" unit=\"num\" expectedMin=\"2.0\" expectedMax=\"2.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
+                                "  </testResult>\n" +
+                                "</testRun>")));
+        TestRun tr = this.testAutomation.finishTestRun("Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc");
+        assertThat(tr.getFinished(), is("true"));
+    }
 }

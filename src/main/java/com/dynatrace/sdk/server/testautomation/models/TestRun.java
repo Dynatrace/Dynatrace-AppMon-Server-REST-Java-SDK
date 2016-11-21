@@ -47,6 +47,8 @@ public class TestRun {
     private String id;
     @XmlAttribute
     private String href;
+    @XmlAttribute
+    private String finished;
 
     @XmlAttribute
     private String versionMajor;
@@ -75,7 +77,7 @@ public class TestRun {
     @XmlElement(name = "testResult")
     private List<TestResult> testResults = new ArrayList<>();
 
-    public TestRun(Long startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
+    public TestRun(Long startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults, String finished) {
         this.startTime = startTime;
         this.platform = platform;
         this.systemProfile = systemProfile;
@@ -94,6 +96,7 @@ public class TestRun {
         this.numDegraded = numDegraded;
         this.numInvalidated = numInvalidated;
         this.testResults = testResults;
+        this.finished = finished;
     }
 
     //Required by JAXB
@@ -171,6 +174,10 @@ public class TestRun {
         return this.numInvalidated;
     }
 
+    public String getFinished() { return finished; }
+
+    public void setFinished(String finished) { this.finished = finished;}
+
     @Override
     public String toString() {
         return "TestRun{" +
@@ -179,6 +186,7 @@ public class TestRun {
                 ", systemProfile='" + this.systemProfile + '\'' +
                 ", category=" + this.category +
                 ", id='" + this.id + '\'' +
+                ", finished=" + this.finished +
                 ", href='" + this.href + '\'' +
                 ", versionMajor='" + this.versionMajor + '\'' +
                 ", versionMinor='" + this.versionMinor + '\'' +

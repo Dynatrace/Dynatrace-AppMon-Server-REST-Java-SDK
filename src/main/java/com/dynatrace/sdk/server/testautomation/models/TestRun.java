@@ -77,7 +77,7 @@ public class TestRun {
     @XmlElement(name = "testResult")
     private List<TestResult> testResults = new ArrayList<>();
 
-    public TestRun(Long startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults, String finished) {
+    public TestRun(Long startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
         this.startTime = startTime;
         this.platform = platform;
         this.systemProfile = systemProfile;
@@ -96,7 +96,6 @@ public class TestRun {
         this.numDegraded = numDegraded;
         this.numInvalidated = numInvalidated;
         this.testResults = testResults;
-        this.finished = finished;
     }
 
     //Required by JAXB

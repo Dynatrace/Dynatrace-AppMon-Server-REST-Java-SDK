@@ -65,7 +65,7 @@ public class ServiceTest {
     public void invalidStatusCodeWithError() throws Exception {
         stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(404).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"Profile not found\"/>")));
         try {
-            this.service.doGetRequest(this.service.buildURI("/test"), null);
+            this.service.doGetRequest("/test");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getStatusCode(), is(404));
@@ -79,14 +79,14 @@ public class ServiceTest {
         stubFor(get(urlPathEqualTo("/300")).willReturn(aResponse().withStatus(300)));
 
         try {
-            this.service.doGetRequest(this.service.buildURI("/404"), null);
+            this.service.doGetRequest("/404");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getStatusCode(), is(404));
         }
 
         try {
-            this.service.doGetRequest(this.service.buildURI("/300"), null);
+            this.service.doGetRequest("/300");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getStatusCode(), is(300));
@@ -96,7 +96,7 @@ public class ServiceTest {
     @Test
     public void validResponse() throws Exception {
         stubFor(get(urlPathEqualTo("/test")).withBasicAuth("admin", "admin").willReturn(aResponse().withStatus(200).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><testRun category=\"unit\" versionBuild=\"15:52:11\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469109132002\" id=\"3283730b-364b-419a-adfd-c5653c62c789\" numPassed=\"4\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testruns/3283730b-364b-419a-adfd-c5653c62c789.xml\"/>")));
-        TestRun tr = this.service.doGetRequest(this.service.buildURI("/test"), TestRun.class);
+        TestRun tr = this.service.doGetRequest("/test", TestRun.class);
         //we test the rest of marshalling process for TestRun in a separate test
         assertThat(tr.getCategory(), Is.is(TestCategory.UNIT));
         verify(getRequestedFor(urlPathEqualTo("/test")).withBasicAuth(new BasicCredentials("admin", "admin")));
@@ -106,7 +106,7 @@ public class ServiceTest {
     public void malformedXML() throws Exception {
         stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(200).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>testRun category=\"unit\" versionBuild=\"15:52:11\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469109132002\" id=\"3283730b-364b-419a-adfd-c5653c62c789\" numPassed=\"4\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testruns/3283730b-364b-419a-adfd-c5653c62c789.xml\"/>")));
         try {
-            this.service.doGetRequest(this.service.buildURI("/test"), TestRun.class);
+            this.service.doGetRequest("/test", TestRun.class);
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertTrue(e.getCause() instanceof JAXBException);
@@ -119,7 +119,7 @@ public class ServiceTest {
         this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 49153, false, 1000))) {
         };
         try {
-            this.service.doGetRequest(this.service.buildURI("/"));
+            this.service.doGetRequest("/");
         } catch (ServerConnectionException e) {
             assertTrue((e.getCause() instanceof HttpHostConnectException) || (e.getCause() instanceof ConnectTimeoutException));
         }
@@ -130,7 +130,7 @@ public class ServiceTest {
         this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "INVALID", 8080, false, 1000))) {
         };
         try {
-            this.service.doGetRequest(this.service.buildURI("/"));
+            this.service.doGetRequest("/");
             fail("Exception was expected to be thrown");
         } catch (ServerConnectionException e) {
             assertTrue(e.getCause() instanceof UnknownHostException);

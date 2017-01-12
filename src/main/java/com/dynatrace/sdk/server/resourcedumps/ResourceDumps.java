@@ -28,6 +28,12 @@
 
 package com.dynatrace.sdk.server.resourcedumps;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
@@ -35,20 +41,6 @@ import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.resourcedumps.models.CreateThreadDumpRequest;
 import com.dynatrace.sdk.server.resourcedumps.models.ThreadDumpStatus;
 import com.dynatrace.sdk.server.resourcedumps.models.ThreadDumpStatusMessage;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.message.BasicNameValuePair;
-import org.xml.sax.InputSource;
-
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Wraps a Resource Dumps REST API, providing an easy to use set of methods to control server.
@@ -71,7 +63,7 @@ public class ResourceDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String createThreadDump(CreateThreadDumpRequest request) throws ServerConnectionException, ServerResponseException {
-        ArrayList<NameValuePair> nvps = new ArrayList<>();
+        List<NameValuePair> nvps = new ArrayList<>();
 
         if (request.getAgentName() != null) {
             nvps.add(new BasicNameValuePair("agentName", request.getAgentName()));
@@ -86,20 +78,7 @@ public class ResourceDumps extends Service {
             nvps.add(new BasicNameValuePair("isSessionLocked", String.valueOf(request.isSessionLocked())));
         }
 
-        try {
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
-            try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(CREATE_THREAD_DUMP_EP, request.getSystemProfile())), entity)) {
-                try (InputStream is = response.getEntity().getContent()) {
-                    return Service.compileValueExpression().evaluate(new InputSource(is));
-                } catch (XPathExpressionException | IOException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response: " + e.getMessage(), e);
-                }
-            }
-        } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", request, e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException(String.format("Could not close http response: %s", e.getMessage()), e);
-        }
+        return this.doPostRequest(String.format(CREATE_THREAD_DUMP_EP, request.getSystemProfile()), nvps).getValue();
     }
 
 
@@ -113,11 +92,6 @@ public class ResourceDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public ThreadDumpStatus getThreadDumpStatus(String profileName, String scheduleId) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId));
-            return this.doGetRequest(uri, ThreadDumpStatus.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or scheduleId[%s] format: %s", profileName, scheduleId, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId), ThreadDumpStatus.class);
     }
 }

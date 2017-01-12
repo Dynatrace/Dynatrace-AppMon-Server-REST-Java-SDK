@@ -28,18 +28,18 @@
 
 package com.dynatrace.sdk.server.memorydumps;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import org.apache.http.Header;
+import org.apache.http.client.methods.CloseableHttpResponse;
+
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.memorydumps.models.MemoryDump;
 import com.dynatrace.sdk.server.memorydumps.models.MemoryDumpJob;
-import org.apache.http.Header;
-import org.apache.http.client.methods.CloseableHttpResponse;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Wraps Dynatrace Server MemoryDumps REST API providing an easy to use set of methods.
@@ -66,12 +66,8 @@ public class MemoryDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public MemoryDump getMemoryDump(String profileName, String resourceId) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(MEMORY_DUMP_EP, profileName, resourceId));
-            return this.doGetRequest(uri, MemoryDump.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or resourceId[%s]: %s", profileName, resourceId, e.getMessage()), e);
-        }
+
+    	return this.doGetRequest(String.format(MEMORY_DUMP_EP, profileName, resourceId), MemoryDump.class);
     }
 
     /**
@@ -84,12 +80,7 @@ public class MemoryDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public MemoryDumpJob getMemoryDumpJob(String profileName, String memoryDumpJobId) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(MEMORY_DUMP_JOBS_EP, profileName, memoryDumpJobId));
-            return this.doGetRequest(uri, MemoryDumpJob.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or memoryDumpJobId[%s]: %s", profileName, memoryDumpJobId, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(MEMORY_DUMP_JOBS_EP, profileName, memoryDumpJobId), MemoryDumpJob.class);
     }
 
     /**
@@ -102,22 +93,21 @@ public class MemoryDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String createMemoryDumpJob(String profileName, MemoryDumpJob parameters) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(MEMORY_DUMP_JOB_EP, profileName));
 
-            try (CloseableHttpResponse response = this.doPutRequest(uri, Service.xmlObjectToEntity(parameters))) {
-                Header locationHeader = response.getLastHeader(RESPONSE_LOCATION_HEADER_NAME);
+    	try (CloseableHttpResponse response = this.doPutRequest(buildURI(String.format(MEMORY_DUMP_JOB_EP, profileName)), Service.xmlObjectToEntity(parameters))) {
 
-                if (locationHeader != null) {
-                    return locationHeader.getValue();
-                } else {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Invalid server response: %s header is not set", RESPONSE_LOCATION_HEADER_NAME));
-                }
-            } catch (IOException e) {
-                throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
+    		Header locationHeader = response.getLastHeader(RESPONSE_LOCATION_HEADER_NAME);
+
+            if (locationHeader != null) {
+                return locationHeader.getValue();
+            } else {
+                throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Invalid server response: %s header is not set", RESPONSE_LOCATION_HEADER_NAME));
             }
+
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format("Invalid profileName[%s] or parameters[%s]: %s", profileName, parameters, e.getMessage()), e);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
         }
     }
 }

@@ -28,6 +28,8 @@
 
 package com.dynatrace.sdk.server.agentsandcollectors;
 
+import java.util.List;
+
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.agentsandcollectors.models.AgentInformation;
@@ -36,15 +38,7 @@ import com.dynatrace.sdk.server.agentsandcollectors.models.CollectorInformation;
 import com.dynatrace.sdk.server.agentsandcollectors.models.Collectors;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.xml.sax.InputSource;
-
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import com.dynatrace.sdk.server.response.models.ResultResponse;
 
 /**
  * Wraps Dynatrace Server Agents and Collectors REST API providing an easy to use set of methods.
@@ -68,12 +62,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public Agents fetchAgents() throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(AGENTS_EP);
-            return this.doGetRequest(uri, Agents.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid uri format: %s", e.getMessage()), e);
-        }
+    	return this.doGetRequest(AGENTS_EP, Agents.class);
     }
 
     /**
@@ -84,12 +73,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public Collectors fetchCollectors() throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(COLLECTORS_EP, ""));
-            return this.doGetRequest(uri, Collectors.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid uri format: %s", e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(COLLECTORS_EP, ""), Collectors.class);
     }
 
     /**
@@ -101,12 +85,8 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public CollectorInformation fetchCollector(String collectorAndHostName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(COLLECTORS_EP, collectorAndHostName));
-            return this.doGetRequest(uri, CollectorInformation.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid collectorAndHostname[%s] format: %s", collectorAndHostName, e.getMessage()), e);
-        }
+        return this.doGetRequest(String.format(COLLECTORS_EP, collectorAndHostName), CollectorInformation.class);
+
     }
 
     /**
@@ -118,25 +98,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean placeHotSensor(int agentId) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(HOT_SENSOR_PLACEMENT_EP, agentId));
-            try(CloseableHttpResponse response = this.doGetRequest(uri);
-                InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid agentId[%s] format: %s", agentId, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(HOT_SENSOR_PLACEMENT_EP, agentId), ResultResponse.class).getValueAsBoolean();
     }
 
     /**
@@ -148,26 +110,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean restartCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(COLLECTOR_RESTART_EP, collectorName));
-
-            try (CloseableHttpResponse response = this.doPostRequest(uri, null);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid collectorName[%s]: %s", collectorName, e.getMessage()), e);
-        }
+    	return this.doPostRequest(String.format(COLLECTOR_RESTART_EP, collectorName), null).getValueAsBoolean();
     }
 
     /**
@@ -179,23 +122,6 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean shutdownCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(COLLECTOR_SHUTDOWN_EP, collectorName));
-            try (CloseableHttpResponse response = this.doPostRequest(uri, null);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid collectorName[%s]: %s", collectorName, e.getMessage()), e);
-        }
+    	return this.doPostRequest(String.format(COLLECTOR_SHUTDOWN_EP, collectorName), null).getValueAsBoolean();
     }
 }

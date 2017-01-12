@@ -28,24 +28,18 @@
 
 package com.dynatrace.sdk.server.sessions;
 
+import java.util.ArrayList;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.response.models.ResultResponse;
 import com.dynatrace.sdk.server.sessions.models.StartRecordingRequest;
 import com.dynatrace.sdk.server.sessions.models.StoreSessionRequest;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.message.BasicNameValuePair;
-import org.xml.sax.InputSource;
-
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 /**
  * Wraps a Live Session REST API, providing an easy to use set of methods to control sessions.
@@ -89,20 +83,8 @@ public class Sessions extends Service {
         for (String label : request.getLabels()) {
             nvps.add(new BasicNameValuePair("label", label));
         }
-        try {
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(nvps);
-            try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "startrecording")), entity)) {
-                try (InputStream is = response.getEntity().getContent()) {
-                    return Service.compileValueExpression().evaluate(new InputSource(is));
-                } catch (XPathExpressionException | IOException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response: " + e.getMessage(), e);
-                }
-            }
-        } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", nvps.toString(), e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response", e);
-        }
+
+        return this.doPostRequest(String.format(SESSIONS_EP,request.getSystemProfile(), "startrecording"), nvps).getValue();
     }
 
     /**
@@ -116,17 +98,8 @@ public class Sessions extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String stopRecording(String profileName) throws ServerResponseException, ServerConnectionException {
-        try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, profileName, "stoprecording")))) {
-            try (InputStream is = response.getEntity().getContent()) {
-                return Service.compileValueExpression().evaluate(new InputSource(is));
-            } catch (XPathExpressionException | IOException e) {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response", e);
-            }
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format: %s", profileName, e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
-        }
+
+    	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "stoprecording"), ResultResponse.class).getValue();
     }
 
     /**
@@ -139,17 +112,8 @@ public class Sessions extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean clear(String profileName) throws ServerResponseException, ServerConnectionException {
-        try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, profileName, "clear")))) {
-            try (InputStream is = response.getEntity().getContent()) {
-                return Service.compileValueExpression().evaluate(new InputSource(is)).equals("true");
-            } catch (XPathExpressionException | IOException e) {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-            }
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] format: %s", profileName, e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
-        }
+
+    	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "clear")).getValueAsBoolean();
     }
 
     /**
@@ -161,17 +125,8 @@ public class Sessions extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
-        try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_EP, sessionName)))) {
-            try (InputStream is = response.getEntity().getContent()) {
-                return Service.compileValueExpression().evaluate(new InputSource(is)).equals("true");
-            } catch (XPathExpressionException | IOException e) {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-            }
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format: %s", sessionName, e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
-        }
+
+    	return this.doGetRequest(String.format(REANALYZE_SESSION_EP, sessionName)).getValueAsBoolean();
     }
 
     /**
@@ -183,17 +138,8 @@ public class Sessions extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean getReanalysisStatus(String sessionName) throws ServerResponseException, ServerConnectionException {
-        try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)))) {
-            try (InputStream is = response.getEntity().getContent()) {
-                return Service.compileValueExpression().evaluate(new InputSource(is)).equals("true");
-            } catch (XPathExpressionException | IOException e) {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-            }
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid sessionName[%s] format: %s", sessionName, e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
-        }
+
+    	return this.doGetRequest(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)).getValueAsBoolean();
     }
 
     /**
@@ -233,18 +179,7 @@ public class Sessions extends Service {
             nvps.add(new BasicNameValuePair("label", label));
         }
 
-        try {
-            try (CloseableHttpResponse response = this.doGetRequest(this.buildURI(String.format(SESSIONS_EP, request.getSystemProfile(), "storepurepaths"), nvps.toArray(new NameValuePair[nvps.size()])))) {
-                try (InputStream is = response.getEntity().getContent()) {
-                    return Service.compileValueExpression().evaluate(new InputSource(is));
-                } catch (XPathExpressionException | IOException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse server response: " + e.getMessage(), e);
-                }
-            }
-        } catch (UnsupportedEncodingException | URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", nvps.toString(), e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
-        }
+        return this.doGetRequest(String.format(SESSIONS_EP, request.getSystemProfile(), "storepurepaths"),
+        		nvps.toArray(new NameValuePair[nvps.size()])).getValue();
     }
 }

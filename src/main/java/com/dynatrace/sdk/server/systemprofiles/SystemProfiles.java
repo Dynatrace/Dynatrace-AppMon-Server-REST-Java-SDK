@@ -34,14 +34,6 @@ import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
 import com.dynatrace.sdk.server.systemprofiles.models.SystemProfileMetadata;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.xml.sax.InputSource;
-
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Wraps a System Profiles REST API, providing an easy to use set of methods to control server.
@@ -66,12 +58,8 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public Profiles getSystemProfiles() throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILES_EP, ""));
-            return this.doGetRequest(uri, Profiles.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Could not build profiles endpoint for: %s", PROFILES_EP));
-        }
+
+    	return this.doGetRequest(String.format(PROFILES_EP, ""), Profiles.class);
     }
 
     /**
@@ -83,12 +71,8 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public SystemProfileMetadata getSystemProfileMetadata(String profileName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILES_EP, profileName));
-            return this.doGetRequest(uri, SystemProfileMetadata.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
-        }
+
+    	return this.doGetRequest(String.format(PROFILES_EP, profileName), SystemProfileMetadata.class);
     }
 
     /**
@@ -101,24 +85,8 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean activateProfileConfiguration(String profileName, String configurationName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(ACTIVATE_PROFILE_CONFIGURATION_EP, profileName, configurationName));
-            try (CloseableHttpResponse response = this.doGetRequest(uri);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or configurationName[%s]: %s", profileName, configurationName, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(ACTIVATE_PROFILE_CONFIGURATION_EP, profileName, configurationName)).getValueAsBoolean();
     }
 
     /**
@@ -130,24 +98,8 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean enableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILE_ENABLE_EP, profileName));
-            try (CloseableHttpResponse response = this.doGetRequest(uri);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(PROFILE_ENABLE_EP, profileName)).getValueAsBoolean();
     }
 
     /**
@@ -159,25 +111,8 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILE_DISABLE_EP, profileName));
-            try (CloseableHttpResponse response = this.doGetRequest(uri);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(PROFILE_DISABLE_EP, profileName)).getValueAsBoolean();
     }
 
 }

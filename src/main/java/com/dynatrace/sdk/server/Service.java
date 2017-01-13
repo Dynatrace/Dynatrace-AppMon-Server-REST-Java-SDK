@@ -44,6 +44,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -131,7 +132,7 @@ public abstract class Service {
         }
     }
 
-    private <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
+    private static <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
         try {
             return xmlInputStreamToObject(response.getEntity().getContent(), responseClass);
         } catch (IOException | JAXBException e) {
@@ -139,66 +140,66 @@ public abstract class Service {
         }
     }
 
-    protected CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
-        HttpPut put = new HttpPut(uri);
-        put.setEntity(entity);
-        return this.doRequest(put);
-    }
-
-
-    public <T> T doPutRequest(String uriString, Object entityObject, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-
-    	HttpEntity entity = entityObject == null ? null : Service.xmlObjectToEntity(entityObject);
-
-        try (CloseableHttpResponse response = this.doPutRequest(buildURI(uriString), entity)) {
-
-        	return this.parseResponse(response, responseClass);
-
-        } catch (IOException e) {
-        	throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
-        } catch (URISyntaxException e) {
-        	throw new IllegalArgumentException("Invalid uri: " + uriString + ". " + e.getMessage(), e);
-		}
-    }
-
-    public <T> T doGetRequest(String uriString, Class<T> responseClass, NameValuePair ... params) throws ServerConnectionException, ServerResponseException {
-
-    	try (CloseableHttpResponse response = this.doRequest(new HttpGet(buildURI(uriString, params)))) {
-
-    		return this.parseResponse(response, responseClass);
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid uri: " + uriString + ", params: " + params + " . " + e.getMessage(), e);
-        } catch (IOException e) {
-        	throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
-		}
-
-    }
-
-	public ResultResponse doGetRequest(String uriString, NameValuePair ... params) throws ServerResponseException, ServerConnectionException {
-
-		return this.doGetRequest(uriString, ResultResponse.class, params);
+	private CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+		HttpPut put = new HttpPut(uri);
+		put.setEntity(entity);
+		return this.doRequest(put);
 	}
 
 
-    private CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
-        HttpPost post = new HttpPost(uri);
-        post.setEntity(entity);
-        return this.doRequest(post);
-    }
+	public <T> T doPutRequest(String uriString, Object entityObject, ResponseResolver<T> resolver) throws ServerConnectionException, ServerResponseException {
 
-    private <T> T doPostRequest(String uriString, Class<T> responseClass, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+		HttpEntity entity = entityObject == null ? null : Service.xmlObjectToEntity(entityObject);
 
-    	try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(uriString), entity)) {
-            return this.parseResponse(response, responseClass);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
-        } catch (URISyntaxException e) {
-        	throw new IllegalArgumentException("Invalid uri: " + e.getMessage(), e);
+		try (CloseableHttpResponse response = this.doPutRequest(buildURI(uriString), entity)) {
+
+			return resolver.resolve(response);
+
+		} catch (IOException e) {
+			throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException("Invalid uri: " + uriString + ". " + e.getMessage(), e);
 		}
-    }
+	}
 
-	public <T> T doPostRequest(String uriString, Class<T> responseClass, List<NameValuePair> entityParams) throws ServerResponseException, ServerConnectionException {
+	public <T> T doGetRequest(String uriString, ResponseResolver<T> resolver, NameValuePair ... params) throws ServerConnectionException, ServerResponseException {
+
+		try (CloseableHttpResponse response = this.doRequest(new HttpGet(buildURI(uriString, params)))) {
+
+			return resolver.resolve(response);
+
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException("Invalid uri: " + uriString + ", params: " + params + " . " + e.getMessage(), e);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
+		}
+
+	}
+
+	public ResultResponse doGetRequest(String uriString, NameValuePair ... params) throws ServerResponseException, ServerConnectionException {
+
+		return this.doGetRequest(uriString, getBodyResponseResolver(ResultResponse.class), params);
+	}
+
+
+	private CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+		HttpPost post = new HttpPost(uri);
+		post.setEntity(entity);
+		return this.doRequest(post);
+	}
+
+	private <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+
+		try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(uriString), entity)) {
+			return resolver.resolve(response);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException("Invalid uri: " + e.getMessage(), e);
+		}
+	}
+
+	public <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, List<NameValuePair> entityParams) throws ServerResponseException, ServerConnectionException {
 
 		HttpEntity entity;
 		try {
@@ -207,19 +208,45 @@ public abstract class Service {
 			throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", entityParams.toString(), e.getMessage()), e);
 		}
 
-		return this.doPostRequest(uriString, responseClass, entity);
+		return this.doPostRequest(uriString, resolver, entity);
 	}
 
-    public <T> T doPostRequest(String uriString, Class<T> responseClass, Object entityObject) throws ServerConnectionException, ServerResponseException {
+	public <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, Object entityObject) throws ServerConnectionException, ServerResponseException {
 
 		HttpEntity entity = entityObject == null ? null : Service.xmlObjectToEntity(entityObject);
-		return this.doPostRequest(uriString, responseClass, entity);
-    }
+		return this.doPostRequest(uriString, resolver, entity);
+	}
 
 	public ResultResponse doPostRequest(String uriString, List<NameValuePair> entityParams) throws ServerResponseException, ServerConnectionException {
 
-		return this.doPostRequest(uriString, ResultResponse.class, entityParams);
+		return this.doPostRequest(uriString, getBodyResponseResolver(ResultResponse.class), entityParams);
 	}
 
 
+	protected static <T> ResponseResolver<T> getBodyResponseResolver(final Class<T> clazz) {
+		return new ResponseResolver<T>() {
+			public T resolve(CloseableHttpResponse response) throws ServerResponseException {
+				return Service.parseResponse(response, clazz);
+			}
+		};
+	}
+
+	protected static ResponseResolver<String> getHeaderResponseResolver() {
+		return headerResponseResolver;
+	}
+
+	static ResponseResolver<String> headerResponseResolver = new ResponseResolver<String>() {
+
+		private static final String RESPONSE_LOCATION_HEADER_NAME = "Location";
+		public String resolve(CloseableHttpResponse response) throws ServerResponseException {
+
+			Header locationHeader = response.getLastHeader(RESPONSE_LOCATION_HEADER_NAME);
+
+			if (locationHeader != null) {
+				return locationHeader.getValue();
+			} else {
+				throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Invalid server response: %s header is not set", RESPONSE_LOCATION_HEADER_NAME));
+			}
+		}
+	};
 }

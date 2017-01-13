@@ -67,7 +67,7 @@ public class TestAutomation extends Service {
      */
     public TestRun createTestRun(CreateTestRunRequest request) throws ServerConnectionException, ServerResponseException {
 
-    	return this.doPostRequest(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), TestRun.class, request);
+    	return this.doPostRequest(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), getBodyResponseResolver(TestRun.class), request);
     }
 
     /**
@@ -82,7 +82,7 @@ public class TestAutomation extends Service {
      */
     public TestRun finishTestRun(String systemProfile, String testRunId) throws ServerConnectionException, ServerResponseException {
 
-    	return this.doPutRequest(String.format(FINISH_TEST_RUN_EP, systemProfile, testRunId), null, TestRun.class);
+    	return this.doPutRequest(String.format(FINISH_TEST_RUN_EP, systemProfile, testRunId), null, getBodyResponseResolver(TestRun.class));
     }
 
     /**
@@ -95,7 +95,7 @@ public class TestAutomation extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public TestRun fetchTestRun(String systemProfile, String testRunId) throws ServerConnectionException, ServerResponseException {
-    	return this.doGetRequest(String.format(TEST_RUNS_EP, systemProfile, testRunId), TestRun.class);
+    	return this.doGetRequest(String.format(TEST_RUNS_EP, systemProfile, testRunId), getBodyResponseResolver(TestRun.class));
     }
 
     /**
@@ -130,6 +130,7 @@ public class TestAutomation extends Service {
             }
         }
 
-        return this.doGetRequest(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), TestRuns.class, nvps.toArray(new NameValuePair[nvps.size()]));
+        return this.doGetRequest(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), getBodyResponseResolver(TestRuns.class),
+        		nvps.toArray(new NameValuePair[nvps.size()]));
     }
 }

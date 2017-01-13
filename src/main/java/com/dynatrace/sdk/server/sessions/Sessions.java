@@ -84,7 +84,7 @@ public class Sessions extends Service {
             nvps.add(new BasicNameValuePair("label", label));
         }
 
-        return this.doPostRequest(String.format(SESSIONS_EP,request.getSystemProfile(), "startrecording"), nvps).getValue();
+        return this.doPostRequest(String.format(SESSIONS_EP, request.getSystemProfile(), "startrecording"), nvps).getValue();
     }
 
     /**
@@ -99,7 +99,7 @@ public class Sessions extends Service {
      */
     public String stopRecording(String profileName) throws ServerResponseException, ServerConnectionException {
 
-    	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "stoprecording"), ResultResponse.class).getValue();
+    	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "stoprecording"), getBodyResponseResolver(ResultResponse.class)).getValue();
     }
 
     /**

@@ -62,7 +62,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public Agents fetchAgents() throws ServerConnectionException, ServerResponseException {
-    	return this.doGetRequest(AGENTS_EP, Agents.class);
+    	return this.doGetRequest(AGENTS_EP, getBodyResponseResolver(Agents.class));
     }
 
     /**
@@ -73,7 +73,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public Collectors fetchCollectors() throws ServerConnectionException, ServerResponseException {
-    	return this.doGetRequest(String.format(COLLECTORS_EP, ""), Collectors.class);
+    	return this.doGetRequest(String.format(COLLECTORS_EP, ""), getBodyResponseResolver(Collectors.class));
     }
 
     /**
@@ -85,7 +85,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public CollectorInformation fetchCollector(String collectorAndHostName) throws ServerConnectionException, ServerResponseException {
-        return this.doGetRequest(String.format(COLLECTORS_EP, collectorAndHostName), CollectorInformation.class);
+        return this.doGetRequest(String.format(COLLECTORS_EP, collectorAndHostName), getBodyResponseResolver(CollectorInformation.class));
 
     }
 
@@ -98,7 +98,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public boolean placeHotSensor(int agentId) throws ServerConnectionException, ServerResponseException {
-    	return this.doGetRequest(String.format(HOT_SENSOR_PLACEMENT_EP, agentId), ResultResponse.class).getValueAsBoolean();
+    	return this.doGetRequest(String.format(HOT_SENSOR_PLACEMENT_EP, agentId), getBodyResponseResolver(ResultResponse.class)).getValueAsBoolean();
     }
 
     /**

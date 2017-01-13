@@ -59,7 +59,7 @@ public class SystemProfiles extends Service {
      */
     public Profiles getSystemProfiles() throws ServerConnectionException, ServerResponseException {
 
-    	return this.doGetRequest(String.format(PROFILES_EP, ""), Profiles.class);
+    	return this.doGetRequest(String.format(PROFILES_EP, ""), getBodyResponseResolver(Profiles.class));
     }
 
     /**
@@ -72,7 +72,7 @@ public class SystemProfiles extends Service {
      */
     public SystemProfileMetadata getSystemProfileMetadata(String profileName) throws ServerConnectionException, ServerResponseException {
 
-    	return this.doGetRequest(String.format(PROFILES_EP, profileName), SystemProfileMetadata.class);
+    	return this.doGetRequest(String.format(PROFILES_EP, profileName), getBodyResponseResolver(SystemProfileMetadata.class));
     }
 
     /**

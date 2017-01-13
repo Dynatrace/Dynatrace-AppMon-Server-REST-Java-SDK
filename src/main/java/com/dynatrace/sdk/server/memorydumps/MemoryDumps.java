@@ -28,12 +28,6 @@
 
 package com.dynatrace.sdk.server.memorydumps;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import org.apache.http.Header;
-import org.apache.http.client.methods.CloseableHttpResponse;
-
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
@@ -50,7 +44,6 @@ public class MemoryDumps extends Service {
     public static final String MEMORY_DUMP_JOB_EP = "/rest/management/profiles/%s/memorydumpjob";
     public static final String MEMORY_DUMP_JOBS_EP = "/rest/management/profiles/%s/memorydumpjobs/%s";
 
-    public static final String RESPONSE_LOCATION_HEADER_NAME = "Location";
 
     public MemoryDumps(DynatraceClient client) {
         super(client);
@@ -67,7 +60,7 @@ public class MemoryDumps extends Service {
      */
     public MemoryDump getMemoryDump(String profileName, String resourceId) throws ServerConnectionException, ServerResponseException {
 
-    	return this.doGetRequest(String.format(MEMORY_DUMP_EP, profileName, resourceId), MemoryDump.class);
+    	return this.doGetRequest(String.format(MEMORY_DUMP_EP, profileName, resourceId), getBodyResponseResolver(MemoryDump.class));
     }
 
     /**
@@ -80,7 +73,8 @@ public class MemoryDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public MemoryDumpJob getMemoryDumpJob(String profileName, String memoryDumpJobId) throws ServerConnectionException, ServerResponseException {
-    	return this.doGetRequest(String.format(MEMORY_DUMP_JOBS_EP, profileName, memoryDumpJobId), MemoryDumpJob.class);
+
+    	return this.doGetRequest(String.format(MEMORY_DUMP_JOBS_EP, profileName, memoryDumpJobId), getBodyResponseResolver(MemoryDumpJob.class));
     }
 
     /**
@@ -94,20 +88,6 @@ public class MemoryDumps extends Service {
      */
     public String createMemoryDumpJob(String profileName, MemoryDumpJob parameters) throws ServerConnectionException, ServerResponseException {
 
-    	try (CloseableHttpResponse response = this.doPutRequest(buildURI(String.format(MEMORY_DUMP_JOB_EP, profileName)), Service.xmlObjectToEntity(parameters))) {
-
-    		Header locationHeader = response.getLastHeader(RESPONSE_LOCATION_HEADER_NAME);
-
-            if (locationHeader != null) {
-                return locationHeader.getValue();
-            } else {
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Invalid server response: %s header is not set", RESPONSE_LOCATION_HEADER_NAME));
-            }
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or parameters[%s]: %s", profileName, parameters, e.getMessage()), e);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
-        }
+    	return this.doPutRequest(String.format(MEMORY_DUMP_JOB_EP, profileName), parameters, getHeaderResponseResolver());
     }
 }

@@ -92,6 +92,7 @@ public class ResourceDumps extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public ThreadDumpStatus getThreadDumpStatus(String profileName, String scheduleId) throws ServerConnectionException, ServerResponseException {
-    	return this.doGetRequest(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId), ThreadDumpStatus.class);
+    	return this.doGetRequest(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId),
+    			getBodyResponseResolver(ThreadDumpStatus.class));
     }
 }

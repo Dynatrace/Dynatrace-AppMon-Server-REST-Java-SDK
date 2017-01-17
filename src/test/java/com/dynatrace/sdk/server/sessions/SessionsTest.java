@@ -52,11 +52,6 @@ public class SessionsTest {
 	private Sessions sessions = new Sessions(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 2000)));
 
 	@Test
-	public void endpoint() {
-		assertThat(String.format(Sessions.SESSIONS_EP, "test", "clear"), is("/profiles/test/session/clear"));
-	}
-
-	@Test
 	public void stopRecording() throws Exception {
 
 		String location = "returnedLocation";
@@ -66,24 +61,6 @@ public class SessionsTest {
 
 		String stopRecording = sessions.stopRecording("testProfile");
 		assertThat(location, is(stopRecording));
-	}
-
-
-	@Test
-	public void clear() throws Exception {
-		stubFor(get(urlPathEqualTo(String.format(Sessions.SESSIONS_EP, "test", "clear")))
-				.willReturn(aResponse()
-						.withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-								"<result value=\"true\"/>")));
-		stubFor(get(urlPathEqualTo(String.format(Sessions.SESSIONS_EP, "non-existent", "clear")))
-				.willReturn(aResponse()
-						.withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-								"<result value=\"false\"/>")));
-
-		boolean result = this.sessions.clear("test");
-		assertThat(result, is(true));
-		result = this.sessions.clear("non-existent");
-		assertThat(result, is(false));
 	}
 
 	@Test
@@ -128,40 +105,6 @@ public class SessionsTest {
 		} catch (ServerResponseException e) {
 			assertThat(e.getMessage(), is(errorReason));
 		}
-	}
-
-	@Test
-	public void reanalyze() throws Exception {
-		stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_EP, "test")))
-				.willReturn(aResponse()
-						.withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-								"<result value=\"true\"/>")));
-		stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_EP, "non-existent")))
-				.willReturn(aResponse()
-						.withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-								"<result value=\"false\"/>")));
-
-		boolean result = this.sessions.reanalyze("test");
-		assertThat(result, is(true));
-		result = this.sessions.reanalyze("non-existent");
-		assertThat(result, is(false));
-	}
-
-	@Test
-	public void getReanalysisStatus() throws Exception {
-		stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_STATUS_EP, "test")))
-				.willReturn(aResponse()
-						.withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-								"<result value=\"true\"/>")));
-		stubFor(get(urlPathEqualTo(String.format(Sessions.REANALYZE_SESSION_STATUS_EP, "non-existent")))
-				.willReturn(aResponse()
-						.withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-								"<result value=\"false\"/>")));
-
-		boolean result = this.sessions.getReanalysisStatus("test");
-		assertThat(result, is(true));
-		result = this.sessions.getReanalysisStatus("non-existent");
-		assertThat(result, is(false));
 	}
 
 	@Test

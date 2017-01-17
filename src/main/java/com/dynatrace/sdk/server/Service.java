@@ -133,7 +133,6 @@ public abstract class Service {
 		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
 		try {
 			CloseableHttpResponse response = this.client.getClient().execute(request);
-			// TODO chojna - this condition is too general - clarify if need to be adjusted
 			if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
 				String error = null;
 				// dynatrace often returns an error message along with a status code

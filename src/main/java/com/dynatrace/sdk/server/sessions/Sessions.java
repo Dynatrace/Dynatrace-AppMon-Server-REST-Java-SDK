@@ -81,54 +81,6 @@ public class Sessions extends Service {
     }
 
     /**
-     * Clears the live session.
-     * <strong>Clearing a session is not possible if Continuous Transaction Storage is enabled.</strong>
-     *
-     * @param profileName - profile name to clean the live session of
-     * @return a boolean indicating whether clearing a session was successful
-     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
-     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
-     */
-    // TODO missing in new API
-    public boolean clear(String profileName) throws ServerResponseException, ServerConnectionException {
-
-    	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "clear")).getValueAsBoolean();
-    }
-
-    /**
-     * Requests start reanalyzing a session with the name (@param sessionName)
-     *
-     * @param sessionName - session name to reanalyze
-     * @return value that describes that the specified session could be found and session reanalysis started successfully
-     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
-     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
-     */
-    // TODO missing in new API
-    public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
-
-    	return this.doGetRequest(String.format(REANALYZE_SESSION_EP, sessionName)).getValueAsBoolean();
-    }
-
-    /**
-     * Queries reanalysis status of the session with the name (@param sessionName)
-     *
-     * @param sessionName - session name to query
-     * @return value that describes that session reanalysis is finished
-     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
-     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
-     */
-    // TODO doubt but maybe this one ??????
-    // GET /profiles/{profileid}/session/recording/status
-    // response objectId: "Recording Status"
-//    {
-//    	  "recording": false
-//    	}
-    public boolean getReanalysisStatus(String sessionName) throws ServerResponseException, ServerConnectionException {
-
-    	return this.doGetRequest(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)).getValueAsBoolean();
-    }
-
-    /**
      * Store all time series and PurePaths in the Server's memory to a stored session
      * for a specific {@link StoreSessionRequest#getSystemProfile() system profile}.
      *

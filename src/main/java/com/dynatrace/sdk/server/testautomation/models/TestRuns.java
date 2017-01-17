@@ -35,11 +35,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "testRuns")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TestRuns {
-    @XmlElement(name = "testRun")
+    @XmlElement(name = "testRuns")
     private List<TestRun> testRuns = new ArrayList<>();
+
+    @XmlElement
+    private String message;
 
     public List<TestRun> getTestRuns() {
         return this.testRuns;
@@ -52,10 +55,18 @@ public class TestRuns {
     public TestRuns() {
     }
 
-    @Override
-    public String toString() {
-        return "TestRuns{" +
-                "testRuns=" + this.testRuns +
-                '}';
-    }
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	@Override
+	public String toString() {
+		return "TestRuns [testRuns=" + testRuns + ", message=" + message + "]";
+	}
+
 }

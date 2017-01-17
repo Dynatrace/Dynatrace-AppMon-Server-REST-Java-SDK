@@ -28,16 +28,11 @@
 
 package com.dynatrace.sdk.server.sessions;
 
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
-import com.dynatrace.sdk.server.response.models.ResultResponse;
+import com.dynatrace.sdk.server.sessions.models.RecordingStatus;
 import com.dynatrace.sdk.server.sessions.models.StartRecordingRequest;
 import com.dynatrace.sdk.server.sessions.models.StoreSessionRequest;
 
@@ -46,7 +41,7 @@ import com.dynatrace.sdk.server.sessions.models.StoreSessionRequest;
  * <a href="https://community.dynatrace.com/community/pages/viewpage.action?pageId=175966050">Community Page</a>
  */
 public class Sessions extends Service {
-    public static final String SESSIONS_EP = "/rest/management/profiles/%s/%s";
+    public static final String SESSIONS_EP = "/profiles/%s/session/%s";
     public static final String REANALYZE_SESSION_EP = "/rest/management/sessions/%s/reanalyze";
     public static final String REANALYZE_SESSION_STATUS_EP = "/rest/management/sessions/%s/reanalyze/finished";
 
@@ -59,32 +54,14 @@ public class Sessions extends Service {
      * <strong>Starting session recording is not possible if Continuous Transaction Storage is enabled.</strong>
      *
      * @param request - session parameters
-     * @return session name
+     * @return created resource location
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String startRecording(StartRecordingRequest request) throws ServerConnectionException, ServerResponseException {
-        ArrayList<NameValuePair> nvps = new ArrayList<>();
-        if (request.getPresentableName() != null) {
-            nvps.add(new BasicNameValuePair("presentableName", request.getPresentableName()));
-        }
-        if (request.getDescription() != null) {
-            nvps.add(new BasicNameValuePair("description", request.getDescription()));
-        }
-        if (request.isTimestampAllowed() != null) {
-            nvps.add(new BasicNameValuePair("isTimeStampAllowed", String.valueOf(request.isTimestampAllowed())));
-        }
-        if (request.getRecordingOption() != null) {
-            nvps.add(new BasicNameValuePair("recordingOption", request.getRecordingOption().getInternal()));
-        }
-        if (request.isSessionLocked() != null) {
-            nvps.add(new BasicNameValuePair("isSessionLocked", String.valueOf(request.isSessionLocked())));
-        }
-        for (String label : request.getLabels()) {
-            nvps.add(new BasicNameValuePair("label", label));
-        }
 
-        return this.doPostRequest(String.format(SESSIONS_EP, request.getSystemProfile(), "startrecording"), nvps).getValue();
+        return this.doPostRequest(String.format(SESSIONS_EP, request.getSystemProfile(), "recording"),
+        		Service.getHeaderLocationResolver(), request);
     }
 
     /**
@@ -93,13 +70,14 @@ public class Sessions extends Service {
      * <strong>Stopping session recording is not possible if Continuous Transaction Storage is enabled.</strong>
      *
      * @param profileName - profile name to stop the session of
-     * @return session name
+     * @return created resource location
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String stopRecording(String profileName) throws ServerResponseException, ServerConnectionException {
 
-    	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "stoprecording"), getBodyResponseResolver(ResultResponse.class)).getValue();
+    	return this.doPutRequest(String.format(SESSIONS_EP, profileName, "recording/status"),
+    			new RecordingStatus(false), getHeaderLocationResolver());
     }
 
     /**
@@ -111,6 +89,7 @@ public class Sessions extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO missing in new API
     public boolean clear(String profileName) throws ServerResponseException, ServerConnectionException {
 
     	return this.doGetRequest(String.format(SESSIONS_EP, profileName, "clear")).getValueAsBoolean();
@@ -124,6 +103,7 @@ public class Sessions extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO missing in new API
     public boolean reanalyze(String sessionName) throws ServerResponseException, ServerConnectionException {
 
     	return this.doGetRequest(String.format(REANALYZE_SESSION_EP, sessionName)).getValueAsBoolean();
@@ -137,6 +117,12 @@ public class Sessions extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO doubt but maybe this one ??????
+    // GET /profiles/{profileid}/session/recording/status
+    // response objectId: "Recording Status"
+//    {
+//    	  "recording": false
+//    	}
     public boolean getReanalysisStatus(String sessionName) throws ServerResponseException, ServerConnectionException {
 
     	return this.doGetRequest(String.format(REANALYZE_SESSION_STATUS_EP, sessionName)).getValueAsBoolean();
@@ -145,41 +131,15 @@ public class Sessions extends Service {
     /**
      * Store all time series and PurePaths in the Server's memory to a stored session
      * for a specific {@link StoreSessionRequest#getSystemProfile() system profile}.
-     * <strong>
-     * The timeframe parameters {@link StoreSessionRequest#timeframeStart} and {@link StoreSessionRequest#timeframeEnd}
-     * must be formatted according to ISO 8601, without a time zone specification, in the form yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss.S
-     * </strong>
      *
      * @param request - session parameters
-     * @return session name
+     * @return created resource location
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public String store(StoreSessionRequest request) throws ServerConnectionException, ServerResponseException {
-        ArrayList<NameValuePair> nvps = new ArrayList<>();
-        if (request.isAppendTimestamp() != null) {
-            nvps.add(new BasicNameValuePair("appendTimestamp", String.valueOf(request.isAppendTimestamp())));
-        }
-        if (request.getRecordingOption() != null) {
-            nvps.add(new BasicNameValuePair("recordingOption", request.getRecordingOption().getInternal()));
-        }
-        if (request.isSessionLocked() != null) {
-            nvps.add(new BasicNameValuePair("isSessionLocked", String.valueOf(request.isSessionLocked())));
-        }
-        if (request.getTimeframeStart() != null) {
-            nvps.add(new BasicNameValuePair("timeframeStart", request.getTimeframeStart()));
-        }
-        if (request.getTimeframeEnd() != null) {
-            nvps.add(new BasicNameValuePair("timeframeEnd", request.getTimeframeEnd()));
-        }
-        if (request.getStoredSessionName() != null) {
-            nvps.add(new BasicNameValuePair("storedSessionName", request.getStoredSessionName()));
-        }
-        for (String label : request.getLabels()) {
-            nvps.add(new BasicNameValuePair("label", label));
-        }
 
-        return this.doGetRequest(String.format(SESSIONS_EP, request.getSystemProfile(), "storepurepaths"),
-        		nvps.toArray(new NameValuePair[nvps.size()])).getValue();
+        return this.doPostRequest(String.format(SESSIONS_EP, request.getSystemProfile(), "store"),
+        		Service.getHeaderLocationResolver(), request);
     }
 }

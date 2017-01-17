@@ -1,8 +1,8 @@
 /***************************************************
  * dynaTrace Diagnostics (c) dynaTrace software GmbH
  *
- * @file: ResultResponse.java
- * @date: 11.01.2017
+ * @file: StatusResponse.java
+ * @date: Jan 13, 2017
  * @author: tomasz.chojnacki
  */
 package com.dynatrace.sdk.server.response.models;
@@ -18,21 +18,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class ResultResponse {
+public class ServerStatus {
 
-	@XmlAttribute(name="result")
-	private String value;
+	@XmlAttribute
+	ServerStatusEnum status;
 
-	public String getValue() {
-		return value;
+	public ServerStatus() {
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+
+	public ServerStatusEnum getStatus() {
+		return status;
 	}
 
-	public boolean getValueAsBoolean() {
-		return value != null && value.equals("true");
+	public void setStatus(ServerStatusEnum status) {
+		this.status = status;
+	}
+
+
+	public boolean getResultAsBoolean() {
+		return status == ServerStatusEnum.SUCCESS;
 	}
 
 }

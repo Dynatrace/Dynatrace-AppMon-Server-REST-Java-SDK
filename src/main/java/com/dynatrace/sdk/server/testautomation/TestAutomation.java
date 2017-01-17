@@ -40,6 +40,7 @@ import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
 import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
 import com.dynatrace.sdk.server.testautomation.models.FetchTestRunsRequest;
 import com.dynatrace.sdk.server.testautomation.models.TestRun;
@@ -50,8 +51,8 @@ import com.dynatrace.sdk.server.testautomation.models.TestRuns;
  */
 @ThreadSafe
 public class TestAutomation extends Service {
-    public static final String TEST_RUNS_EP = "/rest/management/profiles/%s/testruns/%s";
-    public static final String FINISH_TEST_RUN_EP = "/rest/management/profiles/%s/testruns/%s/finish";
+    public static final String TEST_RUNS_EP = "/profiles/%s/testruns/%s";
+    public static final String FINISH_TEST_RUN_EP = "/profiles/%s/testruns/%s/finish";
 
     public TestAutomation(DynatraceClient client) {
         super(client);
@@ -82,7 +83,7 @@ public class TestAutomation extends Service {
      */
     public TestRun finishTestRun(String systemProfile, String testRunId) throws ServerConnectionException, ServerResponseException {
 
-    	return this.doPutRequest(String.format(FINISH_TEST_RUN_EP, systemProfile, testRunId), null, getBodyResponseResolver(TestRun.class));
+    	return this.doPostRequest(String.format(FINISH_TEST_RUN_EP, systemProfile, testRunId), getBodyResponseResolver(TestRun.class), null);
     }
 
     /**
@@ -107,12 +108,13 @@ public class TestAutomation extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public TestRuns fetchTestRuns(FetchTestRunsRequest request) throws ServerConnectionException, ServerResponseException {
+
         List<NameValuePair> nvps = new ArrayList<>();
         if (request.getStartTime() != null) {
-            nvps.add(new BasicNameValuePair("startTime", String.valueOf(request.getStartTime())));
+            nvps.add(new BasicNameValuePair("startTime", DateStringIso8601Adapter.getAsString(request.getStartTime())));
         }
         if (request.getEndTime() != null) {
-            nvps.add(new BasicNameValuePair("endTime", String.valueOf(request.getEndTime())));
+            nvps.add(new BasicNameValuePair("endTime", DateStringIso8601Adapter.getAsString(request.getEndTime())));
         }
         if (request.getExtend() != null) {
             nvps.add(new BasicNameValuePair("extend", request.getExtend().getInternal()));

@@ -58,6 +58,7 @@ public class MemoryDumps extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO not in new API ?? session api has some similarities: e.g. enums
     public MemoryDump getMemoryDump(String profileName, String resourceId) throws ServerConnectionException, ServerResponseException {
 
     	return this.doGetRequest(String.format(MEMORY_DUMP_EP, profileName, resourceId), getBodyResponseResolver(MemoryDump.class));
@@ -72,6 +73,7 @@ public class MemoryDumps extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO not in new API ??
     public MemoryDumpJob getMemoryDumpJob(String profileName, String memoryDumpJobId) throws ServerConnectionException, ServerResponseException {
 
     	return this.doGetRequest(String.format(MEMORY_DUMP_JOBS_EP, profileName, memoryDumpJobId), getBodyResponseResolver(MemoryDumpJob.class));
@@ -86,8 +88,9 @@ public class MemoryDumps extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO not in new API ??
     public String createMemoryDumpJob(String profileName, MemoryDumpJob parameters) throws ServerConnectionException, ServerResponseException {
 
-    	return this.doPutRequest(String.format(MEMORY_DUMP_JOB_EP, profileName), parameters, getHeaderResponseResolver());
+    	return this.doPutRequest(String.format(MEMORY_DUMP_JOB_EP, profileName), parameters, getHeaderLocationResolver());
     }
 }

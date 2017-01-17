@@ -40,8 +40,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
@@ -55,90 +54,115 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.xml.sax.InputSource;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
+import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.response.models.ErrorResponse;
 import com.dynatrace.sdk.server.response.models.ResultResponse;
 
 public abstract class Service {
-    private final DynatraceClient client;
 
-    protected Service(DynatraceClient client) {
-        this.client = client;
-    }
+	static {
+		/** Set jaxb factory to use eclipse implementation. */
+		System.setProperty("javax.xml.bind.context.factory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
+	}
 
-    @SuppressWarnings("unchecked")
-    private static <T> T xmlInputStreamToObject(InputStream xml, Class<T> clazz) throws JAXBException, IOException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        try {
-            return (T) unmarshaller.unmarshal(xml);
-        } finally {
-            xml.close();
-        }
-    }
+	public final static String APP_VER_URI_PREFIX = "/api/v2";
 
-    protected static StringEntity xmlObjectToEntity(Object object) {
-        try {
-            StringWriter writer = new StringWriter();
-            JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.marshal(object, writer);
-            StringEntity entity = new StringEntity(writer.getBuffer().toString());
-            entity.setContentType("application/xml");
-            return entity;
-        } catch (JAXBException | UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
-        }
-    }
+	private final boolean useVersionedApi;
+	private final DynatraceClient client;
 
-    protected URI buildURI(String path, NameValuePair... params) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
-        uriBuilder.setHost(this.client.getConfiguration().getHost());
-        uriBuilder.setPort(this.client.getConfiguration().getPort());
-        uriBuilder.setPath(path);
-        uriBuilder.setParameters(params);
-        return uriBuilder.build();
-    }
+	protected Service(DynatraceClient client) {
+		this(client, true);
+	}
 
-    private CloseableHttpResponse doRequest(HttpRequestBase request) throws ServerConnectionException, ServerResponseException {
-        request.setHeader("Accept", "*/xml");
+	public Service(DynatraceClient client, boolean useVersionedApi) {
+		this.useVersionedApi = useVersionedApi;
+		this.client = client;
+	}
 
-        request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
-        try {
-            CloseableHttpResponse response = this.client.getClient().execute(request);
-            if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
-                String error = null;
-                // dynatrace often returns an error message along with a status code
-                // we try to parse it, if that doesn't work we use a code bound message
-                // as a reason in exception
-                try (InputStream is = response.getEntity().getContent()) {
-                    // xpath is reasonable for parsing such a small entity
-                    error = XPathFactory.newInstance().newXPath().compile("/error/@reason").evaluate(new InputSource(is));
-                } catch (XPathExpressionException e) {
-                    // error message might not exist
-                }
 
-                if (error == null || error.isEmpty()) {
-                    error = response.getStatusLine().getReasonPhrase();
-                }
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
-            }
-            return response;
-        } catch (IOException e) {
-            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
-        }
-    }
+	private static <T> T jsonInputStreamToObject(InputStream json, Class<T> clazz) throws JAXBException, IOException {
+		JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		unmarshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
+		unmarshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, false);
+		try {
+			return unmarshaller.unmarshal(new StreamSource(json), clazz).getValue();
+		} finally {
+			json.close();
+		}
+	}
 
-    private static <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
-        try {
-            return xmlInputStreamToObject(response.getEntity().getContent(), responseClass);
-        } catch (IOException | JAXBException e) {
-            throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Could not unmarshall response into given object: %s", e.getMessage()), e);
-        }
-    }
+
+	protected static StringEntity jsonObjectToEntity(Object object) {
+		try {
+			StringWriter writer = new StringWriter();
+			JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
+			Marshaller marshaller = jaxbContext.createMarshaller();
+			marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
+			marshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, false);
+			marshaller.marshal(object, writer);
+			String string = writer.getBuffer().toString();
+			StringEntity entity = new StringEntity(string);
+			entity.setContentType("application/json");
+
+			return entity;
+		} catch (JAXBException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
+		}
+	}
+
+	private URI buildURI(String path, NameValuePair... params) throws URISyntaxException {
+		URIBuilder uriBuilder = new URIBuilder();
+		uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
+		uriBuilder.setHost(this.client.getConfiguration().getHost());
+		uriBuilder.setPort(this.client.getConfiguration().getPort());
+		uriBuilder.setPath(useVersionedApi ? APP_VER_URI_PREFIX + path : path);
+		uriBuilder.setParameters(params);
+		return uriBuilder.build();
+	}
+
+
+	protected CloseableHttpResponse doRequest(HttpRequestBase request) throws ServerConnectionException, ServerResponseException {
+		request.setHeader("Accept", "*/json");
+
+		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
+		try {
+			CloseableHttpResponse response = this.client.getClient().execute(request);
+			// TODO chojna - this condition is too general - clarify if need to be adjusted
+			if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
+				String error = null;
+				// dynatrace often returns an error message along with a status code
+				// we try to parse it, if that doesn't work we use a code bound message
+				// as a reason in exception
+				try (InputStream is = response.getEntity().getContent()) {
+					error = jsonInputStreamToObject(is, ErrorResponse.class).getMessage();
+				} catch (JAXBException e) {
+					// error message might not exist
+				}
+
+				if (error == null || error.isEmpty()) {
+					error = response.getStatusLine().getReasonPhrase();
+				}
+				throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
+			}
+			return response;
+		} catch (IOException e) {
+			throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
+		}
+	}
+
+	private static <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
+		try {
+			return jsonInputStreamToObject(response.getEntity().getContent(), responseClass);
+		} catch (IOException | JAXBException e) {
+			throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Could not unmarshall response into given object: %s", e.getMessage()), e);
+		}
+	}
 
 	private CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
 		HttpPut put = new HttpPut(uri);
@@ -149,7 +173,7 @@ public abstract class Service {
 
 	public <T> T doPutRequest(String uriString, Object entityObject, ResponseResolver<T> resolver) throws ServerConnectionException, ServerResponseException {
 
-		HttpEntity entity = entityObject == null ? null : Service.xmlObjectToEntity(entityObject);
+		HttpEntity entity = entityObject == null ? null : Service.jsonObjectToEntity(entityObject);
 
 		try (CloseableHttpResponse response = this.doPutRequest(buildURI(uriString), entity)) {
 
@@ -213,7 +237,8 @@ public abstract class Service {
 
 	public <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, Object entityObject) throws ServerConnectionException, ServerResponseException {
 
-		HttpEntity entity = entityObject == null ? null : Service.xmlObjectToEntity(entityObject);
+		HttpEntity entity = entityObject == null ? null : Service.jsonObjectToEntity(entityObject);
+
 		return this.doPostRequest(uriString, resolver, entity);
 	}
 
@@ -223,6 +248,11 @@ public abstract class Service {
 	}
 
 
+	/**
+	 *
+	 * @param clazz of response
+	 * @return object of given class returned in response body
+	 */
 	protected static <T> ResponseResolver<T> getBodyResponseResolver(final Class<T> clazz) {
 		return new ResponseResolver<T>() {
 			public T resolve(CloseableHttpResponse response) throws ServerResponseException {
@@ -231,11 +261,32 @@ public abstract class Service {
 		};
 	}
 
-	protected static ResponseResolver<String> getHeaderResponseResolver() {
-		return headerResponseResolver;
+	/**
+	 *
+	 * @return location param of response header.
+	 */
+	protected static ResponseResolver<String> getHeaderLocationResolver() {
+		return headerLocationResolver;
 	}
 
-	static ResponseResolver<String> headerResponseResolver = new ResponseResolver<String>() {
+	/**
+	 *
+	 * @return always true
+	 */
+	protected static ResponseResolver<Boolean> getEmtpyResolver() {
+		return emptyResolver;
+	}
+
+	static ResponseResolver<Boolean> emptyResolver = new ResponseResolver<Boolean>() {
+
+		@Override
+		public Boolean resolve(CloseableHttpResponse response) throws ServerResponseException {
+			return true;
+		}
+
+	};
+
+	static ResponseResolver<String> headerLocationResolver = new ResponseResolver<String>() {
 
 		private static final String RESPONSE_LOCATION_HEADER_NAME = "Location";
 		public String resolve(CloseableHttpResponse response) throws ServerResponseException {

@@ -32,14 +32,15 @@ import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.response.models.ServerStatus;
 
 /**
  * Wraps a Server Management REST API, providing an easy to use set of methods to control server.
  * <a href="https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965889">Community Page</a>
  */
 public class ServerManagement extends Service {
-    public static final String SERVER_RESTART_EP = "/rest/management/server/restart";
-    public static final String SERVER_SHUTDOWN_EP = "/rest/management/server/shutdown";
+    public static final String SERVER_RESTART_EP = "/server/restart";
+    public static final String SERVER_SHUTDOWN_EP = "/server/shutdown";
 
     public ServerManagement(DynatraceClient client) {
         super(client);
@@ -54,7 +55,7 @@ public class ServerManagement extends Service {
      */
     public boolean restart() throws ServerConnectionException, ServerResponseException {
 
-    	return this.doPostRequest(SERVER_RESTART_EP, null).getValueAsBoolean();
+    	return this.doPostRequest(SERVER_RESTART_EP, getBodyResponseResolver(ServerStatus.class), null).getResultAsBoolean();
     }
 
     /**
@@ -66,6 +67,6 @@ public class ServerManagement extends Service {
      */
     public boolean shutdown() throws ServerConnectionException, ServerResponseException {
 
-    	return this.doPostRequest(SERVER_SHUTDOWN_EP, null).getValueAsBoolean();
+    	return this.doPostRequest(SERVER_SHUTDOWN_EP, getBodyResponseResolver(ServerStatus.class), null).getResultAsBoolean();
     }
 }

@@ -1,7 +1,7 @@
 /***************************************************
  * dynaTrace Diagnostics (c) dynaTrace software GmbH
  *
- * @file: ResultResponse.java
+ * @file: ErrorResponse.java
  * @date: 11.01.2017
  * @author: tomasz.chojnacki
  */
@@ -18,21 +18,35 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class ResultResponse {
+public class ErrorResponse {
 
-	@XmlAttribute(name="result")
-	private String value;
+	@XmlAttribute
+	private Integer code;
 
-	public String getValue() {
-		return value;
+	@XmlAttribute
+	private String message;
+
+	public ErrorResponse() {
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public String getMessage() {
+		return message;
 	}
 
-	public boolean getValueAsBoolean() {
-		return value != null && value.equals("true");
+	public void setMessage(String message) {
+		this.message = message;
 	}
+
+
+	public Integer getCode() {
+		return code;
+	}
+
+
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+
+
 
 }

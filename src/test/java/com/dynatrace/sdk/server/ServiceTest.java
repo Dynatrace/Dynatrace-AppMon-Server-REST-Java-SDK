@@ -57,13 +57,14 @@ public class ServiceTest {
 
     @Before
     public void setup() {
-        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 1000))) {
+        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 1000)), false) {
         };
     }
 
     @Test
     public void invalidStatusCodeWithError() throws Exception {
-        stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(404).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"Profile not found\"/>")));
+        stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(404).
+        		withBody("{\"code\": 404, \"message\": \"Profile not found\"}")));
         try {
             this.service.doGetRequest("/test");
             fail("Exception was expected to be thrown");
@@ -95,7 +96,8 @@ public class ServiceTest {
 
     @Test
     public void validResponse() throws Exception {
-        stubFor(get(urlPathEqualTo("/test")).withBasicAuth("admin", "admin").willReturn(aResponse().withStatus(200).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><testRun category=\"unit\" versionBuild=\"15:52:11\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469109132002\" id=\"3283730b-364b-419a-adfd-c5653c62c789\" numPassed=\"4\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testruns/3283730b-364b-419a-adfd-c5653c62c789.xml\"/>")));
+        stubFor(get(urlPathEqualTo("/test")).withBasicAuth("admin", "admin").willReturn(aResponse().withStatus(200)
+        		.withBody("{\"category\":\"unit\"}")));
         TestRun tr = this.service.doGetRequest("/test", Service.getBodyResponseResolver(TestRun.class));
         //we test the rest of marshalling process for TestRun in a separate test
         assertThat(tr.getCategory(), Is.is(TestCategory.UNIT));
@@ -103,8 +105,8 @@ public class ServiceTest {
     }
 
     @Test
-    public void malformedXML() throws Exception {
-        stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(200).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>testRun category=\"unit\" versionBuild=\"15:52:11\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469109132002\" id=\"3283730b-364b-419a-adfd-c5653c62c789\" numPassed=\"4\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testruns/3283730b-364b-419a-adfd-c5653c62c789.xml\"/>")));
+    public void malformedJson() throws Exception {
+        stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(200).withBody("{{ maformed json }")));
         try {
             this.service.doGetRequest("/test", Service.getBodyResponseResolver(TestRun.class));
             fail("Exception was expected to be thrown");

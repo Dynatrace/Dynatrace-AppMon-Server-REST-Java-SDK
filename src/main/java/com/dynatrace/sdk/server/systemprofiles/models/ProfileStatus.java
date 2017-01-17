@@ -1,11 +1,11 @@
 /***************************************************
  * dynaTrace Diagnostics (c) dynaTrace software GmbH
  *
- * @file: ResultResponse.java
- * @date: 11.01.2017
+ * @file: ProfileStatus.java
+ * @date: Jan 16, 2017
  * @author: tomasz.chojnacki
  */
-package com.dynatrace.sdk.server.response.models;
+package com.dynatrace.sdk.server.systemprofiles.models;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,21 +18,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class ResultResponse {
+public class ProfileStatus {
 
-	@XmlAttribute(name="result")
-	private String value;
+	@XmlAttribute
+	private ProfileStatusEnum status;
 
-	public String getValue() {
-		return value;
+	public ProfileStatus() {
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public ProfileStatus(ProfileStatusEnum status) {
+		this.status = status;
 	}
 
-	public boolean getValueAsBoolean() {
-		return value != null && value.equals("true");
+	public ProfileStatusEnum getStatus() {
+		return status;
 	}
+
+	public void setStatus(ProfileStatusEnum status) {
+		this.status = status;
+	}
+
+
 
 }

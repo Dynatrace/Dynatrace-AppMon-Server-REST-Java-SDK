@@ -35,33 +35,24 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "profiles")
 public class Profiles {
-    @XmlAttribute
-    private String href;
 
-    @XmlElement(name = "systemprofile")
+    @XmlElement(name = "systemprofiles")
     private List<SystemProfile> profiles = new ArrayList<>();
 
-    public Profiles(String href, List<SystemProfile> profiles) {
-        this.href = href;
+    public Profiles(List<SystemProfile> profiles) {
         this.profiles = profiles;
     }
 
     public Profiles() {
     }
 
-    public String getHref() {
-        return this.href;
-    }
-
     public List<SystemProfile> getProfiles() {
         return this.profiles;
     }
 
-    @Override
-    public String toString() {
-        return "Profiles{" +
-                "href='" + this.href + '\'' +
-                ", profiles=" + this.profiles +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Profiles [profiles=" + profiles + "]";
+	}
+
 }

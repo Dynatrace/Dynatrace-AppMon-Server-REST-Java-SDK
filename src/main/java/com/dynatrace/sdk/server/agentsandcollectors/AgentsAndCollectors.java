@@ -61,6 +61,40 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO - API change: findings
+
+//    1. needs profile -
+//    2. another response is given:
+//    https://localhost:8021/api/v2/profiles/easyTravel/agentgroups
+//    {
+//    	id: "Business Backend Server (Java)",
+//    	href: "https://localhost:8021/api/v2/profiles/easyTravel/agentgroups/Business%20Backend%20Server%20(Java)"
+//    	},
+//
+//    https://localhost:8021/api/v2/profiles/easyTravel/agentgroups/Business%20Backend%20Server%20(Java)
+//    {
+//    	name: "Business Backend Server (Java)",
+//    	description: "Backend application that provides web services for retrieving travel data and to store bookings."
+//    	}
+//
+//    https://localhost:8021/api/v2/profiles/easyTravel/agentgroups/Browser/mappings
+//    {
+//    	agentmappings: [
+//    	{
+//    	id: "Browser_easyTravel",
+//    	href: "https://localhost:8021/api/v2/profiles/easyTravel/agentgroups/Browser/mappings/Browser_easyTravel"
+//    	}
+//    	]
+//    	}
+//
+//    https://localhost:8021/api/v2/profiles/easyTravel/agentgroups/Browser/mappings/Browser_easyTravel
+//    {
+//    	alias: "Browser_easyTravel",
+//    	agentnamepattern: "Browser_easyTravel",
+//    	agentnamematchtype: "starts",
+//    	hostnamepattern: "",
+//    	hostnamematchtype: "starts"
+//    	}
     public Agents fetchAgents() throws ServerConnectionException, ServerResponseException {
     	return this.doGetRequest(AGENTS_EP, getBodyResponseResolver(Agents.class));
     }
@@ -72,6 +106,8 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+
+    // TODO no collectors in new api ??
     public Collectors fetchCollectors() throws ServerConnectionException, ServerResponseException {
     	return this.doGetRequest(String.format(COLLECTORS_EP, ""), getBodyResponseResolver(Collectors.class));
     }
@@ -84,6 +120,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO no collectors in new api ??
     public CollectorInformation fetchCollector(String collectorAndHostName) throws ServerConnectionException, ServerResponseException {
         return this.doGetRequest(String.format(COLLECTORS_EP, collectorAndHostName), getBodyResponseResolver(CollectorInformation.class));
 
@@ -97,6 +134,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO no agent with sensor in new api ??
     public boolean placeHotSensor(int agentId) throws ServerConnectionException, ServerResponseException {
     	return this.doGetRequest(String.format(HOT_SENSOR_PLACEMENT_EP, agentId), getBodyResponseResolver(ResultResponse.class)).getValueAsBoolean();
     }
@@ -109,6 +147,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO no agent with sensor in new api ??
     public boolean restartCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
     	return this.doPostRequest(String.format(COLLECTOR_RESTART_EP, collectorName), null).getValueAsBoolean();
     }
@@ -121,6 +160,7 @@ public class AgentsAndCollectors extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO no agent with sensor in new api ??
     public boolean shutdownCollector(String collectorName) throws ServerConnectionException, ServerResponseException {
     	return this.doPostRequest(String.format(COLLECTOR_SHUTDOWN_EP, collectorName), null).getValueAsBoolean();
     }

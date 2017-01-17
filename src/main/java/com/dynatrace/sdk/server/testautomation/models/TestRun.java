@@ -28,15 +28,26 @@
 
 package com.dynatrace.sdk.server.testautomation.models;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "testRun")
 public class TestRun {
+
     @XmlAttribute
-    private Long startTime;
+    @XmlJavaTypeAdapter(DateStringIso8601Adapter.class)
+    private Date startTime;
     @XmlAttribute
     private String platform;
     @XmlAttribute
@@ -48,7 +59,7 @@ public class TestRun {
     @XmlAttribute
     private String href;
     @XmlAttribute
-    private String finished;
+    private boolean finished;
 
     @XmlAttribute
     private String versionMajor;
@@ -74,10 +85,10 @@ public class TestRun {
     @XmlAttribute
     private Integer numInvalidated;
 
-    @XmlElement(name = "testResult")
+    @XmlElement(name = "testResults")
     private List<TestResult> testResults = new ArrayList<>();
 
-    public TestRun(Long startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
+    public TestRun(Date startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
         this.startTime = startTime;
         this.platform = platform;
         this.systemProfile = systemProfile;
@@ -101,11 +112,11 @@ public class TestRun {
     //Required by JAXB
     public TestRun() {}
 
-    public Long getStartTime() {
-        return this.startTime;
-    }
 
-    public String getPlatform() {
+	public Date getStartTime() {
+		return startTime;
+	}
+	public String getPlatform() {
         return this.platform;
     }
 
@@ -173,11 +184,15 @@ public class TestRun {
         return this.numInvalidated;
     }
 
-    public String getFinished() { return finished; }
+	public boolean isFinished() {
+		return finished;
+	}
 
-    public void setFinished(String finished) { this.finished = finished;}
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return "TestRun{" +
                 "startTime=" + this.startTime +

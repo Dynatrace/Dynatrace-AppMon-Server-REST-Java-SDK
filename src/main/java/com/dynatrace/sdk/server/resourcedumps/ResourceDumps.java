@@ -62,6 +62,7 @@ public class ResourceDumps extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+ // TODO not found ??
     public String createThreadDump(CreateThreadDumpRequest request) throws ServerConnectionException, ServerResponseException {
         List<NameValuePair> nvps = new ArrayList<>();
 
@@ -91,6 +92,7 @@ public class ResourceDumps extends Service {
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
+    // TODO not found ??
     public ThreadDumpStatus getThreadDumpStatus(String profileName, String scheduleId) throws ServerConnectionException, ServerResponseException {
     	return this.doGetRequest(String.format(GET_THREAD_DUMP_STATUS_EP, profileName, scheduleId),
     			getBodyResponseResolver(ThreadDumpStatus.class));

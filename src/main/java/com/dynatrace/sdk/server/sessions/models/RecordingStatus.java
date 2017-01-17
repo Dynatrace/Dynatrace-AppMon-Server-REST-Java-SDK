@@ -1,11 +1,11 @@
 /***************************************************
  * dynaTrace Diagnostics (c) dynaTrace software GmbH
  *
- * @file: ResultResponse.java
- * @date: 11.01.2017
+ * @file: RecordingStatus.java
+ * @date: Jan 16, 2017
  * @author: tomasz.chojnacki
  */
-package com.dynatrace.sdk.server.response.models;
+package com.dynatrace.sdk.server.sessions.models;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,21 +18,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class ResultResponse {
+public class RecordingStatus {
 
-	@XmlAttribute(name="result")
-	private String value;
+	@XmlAttribute
+	private boolean recording;
 
-	public String getValue() {
-		return value;
+	public RecordingStatus() {
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public RecordingStatus(boolean recording) {
+		this.recording = recording;
 	}
 
-	public boolean getValueAsBoolean() {
-		return value != null && value.equals("true");
+	public boolean isRecording() {
+		return recording;
+	}
+
+	public void setRecording(boolean recording) {
+		this.recording = recording;
 	}
 
 }

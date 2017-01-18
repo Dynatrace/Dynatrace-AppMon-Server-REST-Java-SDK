@@ -81,9 +81,9 @@ public abstract class Service {
 		this.client = client;
 	}
 
-
 	private static <T> T jsonInputStreamToObject(InputStream json, Class<T> clazz) throws JAXBException, IOException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+		JAXBContext jaxbContext = JAXBContext.newInstance(clazz.getPackage().getName(),
+				Service.class.getClassLoader());
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		unmarshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
 		unmarshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, false);
@@ -98,7 +98,8 @@ public abstract class Service {
 	protected static StringEntity jsonObjectToEntity(Object object) {
 		try {
 			StringWriter writer = new StringWriter();
-			JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
+			JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass().getPackage().getName(),
+					Service.class.getClassLoader());
 			Marshaller marshaller = jaxbContext.createMarshaller();
 			marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
 			marshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, false);
@@ -109,7 +110,6 @@ public abstract class Service {
 
 			return entity;
 		} catch (JAXBException | UnsupportedEncodingException e) {
-			e.printStackTrace();
 			throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
 		}
 	}

@@ -9,13 +9,11 @@ This library provides an easy to use Java implementation of Dynatrace Server RES
 - [Services](#services)
     - [Test Automation](#testautomation)
     - [Sessions](#sessions)
-    - [Agents And Collectors](#agentsandcollectors)
     - [System Profiles](#systemprofiles)
     - [Server Management](#servermanagement)
-    - [Resource Dumps](#resourcedumps)
-    - [Memory Dumps](#memorydumps)
-- [Building](#building) 
+- [Building](#building)
     - [Running tests](#tests)
+- [Rest API documentation](#restapidoc)
 
 ## <a name="installation"></a>Installation
 Manual installation is currently required, maven repository might be available in the future.
@@ -105,10 +103,6 @@ import com.dynatrace.sdk.server.testautomation.TestAutomation;
 TestAutomation automation = new TestAutomation(DynatraceClient);
 ```
 
-#### Wiki entries
-
-- [Test Automation(REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=193298719)
-
 ### <a name="sessions"></a>Sessions
 
 #### Creation
@@ -118,25 +112,6 @@ import com.dynatrace.sdk.server.sessions.Sessions
 //...
 Sessions sessions = new Sessions(DynatraceClient);
 ```
-
-#### Wiki entries 
-
-- [Live Sessions(REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175966050)
-
-
-### <a name="agentsandcollectors"></a>Agents and Collectors
-
-#### Creation
-
-```java
-import com.dynatrace.sdk.server.agentadncollectors.AgentsAndCollectors
-//...
-AgentsAndCollectors agentsAndCollectors = new AgentsAndCollectors(DynatraceClient);
-```
-
-#### Wiki entries
-
-- [Agents and Collectors (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965912)
 
 ### <a name="systemprofiles"></a>System Profiles
 
@@ -148,10 +123,6 @@ import com.dynatrace.sdk.server.systemprofiles.SystemProfiles
 SystemProfiles systemProfiles = new SystemProfiles(DynatraceClient);
 ```
 
-#### Wiki entries
-
-- [System Profiles (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175966053)
-
 ### <a name="servermanagement"></a>Server Management
 
 #### Creation
@@ -162,42 +133,14 @@ import com.dynatrace.sdk.server.servermanagement.ServerManagement
 ServerManagement serverManagement = new ServerManagement(DynatraceClient);
 ```
 
-#### Wiki entries
-
-- [ServerManagement (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965889)
-
-### <a name="resourcedumps"></a>Resource Dumps
-
-#### Creation
-
-```java
-import com.dynatrace.sdk.server.resourcedumps.ResourceDumps
-//...
-ResourceDumps resourceDumps = new ResourceDumps(DynatraceClient);
-```
-
-#### Wiki entries
-
-- [ResourceDumps (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965955)
-
-### <a name="memorydumps"></a>Memory Dumps
-#### Creation
-
-```java
-import com.dynatrace.sdk.server.memorydumps.MemoryDumps
-//...
-MemoryDumps resourceDumps = new MemoryDumps(DynatraceClient);
-```
-
-#### Wiki entries
-
-- [MemoryDumps (REST)](https://community.dynatrace.com/community/pages/viewpage.action?pageId=175965955)
-
-
 ## Building
 In order to build the library, one must execute `mvn clean install` or `mvn clean package`.
 
 ### <a name="tests"></a> Running tests
 The SDK comes with some unit tests, to run them, execute the following command:
 > `mvn clean test`
+
+### <a name="restapidoc"></a>Rest API documentation
+
+Detailed documentation of the Server Rest API can be found on your local Dynatrace Server: [https://DTSERVER:8021/api-docs/current/](https://localhost:8021/api-docs/current/)
 

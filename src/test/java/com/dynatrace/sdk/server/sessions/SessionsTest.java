@@ -55,7 +55,7 @@ public class SessionsTest {
 	public void stopRecording() throws Exception {
 
 		String location = "returnedLocation";
-		stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "testProfile", "recording/status")))
+		stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "testProfile", "recording/status")))
 				.withRequestBody(containing("\"recording\":false"))
 				.willReturn(aResponse().withStatus(204).withHeader("Location", location)));
 
@@ -77,7 +77,7 @@ public class SessionsTest {
 		request.setRecordingOption(RecordingOption.TIME_SERIES);
 
         String location = "locationResult";
-		stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "testProfile", "recording")))
+		stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "testProfile", "recording")))
         		.withRequestBody(containing("\"appendtimestamp\":true"))
         		.withRequestBody(containing("\"locksession\":true"))
                 .withRequestBody(containing("\"description\":\"Description\""))
@@ -95,7 +95,7 @@ public class SessionsTest {
 	@Test
 	public void startRecordingAlreadyRecording() throws Exception {
 		final String errorReason = "Session Recording could not be started because it is already started";
-		stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "test", "recording")))
+		stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "test", "recording")))
 				.willReturn(aResponse()
 						.withStatus(404)
 						.withBody("{ \"code\": 404, \"message\": \"" + errorReason + "\"}")));
@@ -124,7 +124,7 @@ public class SessionsTest {
 
 		String location = "https://localhost:8021/api/v2/sessions/easyTravel%252F20170116121233_0.session";
 
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "testProfile", "store")))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(Sessions.SESSIONS_EP, "testProfile", "store")))
                 .withRequestBody(containing("\"sessionname\":\"session_name_test\""))
                 .withRequestBody(containing("\"description\":\"test_description\""))
                 .withRequestBody(containing("\"appendtimestamp\":true"))

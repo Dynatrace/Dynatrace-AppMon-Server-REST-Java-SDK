@@ -57,7 +57,7 @@ public class TestAutomationTest {
 
     @Test
     public void createTestRun() throws Exception {
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
                 .withRequestBody(equalToJson("{\n" +
                 		"  \"platform\": \"platformValue\",\n" +
                 		"  \"category\": \"unit\",\n" +
@@ -117,7 +117,7 @@ public class TestAutomationTest {
 
     @Test
     public void fetchTestRun() throws Exception {
-        stubFor(get(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "a75964f5-7a41-4794-b929-fbd694456ad4")))
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "a75964f5-7a41-4794-b929-fbd694456ad4")))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBodyFile("fetchSingleTestrunResponse.json")));
@@ -166,7 +166,7 @@ public class TestAutomationTest {
 
     @Test
     public void fetchTestRuns() throws Exception {
-        stubFor(get(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
         		.withQueryParam("extend", equalTo("runs"))
         		.withQueryParam("category", equalTo("unit"))
                 .willReturn(aResponse()
@@ -181,7 +181,7 @@ public class TestAutomationTest {
 
     @Test
     public void finishTestRunShouldBeExecuted() throws Exception {
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(TestAutomation.FINISH_TEST_RUN_EP, "easyTravel", "078e961b-9e6e-44ec-ab12-ab0d31be93fc")))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.FINISH_TEST_RUN_EP, "easyTravel", "078e961b-9e6e-44ec-ab12-ab0d31be93fc")))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("{\n" +

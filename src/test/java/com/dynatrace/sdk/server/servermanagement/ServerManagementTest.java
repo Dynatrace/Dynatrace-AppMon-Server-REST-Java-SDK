@@ -50,7 +50,7 @@ public class ServerManagementTest {
 
     @Test
     public void restart_successInResponse_resultIsTrue() throws Exception {
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("{ \"status\": \"success\" }")));
@@ -61,7 +61,7 @@ public class ServerManagementTest {
 
     @Test
     public void restart_failInResponse_resultIsFalse() throws Exception {
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("{ \"status\": \"fail\" }")));
@@ -73,7 +73,7 @@ public class ServerManagementTest {
     @Test
     public void restart_invalidHost_exceptionThrown() throws ServerResponseException {
 
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("{ \"status\": \"success\" }")));
@@ -91,7 +91,7 @@ public class ServerManagementTest {
 
     @Test
     public void shutdown() throws Exception {
-        stubFor(post(urlPathEqualTo(Service.APP_VER_URI_PREFIX + ServerManagement.SERVER_SHUTDOWN_EP))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_SHUTDOWN_EP))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("{ \"status\": \"success\" }")));

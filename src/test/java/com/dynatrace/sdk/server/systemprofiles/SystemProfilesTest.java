@@ -53,7 +53,7 @@ public class SystemProfilesTest {
 
     @Test
     public void getSystemProfileMetadata() throws Exception {
-        stubFor(get(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.PROFILES_EP, "test"))).willReturn(aResponse().withBody(
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILES_EP, "test"))).willReturn(aResponse().withBody(
         		"{\n" +
         		"  \"id\": \"easyTravel\",\n" +
         		"  \"description\": \"Profile for the easyTravel demo application.\",\n" +
@@ -69,7 +69,7 @@ public class SystemProfilesTest {
 
     @Test
     public void getSystemProfiles() throws Exception {
-        stubFor(get(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.PROFILES_EP, ""))).willReturn(aResponse().withBody(
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILES_EP, ""))).willReturn(aResponse().withBody(
                 "{\n" +
                 "  \"systemprofiles\": [\n" +
                 "    {\n" +
@@ -102,11 +102,11 @@ public class SystemProfilesTest {
 
     @Test
     public void activateProfileConfiguration() throws Exception {
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "configuration")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "configuration")))
                 .willReturn(aResponse().withStatus(204)));
 
 
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "unknownprofile", "configuration")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "unknownprofile", "configuration")))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withBody(
@@ -116,7 +116,7 @@ public class SystemProfilesTest {
                                 "}"
                         )));
 
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "unknownconfiguration")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "unknownconfiguration")))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withBody(
@@ -147,12 +147,12 @@ public class SystemProfilesTest {
     @Test
     public void enableProfile() throws Exception {
 
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "profile")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "profile")))
                 .willReturn(aResponse()
                         .withStatus(204)));
 
 
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "unknownprofile")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "unknownprofile")))
                 .willReturn(aResponse()
                         .withStatus(404).withBody("{\n" +
                         		"  \"code\": 404,\n" +
@@ -173,12 +173,12 @@ public class SystemProfilesTest {
     @Test
     public void disableProfile() throws Exception {
 
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "profile")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "profile")))
                 .willReturn(aResponse()
                         .withStatus(204)));
 
 
-        stubFor(put(urlPathEqualTo(Service.APP_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "unknownprofile")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "unknownprofile")))
                 .willReturn(aResponse()
                         .withStatus(404).withBody("{\n" +
                         		"  \"code\": 404,\n" +

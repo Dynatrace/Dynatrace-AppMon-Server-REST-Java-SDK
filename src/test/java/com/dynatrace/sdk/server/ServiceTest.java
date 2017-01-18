@@ -57,7 +57,7 @@ public class ServiceTest {
 
     @Before
     public void setup() {
-        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 1000)), false) {
+        this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 1000)), "") {
         };
     }
 
@@ -66,7 +66,7 @@ public class ServiceTest {
         stubFor(get(urlPathEqualTo("/test")).willReturn(aResponse().withStatus(404).
         		withBody("{\"code\": 404, \"message\": \"Profile not found\"}")));
         try {
-            this.service.doGetRequest("/test");
+            this.service.doGetRequest("/test", Service.getEmtpyResolver());
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getStatusCode(), is(404));
@@ -80,14 +80,14 @@ public class ServiceTest {
         stubFor(get(urlPathEqualTo("/300")).willReturn(aResponse().withStatus(300)));
 
         try {
-            this.service.doGetRequest("/404");
+            this.service.doGetRequest("/404", Service.getEmtpyResolver());
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getStatusCode(), is(404));
         }
 
         try {
-            this.service.doGetRequest("/300");
+            this.service.doGetRequest("/300", Service.getEmtpyResolver());
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException e) {
             assertThat(e.getStatusCode(), is(300));
@@ -121,7 +121,7 @@ public class ServiceTest {
         this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 49153, false, 1000))) {
         };
         try {
-            this.service.doGetRequest("/");
+            this.service.doGetRequest("/", Service.getEmtpyResolver());
         } catch (ServerConnectionException e) {
             assertTrue((e.getCause() instanceof HttpHostConnectException) || (e.getCause() instanceof ConnectTimeoutException));
         }
@@ -132,7 +132,7 @@ public class ServiceTest {
         this.service = new Service(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "INVALID", 8080, false, 1000))) {
         };
         try {
-            this.service.doGetRequest("/");
+            this.service.doGetRequest("/", Service.getEmtpyResolver());
             fail("Exception was expected to be thrown");
         } catch (ServerConnectionException e) {
             assertTrue(e.getCause() instanceof UnknownHostException);

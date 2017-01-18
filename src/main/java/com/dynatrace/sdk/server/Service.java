@@ -34,7 +34,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -46,7 +45,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -60,7 +58,6 @@ import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.response.models.ErrorResponse;
-import com.dynatrace.sdk.server.response.models.ResultResponse;
 
 public abstract class Service {
 
@@ -69,17 +66,18 @@ public abstract class Service {
 		System.setProperty("javax.xml.bind.context.factory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
 	}
 
-	public final static String APP_VER_URI_PREFIX = "/api/v2";
+	/** Default API version URI prefix, may be overwritten in constructor. */
+	public final static String API_VER_URI_PREFIX = "/api/v2";
 
-	private final boolean useVersionedApi;
+	private final String apiVerURIPrefix;
 	private final DynatraceClient client;
 
 	protected Service(DynatraceClient client) {
-		this(client, true);
+		this(client, API_VER_URI_PREFIX);
 	}
 
-	public Service(DynatraceClient client, boolean useVersionedApi) {
-		this.useVersionedApi = useVersionedApi;
+	protected Service(DynatraceClient client, String apiVerURIPrefix) {
+		this.apiVerURIPrefix = apiVerURIPrefix;
 		this.client = client;
 	}
 
@@ -121,7 +119,7 @@ public abstract class Service {
 		uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
 		uriBuilder.setHost(this.client.getConfiguration().getHost());
 		uriBuilder.setPort(this.client.getConfiguration().getPort());
-		uriBuilder.setPath(useVersionedApi ? APP_VER_URI_PREFIX + path : path);
+		uriBuilder.setPath(apiVerURIPrefix + path);
 		uriBuilder.setParameters(params);
 		return uriBuilder.build();
 	}
@@ -199,12 +197,6 @@ public abstract class Service {
 
 	}
 
-	public ResultResponse doGetRequest(String uriString, NameValuePair ... params) throws ServerResponseException, ServerConnectionException {
-
-		return this.doGetRequest(uriString, getBodyResponseResolver(ResultResponse.class), params);
-	}
-
-
 	private CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
 		HttpPost post = new HttpPost(uri);
 		post.setEntity(entity);
@@ -222,30 +214,12 @@ public abstract class Service {
 		}
 	}
 
-	public <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, List<NameValuePair> entityParams) throws ServerResponseException, ServerConnectionException {
-
-		HttpEntity entity;
-		try {
-			entity = entityParams == null || entityParams.isEmpty() ? null : new UrlEncodedFormEntity(entityParams);
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalArgumentException(String.format("Invalid parameters[%s] format: %s", entityParams.toString(), e.getMessage()), e);
-		}
-
-		return this.doPostRequest(uriString, resolver, entity);
-	}
-
 	public <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, Object entityObject) throws ServerConnectionException, ServerResponseException {
 
 		HttpEntity entity = entityObject == null ? null : Service.jsonObjectToEntity(entityObject);
 
 		return this.doPostRequest(uriString, resolver, entity);
 	}
-
-	public ResultResponse doPostRequest(String uriString, List<NameValuePair> entityParams) throws ServerResponseException, ServerConnectionException {
-
-		return this.doPostRequest(uriString, getBodyResponseResolver(ResultResponse.class), entityParams);
-	}
-
 
 	/**
 	 *

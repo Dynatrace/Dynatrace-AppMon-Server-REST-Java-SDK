@@ -82,6 +82,8 @@ public abstract class Service {
 	}
 
 	private static <T> T jsonInputStreamToObject(InputStream json, Class<T> clazz) throws JAXBException, IOException {
+		// passing service classloader is required for JAXBContext.newInstance, because Ant tasks runs using specific classloader,
+		// what causes that jaxb default classloader cannot find org.eclipse.persistence.jaxb classes (used for json parsing)
 		JAXBContext jaxbContext = JAXBContext.newInstance(clazz.getPackage().getName(),
 				Service.class.getClassLoader());
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -98,6 +100,8 @@ public abstract class Service {
 	protected static StringEntity jsonObjectToEntity(Object object) {
 		try {
 			StringWriter writer = new StringWriter();
+			// passing service classloader is required for JAXBContext.newInstance, because Ant tasks runs using specific classloader,
+			// what causes that jaxb default classloader cannot find org.eclipse.persistence.jaxb classes (used for json parsing)
 			JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass().getPackage().getName(),
 					Service.class.getClassLoader());
 			Marshaller marshaller = jaxbContext.createMarshaller();

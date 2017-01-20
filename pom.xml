@@ -70,7 +70,7 @@
 			<resource>
 				<directory>src/main/java</directory>
 				<includes>
-					<include>**/jaxb.index</include>
+					<include>**/jaxb.*</include>
 				</includes>
 			</resource>
 		</resources>

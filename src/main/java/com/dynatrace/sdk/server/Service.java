@@ -61,11 +61,6 @@ import com.dynatrace.sdk.server.response.models.ErrorResponse;
 
 public abstract class Service {
 
-	static {
-		/** Set jaxb factory to use eclipse implementation. */
-		System.setProperty("javax.xml.bind.context.factory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
-	}
-
 	/** Default API version URI prefix, may be overwritten in constructor. */
 	public final static String API_VER_URI_PREFIX = "/api/v2";
 

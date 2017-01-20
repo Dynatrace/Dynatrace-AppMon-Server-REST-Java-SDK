@@ -1,0 +1,202 @@
+{
+ "testRuns": [
+    {
+      "id": "760aaadf-ca95-4fcd-8907-fa979e18577e",
+      "category": "unit",
+      "versionBuild": "3",
+      "versionMajor": "1",
+      "versionMilestone": "m4",
+      "versionMinor": "2",
+      "versionRevision": "3",
+      "platform": "Windows",
+      "startTime": "2017-01-12T16:42:33.116+01:00",
+      "systemProfile": "easyTravel",
+      "marker": "marker",
+      "href": "https://localhost:8021/api/v2/profiles/easyTravel/testruns/760aaadf-ca95-4fcd-8907-fa979e18577e",
+      "creationMode": "MANUAL",
+      "additionalMetaData": {
+        "somekey": "somevalue"
+      },
+      "numDegraded": 0,
+      "numFailed": 0,
+      "numImproved": 0,
+      "numInvalidated": 0,
+      "numPassed": 6,
+      "numVolatile": 0,
+      "finished": true,
+      "testResults": [
+        {
+          "name": "SumTest.sumWithoutAdding",
+          "status": "passed",
+          "exectime": "2017-01-12T16:42:36.349+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "StringMergeTest.doMergeFromSetter",
+          "status": "passed",
+          "exectime": "2017-01-12T16:42:36.347+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "SumTest.sumWithNegativeNumbers",
+          "status": "passed",
+          "exectime": "2017-01-12T16:42:37.351+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "SumTest.sumWithPositiveNumbers",
+          "status": "passed",
+          "exectime": "2017-01-12T16:42:36.851+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "SumTest.sumWithMixedNumbers",
+          "status": "passed",
+          "exectime": "2017-01-12T16:42:37.852+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "StringMergeTest.doMergeFromConstructor",
+          "status": "passed",
+          "exectime": "2017-01-12T16:42:36.341+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        }
+      ]
+    },
+    {
+      "id": "f25f0f48-92a4-43ff-9ba4-b99a5df74165",
+      "category": "unit",
+      "platform": "Windows 10 10.0.10586 x64",
+      "startTime": "2017-01-11T16:49:48.526+01:00",
+      "systemProfile": "easyTravel",
+      "href": "https://localhost:8021/api/v2/profiles/easyTravel/testruns/f25f0f48-92a4-43ff-9ba4-b99a5df74165",
+      "creationMode": "MANUAL",
+      "numDegraded": 0,
+      "numFailed": 0,
+      "numImproved": 0,
+      "numInvalidated": 0,
+      "numPassed": 6,
+      "numVolatile": 0,
+      "finished": true,
+      "testResults": [
+        {
+          "name": "StringMergeTest.doMergeFromConstructor",
+          "status": "passed",
+          "exectime": "2017-01-11T16:49:50.493+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows 10 10.0.10586 x64"
+        },
+        {
+          "name": "SumTest.sumWithPositiveNumbers",
+          "status": "passed",
+          "exectime": "2017-01-11T16:49:50.998+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows 10 10.0.10586 x64"
+        },
+        {
+          "name": "SumTest.sumWithoutAdding",
+          "status": "passed",
+          "exectime": "2017-01-11T16:49:50.497+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows 10 10.0.10586 x64"
+        },
+        {
+          "name": "SumTest.sumWithMixedNumbers",
+          "status": "passed",
+          "exectime": "2017-01-11T16:49:52.001+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows 10 10.0.10586 x64"
+        },
+        {
+          "name": "StringMergeTest.doMergeFromSetter",
+          "status": "passed",
+          "exectime": "2017-01-11T16:49:50.496+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows 10 10.0.10586 x64"
+        },
+        {
+          "name": "SumTest.sumWithNegativeNumbers",
+          "status": "passed",
+          "exectime": "2017-01-11T16:49:51.500+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows 10 10.0.10586 x64"
+        }
+      ]
+    },
+    {
+      "id": "1fc7cd73-2a9a-4388-ab19-a2cf1b7569b3",
+      "category": "unit",
+      "versionBuild": "3",
+      "versionMajor": "1",
+      "versionMilestone": "m4",
+      "versionMinor": "2",
+      "versionRevision": "3",
+      "platform": "Windows",
+      "startTime": "2017-01-11T16:35:10.691+01:00",
+      "systemProfile": "easyTravel",
+      "marker": "marker",
+      "href": "https://localhost:8021/api/v2/profiles/easyTravel/testruns/1fc7cd73-2a9a-4388-ab19-a2cf1b7569b3",
+      "creationMode": "MANUAL",
+      "additionalMetaData": {
+        "somekey": "somevalue"
+      },
+      "numDegraded": 0,
+      "numFailed": 0,
+      "numImproved": 0,
+      "numInvalidated": 0,
+      "numPassed": 6,
+      "numVolatile": 0,
+      "finished": true,
+      "testResults": [
+        {
+          "name": "SumTest.sumWithoutAdding",
+          "status": "passed",
+          "exectime": "2017-01-11T16:35:12.704+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "StringMergeTest.doMergeFromSetter",
+          "status": "passed",
+          "exectime": "2017-01-11T16:35:12.703+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "SumTest.sumWithNegativeNumbers",
+          "status": "passed",
+          "exectime": "2017-01-11T16:35:13.707+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "SumTest.sumWithPositiveNumbers",
+          "status": "passed",
+          "exectime": "2017-01-11T16:35:13.206+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "SumTest.sumWithMixedNumbers",
+          "status": "passed",
+          "exectime": "2017-01-11T16:35:14.207+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        },
+        {
+          "name": "StringMergeTest.doMergeFromConstructor",
+          "status": "passed",
+          "exectime": "2017-01-11T16:35:12.700+01:00",
+          "package": "com.example.simple",
+          "platform": "Windows"
+        }
+      ]
+    }
+	]
+}

@@ -2,52 +2,58 @@ package com.dynatrace.sdk.server.systemprofiles.models;
 
 import javax.xml.bind.annotation.*;
 
+/**
+ *
+ * @author tomasz.chojnacki
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="systemprofile")
-public class SystemProfileMetadata extends SystemProfile {
-    @XmlAttribute
-    private Boolean enabled;
-    @XmlAttribute
-    private Boolean isInteractiveLicensed;
+public class SystemProfileMetadata {
 
-    @XmlElement(name = "agentgroupsreference")
-    private AgentGroupsReference agentGroupsReference;
+    @XmlAttribute
+    private String id;
+    @XmlAttribute
     private String description;
-
-    public SystemProfileMetadata(Boolean isRecording, String id, String href, Boolean enabled, Boolean isInteractiveLicensed, AgentGroupsReference agentGroupsReference, String description) {
-        super(isRecording, id, href);
-        this.enabled = enabled;
-        this.isInteractiveLicensed = isInteractiveLicensed;
-        this.agentGroupsReference = agentGroupsReference;
-        this.description = description;
-    }
+	@XmlAttribute
+    private Boolean enabled;
+    @XmlAttribute(name="isrecording")
+    private boolean recording;
 
     public SystemProfileMetadata() {
     }
 
-    public Boolean isEnabled() {
-        return this.enabled;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public Boolean isInteractiveLicensed() {
-        return this.isInteractiveLicensed;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public AgentGroupsReference getAgentGroupsReference() {
-        return this.agentGroupsReference;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getDescription() {
-        return this.description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    @Override
-    public String toString() {
-        return "SystemProfileMetadata{" +
-                "enabled=" + this.enabled +
-                ", isInteractiveLicensed=" + this.isInteractiveLicensed +
-                ", agentGroupReference=" + this.agentGroupsReference +
-                ", description='" + this.description + '\'' +
-                '}';
-    }
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public Boolean getRecording() {
+		return recording;
+	}
+
+	public void setRecording(Boolean recording) {
+		this.recording = recording;
+	}
+
+
+
 }

@@ -34,6 +34,11 @@
     </contributors>
 
     <dependencies>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>org.eclipse.persistence.moxy</artifactId>
+			<version>2.5.0</version>
+		</dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -60,6 +65,15 @@
     </dependencies>
 
     <build>
+    	<!-- attach jaxb index files, to allow ant plugin work with eclipse jaxb implementation -->
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/jaxb.index</include>
+				</includes>
+			</resource>
+		</resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -106,13 +120,7 @@
                 </executions>
                 <configuration>
                     <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.apache</pattern>
-                            <shadedPattern>${project.groupId}.org.apache</shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <filters>
+						<filters>
                         <filter>
                             <artifact>*:*</artifact>
                             <excludes>

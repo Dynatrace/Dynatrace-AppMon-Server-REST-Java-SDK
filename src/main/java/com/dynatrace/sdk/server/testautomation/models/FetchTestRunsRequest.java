@@ -33,7 +33,7 @@ import java.util.*;
 public class FetchTestRunsRequest {
 
     public enum Extension {
-        TEST_RUNS("testRuns"), TEST_RESULTS("testResults"), MEASURES("measures");
+        TEST_RUNS("runs"), TEST_RESULTS("results"), MEASURES("measures");
 
         private final String internal;
 
@@ -47,8 +47,8 @@ public class FetchTestRunsRequest {
     }
 
     private String systemProfile;
-    private Long startTime;
-    private Long endTime;
+    private Date startTime;
+    private Date endTime;
     private Integer maxTestRuns;
     private Integer maxBuilds;
     private Extension extend;
@@ -71,40 +71,23 @@ public class FetchTestRunsRequest {
         this.systemProfile = systemProfile;
     }
 
-    /**
-     * @return Start timestamp of timeframe, in milisecond since epoch (January 1, 1970 UTC).
-     */
-    public Long getStartTime() {
-        return this.startTime;
-    }
+    public Date getStartTime() {
+		return startTime;
+	}
 
-    /**
-     * @param startTime - Start timestamp of timeframe, in milisecond since epoch (January 1, 1970 UTC).
-     */
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime.getTime();
-    }
+	public Date getEndTime() {
+		return endTime;
+	}
 
-    public Long getEndTime() {
-        return this.endTime;
-    }
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 
-    /**
-     * @param endTime - End timestamp of timeframe, in milisecond since epoch (January 1, 1970 UTC).
-     */
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime.getTime();
-    }
-
-    /**
+	/**
      * @return Max number of test runs to be returned in this call.
      */
     public Integer getMaxTestRuns() {

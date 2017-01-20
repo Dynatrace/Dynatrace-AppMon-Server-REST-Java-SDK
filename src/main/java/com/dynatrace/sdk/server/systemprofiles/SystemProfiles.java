@@ -32,16 +32,10 @@ import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.systemprofiles.models.ProfileStatus;
+import com.dynatrace.sdk.server.systemprofiles.models.ProfileStatusEnum;
 import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
 import com.dynatrace.sdk.server.systemprofiles.models.SystemProfileMetadata;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.xml.sax.InputSource;
-
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Wraps a System Profiles REST API, providing an easy to use set of methods to control server.
@@ -49,10 +43,9 @@ import java.net.URISyntaxException;
  */
 
 public class SystemProfiles extends Service {
-    public static final String ACTIVATE_PROFILE_CONFIGURATION_EP = "/rest/management/profiles/%s/configurations/%s/activate";
-    public static final String PROFILE_ENABLE_EP = "/rest/management/profiles/%s/enable";
-    public static final String PROFILE_DISABLE_EP = "/rest/management/profiles/%s/disable";
-    public static final String PROFILES_EP = "/rest/management/profiles/%s";
+    public static final String ACTIVATE_PROFILE_CONFIGURATION_EP = "/profiles/%s/configurations/%s/status";
+    public static final String PROFILE_STATUS_EP = "/profiles/%s/status";
+    public static final String PROFILES_EP = "/profiles/%s";
 
     public SystemProfiles(DynatraceClient client) {
         super(client);
@@ -66,12 +59,8 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public Profiles getSystemProfiles() throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILES_EP, ""));
-            return this.doGetRequest(uri, Profiles.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Could not build profiles endpoint for: %s", PROFILES_EP));
-        }
+
+    	return this.doGetRequest(String.format(PROFILES_EP, ""), getBodyResponseResolver(Profiles.class));
     }
 
     /**
@@ -83,101 +72,46 @@ public class SystemProfiles extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public SystemProfileMetadata getSystemProfileMetadata(String profileName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILES_EP, profileName));
-            return this.doGetRequest(uri, SystemProfileMetadata.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
-        }
+
+    	return this.doGetRequest(String.format(PROFILES_EP, profileName), getBodyResponseResolver(SystemProfileMetadata.class));
     }
 
     /**
-     * Activate a System Profile configuration, so that all others are set to inactive
+     * Change the activation state of a System Profile. Activating a configuration automatically sets all other configurations to DISABLED.
+     * Manually setting the activation state to DISABLED via this call is not allowed.
      *
      * @param profileName       - name of the System Profile
      * @param configurationName - name of the Configuration to activate
-     * @return boolean that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public boolean activateProfileConfiguration(String profileName, String configurationName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(ACTIVATE_PROFILE_CONFIGURATION_EP, profileName, configurationName));
-            try (CloseableHttpResponse response = this.doGetRequest(uri);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public void activateProfileConfiguration(String profileName, String configurationName) throws ServerConnectionException, ServerResponseException {
 
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s] or configurationName[%s]: %s", profileName, configurationName, e.getMessage()), e);
-        }
+    	this.doPutRequest(String.format(ACTIVATE_PROFILE_CONFIGURATION_EP, profileName, configurationName),
+    			new ProfileStatus(ProfileStatusEnum.ENABLED), Service.getEmtpyResolver());
     }
 
     /**
      * Enable System Profile
      *
-     * @param profileName - name of the System Profile
-     * @return boolean that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public boolean enableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILE_ENABLE_EP, profileName));
-            try (CloseableHttpResponse response = this.doGetRequest(uri);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public void enableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
 
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
-        }
+    	this.doPutRequest(String.format(PROFILE_STATUS_EP, profileName), new ProfileStatus(ProfileStatusEnum.ENABLED), Service.getEmtpyResolver());
     }
 
     /**
      * Disable System Profile
      *
      * @param profileName - name of the System Profile
-     * @return boolean that describes that the request was executed successfully
      * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
-    public boolean disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(PROFILE_DISABLE_EP, profileName));
-            try (CloseableHttpResponse response = this.doGetRequest(uri);
-                 InputStream is = response.getEntity().getContent()) {
-                // xpath is reasonable for parsing such a small entity
-                try {
-                    String result = Service.compileValueExpression().evaluate(new InputSource(is));
-                    return result != null && result.equals("true");
-                } catch (XPathExpressionException e) {
-                    throw new ServerResponseException(response.getStatusLine().getStatusCode(), "Could not parse response: " + e.getMessage(), e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public void disableProfile(String profileName) throws ServerConnectionException, ServerResponseException {
 
-
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid profileName[%s]: %s", profileName, e.getMessage()), e);
-        }
+    	this.doPutRequest(String.format(PROFILE_STATUS_EP, profileName), new ProfileStatus(ProfileStatusEnum.DISABLED), Service.getEmtpyResolver());
     }
 
 }

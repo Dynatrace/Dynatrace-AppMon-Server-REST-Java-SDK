@@ -1,0 +1,5 @@
+RecordingOption
+RecordingStatus
+SessionType
+StartRecordingRequest
+StoreSessionRequest

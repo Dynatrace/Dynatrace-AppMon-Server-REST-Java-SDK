@@ -31,16 +31,37 @@ package com.dynatrace.sdk.server.sessions.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class StartRecordingRequest {
+
+	/** System profile is used as url param, not included in request body. */
+	@XmlTransient
     private String systemProfile;
+	@XmlAttribute(name="sessionname")
     private String presentableName;
+	@XmlAttribute(name="description")
     private String description;
+	@XmlAttribute(name="appendtimestamp")
     private Boolean isTimestampAllowed;
+	@XmlAttribute(name="recordingoption")
     private RecordingOption recordingOption;
+	@XmlAttribute(name="locksession")
     private Boolean isSessionLocked;
+	@XmlElement(name="labels")
     private List<String> labels = new ArrayList<>();
 
-    public StartRecordingRequest(String systemProfile) {
+    public StartRecordingRequest() {
+	}
+
+	public StartRecordingRequest(String systemProfile) {
         this.systemProfile = systemProfile;
     }
 

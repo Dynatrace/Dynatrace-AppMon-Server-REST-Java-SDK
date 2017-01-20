@@ -28,16 +28,27 @@
 
 package com.dynatrace.sdk.server.testautomation;
 
-import com.dynatrace.sdk.server.BasicServerConfiguration;
-import com.dynatrace.sdk.server.DynatraceClient;
-import com.dynatrace.sdk.server.testautomation.models.*;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Rule;
-import org.junit.Test;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+
+import org.junit.Rule;
+import org.junit.Test;
+
+import com.dynatrace.sdk.server.BasicServerConfiguration;
+import com.dynatrace.sdk.server.DynatraceClient;
+import com.dynatrace.sdk.server.Service;
+import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
+import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
+import com.dynatrace.sdk.server.testautomation.models.CreationMode;
+import com.dynatrace.sdk.server.testautomation.models.FetchTestRunsRequest;
+import com.dynatrace.sdk.server.testautomation.models.TestCategory;
+import com.dynatrace.sdk.server.testautomation.models.TestMeasure;
+import com.dynatrace.sdk.server.testautomation.models.TestResult;
+import com.dynatrace.sdk.server.testautomation.models.TestRun;
+import com.dynatrace.sdk.server.testautomation.models.TestRuns;
+import com.dynatrace.sdk.server.testautomation.models.TestStatus;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class TestAutomationTest {
     @Rule
@@ -46,122 +57,205 @@ public class TestAutomationTest {
 
     @Test
     public void createTestRun() throws Exception {
-        stubFor(post(urlPathEqualTo(String.format(TestAutomation.TEST_RUNS_EP, "Test", "")))
-                .withRequestBody(equalToXml("<testRun systemProfile=\"Test\" category=\"performance\" versionBuild=\"Build\"/>"))
-                .willReturn(aResponse()
-                        .withStatus(201)
-                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><testRun category=\"performance\" versionBuild=\"Build\" platform=\"\" startTime=\"1469452303746\" id=\"6c0e95b3-e51b-411f-bb49-da85e8b36261\" numPassed=\"0\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"Test\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/Jenkins/testruns/6c0e95b3-e51b-411f-bb49-da85e8b36261.xml\"/>")));
-        CreateTestRunRequest request = new CreateTestRunRequest("Test", "Build");
-        request.setCategory(TestCategory.PERFORMANCE);
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
+                .withRequestBody(equalToJson("{\n" +
+                		"  \"platform\": \"platformValue\",\n" +
+                		"  \"category\": \"unit\",\n" +
+                		"  \"versionMajor\": \"major1\",\n" +
+                		"  \"versionMinor\": \"minor1\",\n" +
+                		"  \"versionRevision\": \"revision1\",\n" +
+                		"  \"versionBuild\": \"build1\",\n" +
+                		"  \"versionMilestone\": \"milestone1\",\n" +
+                		"  \"marker\": \"markerValue\"\n" +
+                		"}")).willReturn(aResponse()
+                                .withStatus(201)
+                                .withBody("{\n" +
+                                		"  \"id\": \"9a338757-5007-4bee-aa19-4952c7953a1e\",\n" +
+                                		"  \"category\": \"unit\",\n" +
+                                		"  \"versionBuild\": \"build1\",\n" +
+                                		"  \"versionMajor\": \"major1\",\n" +
+                                		"  \"versionMilestone\": \"milestone1\",\n" +
+                                		"  \"versionMinor\": \"minor1\",\n" +
+                                		"  \"versionRevision\": \"revision1\",\n" +
+                                		"  \"platform\": \"platformValue\",\n" +
+                                		"  \"startTime\": \"2017-01-16T16:56:23.518+01:00\",\n" +
+                                		"  \"systemProfile\": \"easyTravel\",\n" +
+                                		"  \"marker\": \"string\",\n" +
+                                		"  \"href\": \"https://localhost:8021/api/v2/profiles/easyTravel/testruns/9a338757-5007-4bee-aa19-4952c7953a1e\",\n" +
+                                		"  \"creationMode\": \"MANUAL\",\n" +
+                                		"  \"numDegraded\": 0,\n" +
+                                		"  \"numFailed\": 0,\n" +
+                                		"  \"numImproved\": 0,\n" +
+                                		"  \"numInvalidated\": 0,\n" +
+                                		"  \"numPassed\": 0,\n" +
+                                		"  \"numVolatile\": 0,\n" +
+                                		"  \"finished\": false\n" +
+                                		"}")));
+
+
+        CreateTestRunRequest request = new CreateTestRunRequest();
+        request.setSystemProfile("easyTravel");
+        request.setVersionBuild("build1");
+        request.setVersionMajor("major1");
+        request.setVersionMilestone("milestone1");
+        request.setVersionMinor("minor1");
+        request.setVersionRevision("revision1");
+        request.setMarker("markerValue");
+        request.setPlatform("platformValue");
+        request.setCategory(TestCategory.UNIT);
+
         TestRun tr = this.testAutomation.createTestRun(request);
-        assertThat(tr.getCategory(), is(TestCategory.PERFORMANCE));
-        assertThat(tr.getVersionBuild(), is("Build"));
-        assertThat(tr.getStartTime(), is(1469452303746L));
-        assertThat(tr.getId(), is("6c0e95b3-e51b-411f-bb49-da85e8b36261"));
-        assertThat(tr.getSystemProfile(), is("Test"));
+        assertThat(tr.getCategory(), is(TestCategory.UNIT));
+        assertThat(tr.getVersionBuild(), is("build1"));
+        assertThat(tr.getId(), is("9a338757-5007-4bee-aa19-4952c7953a1e"));
+        assertThat(tr.getSystemProfile(), is("easyTravel"));
         assertThat(tr.getCreationMode(), is(CreationMode.MANUAL));
-        assertThat(tr.getHref(), is("https://localhost:8021/rest/management/profiles/Jenkins/testruns/6c0e95b3-e51b-411f-bb49-da85e8b36261.xml"));
+        assertThat(tr.isFinished(), is(false));
+        assertThat(tr.getHref(), is("https://localhost:8021/api/v2/profiles/easyTravel/testruns/9a338757-5007-4bee-aa19-4952c7953a1e"));
+
     }
 
     @Test
     public void fetchTestRun() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(TestAutomation.TEST_RUNS_EP, "Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc")))
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "a75964f5-7a41-4794-b929-fbd694456ad4")))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                                "<testRun category=\"unit\" versionBuild=\"13:42:05\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"2\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469446925361\" id=\"078e961b-9e6e-44ec-ab12-ab0d31be93fc\" numPassed=\"3\" numFailed=\"1\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"Test\" creationMode=\"MANUAL\">\n" +
-                                "  <testResult name=\"ITDaoTest.testRemoveDestinations\" status=\"passed\" exectime=\"1469446929087\" package=\"com.compuware.apm.samples.simplewebapp\" platform=\"Linux 4.4.13-1-MANJARO x86_64\">\n" +
-                                "    <measure name=\"Count\" metricGroup=\"Exceptions\" value=\"2.0\" unit=\"num\" expectedMin=\"2.0\" expectedMax=\"2.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "    <measure name=\"Failed Transaction Count\" metricGroup=\"Error Detection\" value=\"0.0\" unit=\"num\" expectedMin=\"0.0\" expectedMax=\"0.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "    <measure name=\"DB Count\" metricGroup=\"Database\" value=\"4.0\" unit=\"num\" expectedMin=\"4.0\" expectedMax=\"4.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "  </testResult>\n" +
-                                "  <testResult name=\"ITDaoTest.testNotExistingDestination\" status=\"passed\" exectime=\"1469446930433\" package=\"com.compuware.apm.samples.simplewebapp\" platform=\"Linux 4.4.13-1-MANJARO x86_64\">\n" +
-                                "    <measure name=\"Failed Transaction Count\" metricGroup=\"Error Detection\" value=\"0.0\" unit=\"num\" expectedMin=\"0.0\" expectedMax=\"0.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "    <measure name=\"DB Count\" metricGroup=\"Database\" value=\"1.0\" unit=\"num\" expectedMin=\"1.0\" expectedMax=\"1.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "  </testResult>\n" +
-                                "  <testResult name=\"ITDaoTest.testGetAllDestinations\" status=\"failed\" exectime=\"1469446929383\" package=\"com.compuware.apm.samples.simplewebapp\" platform=\"Linux 4.4.13-1-MANJARO x86_64\">\n" +
-                                "    <measure name=\"Count\" metricGroup=\"Exceptions\" value=\"1.0\" unit=\"num\" numFailingOrInvalidatedRuns=\"1\" numValidRuns=\"0\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "    <measure name=\"Failed Transaction Count\" metricGroup=\"Error Detection\" value=\"-INF\" unit=\"num\" numFailingOrInvalidatedRuns=\"1\" numValidRuns=\"0\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "    <measure name=\"DB Count\" metricGroup=\"Database\" value=\"INF\" unit=\"num\" numFailingOrInvalidatedRuns=\"1\" numValidRuns=\"0\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "  </testResult>\n" +
-                                "  <testResult name=\"ITDaoTest.testGetDestination\" status=\"passed\" exectime=\"1469446930466\" package=\"com.compuware.apm.samples.simplewebapp\" platform=\"Linux 4.4.13-1-MANJARO x86_64\">\n" +
-                                "    <measure name=\"Failed Transaction Count\" metricGroup=\"Error Detection\" value=\"0.0\" unit=\"num\" expectedMin=\"0.0\" expectedMax=\"0.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "    <measure name=\"DB Count\" metricGroup=\"Database\" value=\"1.0\" unit=\"num\" expectedMin=\"1.0\" expectedMax=\"1.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "  </testResult>\n" +
-                                "</testRun>")));
-        TestRun tr = this.testAutomation.fetchTestRun("Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc");
-        assertThat(tr.getId(), is("078e961b-9e6e-44ec-ab12-ab0d31be93fc"));
-        assertThat(tr.getPassedCount(), is(3));
+                        .withBodyFile("fetchSingleTestrunResponse.json")));
+
+        TestRun tr = this.testAutomation.fetchTestRun("easyTravel", "a75964f5-7a41-4794-b929-fbd694456ad4");
+
+        assertThat(tr.getId(), is("a75964f5-7a41-4794-b929-fbd694456ad4"));
+        assertThat(tr.getPassedCount(), is(6));
         assertThat(tr.getFailedCount(), is(1));
-        assertThat(tr.getSystemProfile(), is("Test"));
+        assertThat(tr.getSystemProfile(), is("easyTravel"));
         assertThat(tr.getCreationMode(), is(CreationMode.MANUAL));
         assertThat(tr.getCategory(), is(TestCategory.UNIT));
-        assertThat(tr.getVersionBuild(), is("13:42:05"));
-        assertThat(tr.getVersionMajor(), is("2016"));
-        assertThat(tr.getVersionMinor(), is("7"));
-        assertThat(tr.getVersionRevision(), is("2"));
-        assertThat(tr.getPlatform(), is("Linux 4.4.13-1-MANJARO x86_64"));
-        assertThat(tr.getStartTime(), is(1469446925361L));
-        assertThat(tr.getTestResults().size(), is(4));
+        assertThat(tr.getVersionBuild(), is("3"));
+        assertThat(tr.getVersionMajor(), is("1"));
+        assertThat(tr.getVersionMinor(), is("2"));
+        assertThat(tr.getVersionRevision(), is("3"));
+        assertThat(tr.getPlatform(), is("Windows"));
+        assertThat(tr.getStartTime(), is(DateStringIso8601Adapter.getAsDate("2017-01-10T14:56:54.722+01:00")));
+        assertThat(tr.getTestResults().size(), is(6));
 
         //Test a single test result unmarshalling
-        TestResult result = tr.getTestResults().get(2);
-        assertThat(result.getName(), is("ITDaoTest.testGetAllDestinations"));
-        assertThat(result.getStatus(), is(TestStatus.FAILED));
-        assertThat(result.getExecutionTime(), is(1469446929383L));
-        assertThat(result.getPackageName(), is("com.compuware.apm.samples.simplewebapp"));
-        assertThat(result.getPlatform(), is("Linux 4.4.13-1-MANJARO x86_64"));
-        assertThat(result.getMeasures().size(), is(3));
+        TestResult result = tr.getTestResults().get(0);
+        assertThat(result.getName(), is("SumTest.sumWithoutAdding"));
+        assertThat(result.getStatus(), is(TestStatus.PASSED));
+        assertThat(result.getExecutionTime(), is(DateStringIso8601Adapter.getAsDate("2017-01-10T14:56:56.785+01:00")));
+        assertThat(result.getPackageName(), is("com.example.simple"));
+        assertThat(result.getPlatform(), is("Windows"));
+        assertThat(result.getMeasures().size(), is(1));
 
         //Test it's measures
         TestMeasure measure = result.getMeasures().get(0);
-        assertThat(measure.getName(), is("Count"));
-        assertThat(measure.getMetricGroup(), is("Exceptions"));
-        assertThat(measure.getValue(), is(1.0));
-        //unit="num" numFailingOrInvalidatedRuns="1" numValidRuns="0" numImprovedRuns="0" numDegradedRuns="0" violationPercentage="0.0"/>
+        assertThat(measure.getName(), is("Failed Transaction Count"));
+        assertThat(measure.getMetricGroup(), is("Error Detection"));
+        assertThat(measure.getValue(), is(0.0));
         assertThat(measure.getUnit(), is("num"));
         assertThat(measure.getViolationPercentage(), is(0.0));
-        assertThat(measure.getFailingOrInvalidatedRunsCount(), is(1));
-        assertThat(measure.getValidRunsCount(), is(0));
+        assertThat(measure.getFailingOrInvalidatedRunsCount(), is(2));
+        assertThat(measure.getValidRunsCount(), is(9));
         assertThat(measure.getImprovedRunsCount(), is(0));
         assertThat(measure.getDegradedRunsCount(), is(0));
 
         //check edge case
-        assertThat(result.getMeasures().get(1).getValue(), is(Double.NEGATIVE_INFINITY));
-        assertThat(result.getMeasures().get(2).getValue(), is(Double.POSITIVE_INFINITY));
+//        assertThat(result.getMeasures().get(1).getValue(), is(Double.NEGATIVE_INFINITY));
+//        assertThat(result.getMeasures().get(2).getValue(), is(Double.POSITIVE_INFINITY));
     }
 
     @Test
     public void fetchTestRuns() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(TestAutomation.TEST_RUNS_EP, "IntelliJ", ""))).withQueryParam("extend", equalTo("testRuns")).withQueryParam("category", equalTo("unit"))
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
+        		.withQueryParam("extend", equalTo("runs"))
+        		.withQueryParam("category", equalTo("unit"))
                 .willReturn(aResponse()
-                        .withStatus(200).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                                "<testRuns>\n" +
-                                "  <testRun category=\"unit\" versionBuild=\"13:42:05\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"2\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469446925361\" id=\"078e961b-9e6e-44ec-ab12-ab0d31be93fc\" numPassed=\"3\" numFailed=\"1\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testRuns/078e961b-9e6e-44ec-ab12-ab0d31be93fc.xml\"/>\n" +
-                                "  <testRun category=\"unit\" versionBuild=\"15:52:11\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469109132002\" id=\"3283730b-364b-419a-adfd-c5653c62c789\" numPassed=\"4\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testRuns/3283730b-364b-419a-adfd-c5653c62c789.xml\"/>\n" +
-                                "  <testRun category=\"unit\" versionBuild=\"15:24:40\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469107480773\" id=\"966d9418-9e80-405b-bb2f-97220d684732\" numPassed=\"4\" numFailed=\"0\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testRuns/966d9418-9e80-405b-bb2f-97220d684732.xml\"/>\n" +
-                                "  <testRun category=\"unit\" versionBuild=\"08:29:53\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"5\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469082594103\" id=\"2b6b7482-a704-433c-b84f-5b7bb1509c45\" numPassed=\"3\" numFailed=\"1\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testRuns/2b6b7482-a704-433c-b84f-5b7bb1509c45.xml\"/>\n" +
-                                "  <testRun category=\"unit\" versionBuild=\"13:08:29\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"4\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469012910062\" id=\"be72fc18-9f15-4ce5-b1af-1ed7cdd284f6\" numPassed=\"3\" numFailed=\"1\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"IntelliJ\" creationMode=\"MANUAL\" href=\"https://localhost:8021/rest/management/profiles/IntelliJ/testRuns/be72fc18-9f15-4ce5-b1af-1ed7cdd284f6.xml\"/>\n" +
-                                "</testRuns>")));
-        FetchTestRunsRequest request = new FetchTestRunsRequest("IntelliJ");
+                        .withStatus(200).withBodyFile("fetchTestrunsResponse.json")));
+        FetchTestRunsRequest request = new FetchTestRunsRequest("easyTravel");
         request.setExtend(FetchTestRunsRequest.Extension.TEST_RUNS);
         request.setCategoryFilter(TestCategory.UNIT);
+
         TestRuns testRuns = this.testAutomation.fetchTestRuns(request);
-        assertThat(testRuns.getTestRuns().size(), is(5));
+        assertThat(testRuns.getTestRuns().size(), is(3));
     }
 
     @Test
     public void finishTestRunShouldBeExecuted() throws Exception {
-        stubFor(put(urlPathEqualTo(String.format(TestAutomation.FINISH_TEST_RUN_EP, "Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc")))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.FINISH_TEST_RUN_EP, "easyTravel", "078e961b-9e6e-44ec-ab12-ab0d31be93fc")))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withBody("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                                "<testRun category=\"unit\" versionBuild=\"13:42:05\" finished=\"true\" versionMajor=\"2016\" versionMinor=\"7\" versionRevision=\"2\" platform=\"Linux 4.4.13-1-MANJARO x86_64\" startTime=\"1469446925361\" id=\"078e961b-9e6e-44ec-ab12-ab0d31be93fc\" numPassed=\"3\" numFailed=\"1\" numVolatile=\"0\" numImproved=\"0\" numDegraded=\"0\" numInvalidated=\"0\" systemProfile=\"Test\" creationMode=\"MANUAL\">\n" +
-                                "  <testResult name=\"ITDaoTest.testRemoveDestinations\" status=\"passed\" exectime=\"1469446929087\" package=\"com.compuware.apm.samples.simplewebapp\" platform=\"Linux 4.4.13-1-MANJARO x86_64\">\n" +
-                                "    <measure name=\"Count\" metricGroup=\"Exceptions\" value=\"2.0\" unit=\"num\" expectedMin=\"2.0\" expectedMax=\"2.0\" numFailingOrInvalidatedRuns=\"0\" numValidRuns=\"10\" numImprovedRuns=\"0\" numDegradedRuns=\"0\" violationPercentage=\"0.0\"/>\n" +
-                                "  </testResult>\n" +
-                                "</testRun>")));
-        TestRun tr = this.testAutomation.finishTestRun("Test", "078e961b-9e6e-44ec-ab12-ab0d31be93fc");
-        assertThat(tr.getFinished(), is("true"));
+                        .withBody("{\n" +
+                        		"  \"id\": \"078e961b-9e6e-44ec-ab12-ab0d31be93fc\",\n" +
+                        		"  \"category\": \"unit\",\n" +
+                        		"  \"versionBuild\": \"3\",\n" +
+                        		"  \"versionMajor\": \"1\",\n" +
+                        		"  \"versionMilestone\": \"m4\",\n" +
+                        		"  \"versionMinor\": \"2\",\n" +
+                        		"  \"versionRevision\": \"3\",\n" +
+                        		"  \"platform\": \"Windows\",\n" +
+                        		"  \"startTime\": \"2017-01-10T15:21:20.618+01:00\",\n" +
+                        		"  \"systemProfile\": \"easyTravel\",\n" +
+                        		"  \"marker\": \"marker\",\n" +
+                        		"  \"creationMode\": \"MANUAL\",\n" +
+                        		"  \"additionalMetaData\": {\n" +
+                        		"    \"somekey\": \"somevalue\"\n" +
+                        		"  },\n" +
+                        		"  \"numDegraded\": 0,\n" +
+                        		"  \"numFailed\": 0,\n" +
+                        		"  \"numImproved\": 0,\n" +
+                        		"  \"numInvalidated\": 0,\n" +
+                        		"  \"numPassed\": 6,\n" +
+                        		"  \"numVolatile\": 0,\n" +
+                        		"  \"finished\": true,\n" +
+                        		"  \"testResults\": [\n" +
+                        		"    {\n" +
+                        		"      \"name\": \"SumTest.sumWithoutAdding\",\n" +
+                        		"      \"status\": \"passed\",\n" +
+                        		"      \"exectime\": \"2017-01-10T15:21:22.737+01:00\",\n" +
+                        		"      \"package\": \"com.example.simple\",\n" +
+                        		"      \"platform\": \"Windows\",\n" +
+                        		"      \"measures\": [\n" +
+                        		"        {\n" +
+                        		"          \"name\": \"Failed Transaction Count\",\n" +
+                        		"          \"metricGroup\": \"Error Detection\",\n" +
+                        		"          \"value\": 0,\n" +
+                        		"          \"unit\": \"num\",\n" +
+                        		"          \"expectedMin\": 0,\n" +
+                        		"          \"expectedMax\": 0,\n" +
+                        		"          \"numFailingOrInvalidatedRuns\": 0,\n" +
+                        		"          \"numValidRuns\": 10,\n" +
+                        		"          \"numImprovedRuns\": 0,\n" +
+                        		"          \"numDegradedRuns\": 0,\n" +
+                        		"          \"violationPercentage\": 0\n" +
+                        		"        }\n" +
+                        		"      ]\n" +
+                        		"    },\n" +
+                        		"    {\n" +
+                        		"      \"name\": \"StringMergeTest.doMergeFromSetter\",\n" +
+                        		"      \"status\": \"passed\",\n" +
+                        		"      \"exectime\": \"2017-01-10T15:21:22.736+01:00\",\n" +
+                        		"      \"package\": \"com.example.simple\",\n" +
+                        		"      \"platform\": \"Windows\",\n" +
+                        		"      \"measures\": [\n" +
+                        		"        {\n" +
+                        		"          \"name\": \"Failed Transaction Count\",\n" +
+                        		"          \"metricGroup\": \"Error Detection\",\n" +
+                        		"          \"value\": 0,\n" +
+                        		"          \"unit\": \"num\",\n" +
+                        		"          \"expectedMin\": 0,\n" +
+                        		"          \"expectedMax\": 0,\n" +
+                        		"          \"numFailingOrInvalidatedRuns\": 0,\n" +
+                        		"          \"numValidRuns\": 10,\n" +
+                        		"          \"numImprovedRuns\": 0,\n" +
+                        		"          \"numDegradedRuns\": 0,\n" +
+                        		"          \"violationPercentage\": 0\n" +
+                        		"        }\n" +
+                        		"      ]\n" +
+                        		"    }\n" +
+                        		"  ]\n" +
+                        		"}")));
+        TestRun tr = this.testAutomation.finishTestRun("easyTravel", "078e961b-9e6e-44ec-ab12-ab0d31be93fc");
+        assertThat(tr.isFinished(), is(true));
+        assertThat(tr.getStartTime(), is(DateStringIso8601Adapter.getAsDate("2017-01-10T15:21:20.618+01:00")));
     }
 }

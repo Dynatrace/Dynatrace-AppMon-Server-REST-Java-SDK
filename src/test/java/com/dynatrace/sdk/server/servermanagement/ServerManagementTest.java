@@ -30,7 +30,9 @@ package com.dynatrace.sdk.server.servermanagement;
 
 import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
+import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
+import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.hamcrest.core.StringContains;
 import org.junit.Rule;
@@ -47,16 +49,34 @@ public class ServerManagementTest {
     private ServerManagement serverManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost", 8080, false, 2000)));
 
     @Test
-    public void restart() throws Exception {
-        stubFor(post(urlPathEqualTo(ServerManagement.SERVER_RESTART_EP))
+    public void restart_successInResponse_resultIsTrue() throws Exception {
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
-                        )));
+                        .withBody("{ \"status\": \"success\" }")));
 
         Boolean result = this.serverManagement.restart();
         assertThat(result, is(true));
+    }
+
+    @Test
+    public void restart_failInResponse_resultIsFalse() throws Exception {
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("{ \"status\": \"fail\" }")));
+
+        Boolean result = this.serverManagement.restart();
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void restart_invalidHost_exceptionThrown() throws ServerResponseException {
+
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_RESTART_EP))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("{ \"status\": \"success\" }")));
 
         ServerManagement invalidServerManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));
 
@@ -66,21 +86,21 @@ public class ServerManagementTest {
         } catch (ServerConnectionException ex) {
             assertThat(ex.getMessage(), new StringContains("localhost__invalid"));
         }
+
     }
 
     @Test
     public void shutdown() throws Exception {
-        stubFor(post(urlPathEqualTo(ServerManagement.SERVER_SHUTDOWN_EP))
+        stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + ServerManagement.SERVER_SHUTDOWN_EP))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
-                        )));
+                        .withBody("{ \"status\": \"success\" }")));
 
         Boolean result = this.serverManagement.shutdown();
         assertThat(result, is(true));
 
-        ServerManagement invalidServerManagement = new ServerManagement(new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));
+        ServerManagement invalidServerManagement = new ServerManagement(
+        		new DynatraceClient(new BasicServerConfiguration("admin", "admin", false, "localhost__invalid", 8080, false, 2000)));
 
         try {
             invalidServerManagement.shutdown();

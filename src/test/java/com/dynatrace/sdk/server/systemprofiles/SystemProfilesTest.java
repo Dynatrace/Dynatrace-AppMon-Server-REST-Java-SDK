@@ -28,22 +28,23 @@
 
 package com.dynatrace.sdk.server.systemprofiles;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.fail;
+
+import org.hamcrest.core.StringContains;
+import org.junit.Rule;
+import org.junit.Test;
+
 import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
+import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.exceptions.ServerResponseException;
 import com.dynatrace.sdk.server.systemprofiles.models.Profiles;
 import com.dynatrace.sdk.server.systemprofiles.models.SystemProfile;
 import com.dynatrace.sdk.server.systemprofiles.models.SystemProfileMetadata;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.hamcrest.core.StringContains;
-import org.junit.Rule;
-import org.junit.Test;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.fail;
 
 public class SystemProfilesTest {
     @Rule
@@ -52,71 +53,87 @@ public class SystemProfilesTest {
 
     @Test
     public void getSystemProfileMetadata() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILES_EP, "test"))).willReturn(aResponse().withBody("<systemprofile enabled=\"true\" isInteractiveLicensed=\"true\" isrecording=\"true\" id=\"easyTravel\" href=\"https://localhost:8021/rest/management/profiles/easyTravel\">\n" +
-                "    <agentgroupsreference href=\"https://localhost:8021/rest/management/profiles/easyTravel/agentgroups\"/>\n" +
-                "    <description>Profile for the easyTravel demo application.</description>\n" +
-                "</systemprofile>")));
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILES_EP, "test"))).willReturn(aResponse().withBody(
+        		"{\n" +
+        		"  \"id\": \"easyTravel\",\n" +
+        		"  \"description\": \"Profile for the easyTravel demo application.\",\n" +
+        		"  \"enabled\": true,\n" +
+        		"  \"isrecording\": true\n" +
+        		"}")));
         SystemProfileMetadata meta = this.systemProfiles.getSystemProfileMetadata("test");
-        assertThat(meta.isEnabled(), is(true));
+        assertThat(meta.getEnabled(), is(true));
         assertThat(meta.getId(), is("easyTravel"));
-        assertThat(meta.getHref(), is("https://localhost:8021/rest/management/profiles/easyTravel"));
-        assertThat(meta.isRecording(), is(true));
-        assertThat(meta.isInteractiveLicensed(), is(true));
+        assertThat(meta.getRecording(), is(true));
         assertThat(meta.getDescription(), is("Profile for the easyTravel demo application."));
-        assertThat(meta.getAgentGroupsReference(), notNullValue());
-        assertThat(meta.getAgentGroupsReference().getHref(), is("https://localhost:8021/rest/management/profiles/easyTravel/agentgroups"));
     }
 
     @Test
     public void getSystemProfiles() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILES_EP, ""))).willReturn(aResponse().withBody(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n" +
-                        "<profiles href=\"https://localhost:8021/rest/management/profiles\">\n" +
-                        "    <systemprofile isrecording=\"false\" id=\"dynaTrace Self-Monitoring\" href=\"https://localhost:8021/rest/management/profiles/dynaTrace%20Self-Monitoring\"/>\n" +
-                        "    <systemprofile isrecording=\"true\" id=\"easyTravel\" href=\"http://localhost:8020/rest/management/profiles/easyTravel\"/>\n" +
-                        "</profiles>"
+        stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILES_EP, ""))).willReturn(aResponse().withBody(
+                "{\n" +
+                "  \"systemprofiles\": [\n" +
+                "    {\n" +
+                "      \"id\": \"dynaTrace Self-Monitoring\",\n" +
+                "      \"isrecording\": false,\n" +
+                "      \"href\": \"https://localhost:8021/api/v2/profiles/dynaTrace%20Self-Monitoring\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": \"AjaxWorld\",\n" +
+                "      \"isrecording\": true,\n" +
+                "      \"href\": \"https://localhost:8021/api/v2/profiles/AjaxWorld\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": \"AjaxWorldTests\",\n" +
+                "      \"isrecording\": false,\n" +
+                "      \"href\": \"https://localhost:8021/api/v2/profiles/AjaxWorldTests\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"
         )));
+
         Profiles profiles = this.systemProfiles.getSystemProfiles();
-        assertThat(profiles.getHref(), is("https://localhost:8021/rest/management/profiles"));
-        assertThat(profiles.getProfiles().size(), is(2));
+        assertThat(profiles.getProfiles().size(), is(3));
         SystemProfile profile = profiles.getProfiles().get(1);
         assertThat(profile.isRecording(), is(true));
-        assertThat(profile.getId(), is("easyTravel"));
-        assertThat(profile.getHref(), is("http://localhost:8020/rest/management/profiles/easyTravel"));
+        assertThat(profile.getId(), is("AjaxWorld"));
+        assertThat(profile.getHref(), is("https://localhost:8021/api/v2/profiles/AjaxWorld"));
+
     }
 
     @Test
     public void activateProfileConfiguration() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "configuration")))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
-                        )));
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "configuration")))
+                .willReturn(aResponse().withStatus(204)));
 
 
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "unknownprofile", "configuration")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "unknownprofile", "configuration")))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile 'unknownprofile' not found\"/>"
+                                "{\n" +
+                                "  \"code\": 404,\n" +
+                                "  \"message\": \"System Profile 'unknownprofile' not found\"\n" +
+                                "}"
                         )));
 
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "unknownconfiguration")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.ACTIVATE_PROFILE_CONFIGURATION_EP, "profile", "unknownconfiguration")))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile configuration 'unknownconfiguration' not found\"/>"
+                                "{\n" +
+                                "  \"code\": 404,\n" +
+                                "  \"message\": \"System Profile configuration 'unknownconfiguration' not found for System Profile 'profile'\"\n" +
+                                "}"
                         )));
 
-        boolean result = this.systemProfiles.activateProfileConfiguration("profile", "configuration");
-        assertThat(result, is(true));
+        // no exception
+        this.systemProfiles.activateProfileConfiguration("profile", "configuration");
 
         try {
             this.systemProfiles.activateProfileConfiguration("unknownprofile", "configuration");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
-            assertThat(ex.getMessage(), new StringContains("unknownprofile"));
+            assertThat(ex.getMessage(), new StringContains("System Profile 'unknownprofile' not found"));
         }
 
         try {
@@ -129,57 +146,54 @@ public class SystemProfilesTest {
 
     @Test
     public void enableProfile() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILE_ENABLE_EP, "profile")))
+
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "profile")))
                 .willReturn(aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
-                        )));
+                        .withStatus(204)));
 
 
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILE_ENABLE_EP, "unknownprofile")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "unknownprofile")))
                 .willReturn(aResponse()
-                        .withStatus(404)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile 'unknownprofile' not found\"/>"
-                        )));
+                        .withStatus(404).withBody("{\n" +
+                        		"  \"code\": 404,\n" +
+                        		"  \"message\": \"System Profile 'easyTravel2' not found\"\n" +
+                        		"}")));
 
-        Boolean result = this.systemProfiles.enableProfile("profile");
-        assertThat(result, is(true));
+        // no exception
+        this.systemProfiles.enableProfile("profile");
 
         try {
             this.systemProfiles.enableProfile("unknownprofile");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
-            assertThat(ex.getMessage(), new StringContains("unknownprofile"));
+            assertThat(ex.getMessage(), new StringContains("System Profile 'easyTravel2' not found"));
         }
     }
 
     @Test
     public void disableProfile() throws Exception {
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILE_DISABLE_EP, "profile")))
+
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "profile")))
                 .willReturn(aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><result value=\"true\"/>"
-                        )));
+                        .withStatus(204)));
 
 
-        stubFor(get(urlPathEqualTo(String.format(SystemProfiles.PROFILE_DISABLE_EP, "unknownprofile")))
+        stubFor(put(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(SystemProfiles.PROFILE_STATUS_EP, "unknownprofile")))
                 .willReturn(aResponse()
-                        .withStatus(404)
-                        .withBody(
-                                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error reason=\"System profile 'unknownprofile' not found\"/>"
-                        )));
+                        .withStatus(404).withBody("{\n" +
+                        		"  \"code\": 404,\n" +
+                        		"  \"message\": \"System Profile 'easyTravel2' not found\"\n" +
+                        		"}")));
 
-        Boolean result = this.systemProfiles.disableProfile("profile");
-        assertThat(result, is(true));
+        // no exception
+        this.systemProfiles.disableProfile("profile");
 
         try {
             this.systemProfiles.disableProfile("unknownprofile");
             fail("Exception was expected to be thrown");
         } catch (ServerResponseException ex) {
-            assertThat(ex.getMessage(), new StringContains("unknownprofile"));
+            assertThat(ex.getMessage(), new StringContains("System Profile 'easyTravel2' not found"));
         }
+
     }
 }

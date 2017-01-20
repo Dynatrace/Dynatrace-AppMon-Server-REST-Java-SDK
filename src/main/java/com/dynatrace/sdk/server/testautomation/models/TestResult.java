@@ -28,17 +28,23 @@
 
 package com.dynatrace.sdk.server.testautomation.models;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import java.util.List;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TestResult {
 
     @XmlAttribute(name = "exectime")
-    private Long execTime;
+    @XmlJavaTypeAdapter(DateStringIso8601Adapter.class)
+    private Date execTime;
     @XmlAttribute
     private String name;
     @XmlAttribute(name = "package")
@@ -48,10 +54,10 @@ public class TestResult {
     @XmlAttribute
     private TestStatus status;
 
-    @XmlElement(name = "measure")
+    @XmlElement(name = "measures")
     private List<TestMeasure> measures;
 
-    public TestResult(Long execTime, String name, String packageName, String platform, TestStatus status, List<TestMeasure> measures) {
+    public TestResult(Date execTime, String name, String packageName, String platform, TestStatus status, List<TestMeasure> measures) {
         this.execTime = execTime;
         this.name = name;
         this.packageName = packageName;
@@ -62,7 +68,7 @@ public class TestResult {
 
     public TestResult() {}
 
-    public Long getExecutionTime() {
+    public Date getExecutionTime() {
         return this.execTime;
     }
 

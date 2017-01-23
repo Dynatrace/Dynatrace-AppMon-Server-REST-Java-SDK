@@ -76,10 +76,9 @@
         {
           "name": "Failed Transaction Count",
           "metricGroup": "Error Detection",
-          "value": 0,
           "unit": "num",
-          "expectedMin": 0,
-          "expectedMax": 0,
+          "expectedMin": "-INF",
+          "expectedMax": "INF",
           "numFailingOrInvalidatedRuns": 0,
           "numValidRuns": 9,
           "numImprovedRuns": 0,

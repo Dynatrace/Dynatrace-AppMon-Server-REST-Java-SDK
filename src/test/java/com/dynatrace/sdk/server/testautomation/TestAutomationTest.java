@@ -31,6 +31,7 @@ package com.dynatrace.sdk.server.testautomation;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -159,9 +160,11 @@ public class TestAutomationTest {
         assertThat(measure.getImprovedRunsCount(), is(0));
         assertThat(measure.getDegradedRunsCount(), is(0));
 
-        //check edge case
-//        assertThat(result.getMeasures().get(1).getValue(), is(Double.NEGATIVE_INFINITY));
-//        assertThat(result.getMeasures().get(2).getValue(), is(Double.POSITIVE_INFINITY));
+        //check edge cases
+        TestResult tr2 = tr.getTestResults().get(2);
+        assertThat(tr2.getMeasures().get(0).getValue(), is(nullValue()));
+        assertThat(tr2.getMeasures().get(0).getExpectedMax(), is(Double.POSITIVE_INFINITY));
+        assertThat(tr2.getMeasures().get(0).getExpectedMin(), is(Double.NEGATIVE_INFINITY));
     }
 
     @Test

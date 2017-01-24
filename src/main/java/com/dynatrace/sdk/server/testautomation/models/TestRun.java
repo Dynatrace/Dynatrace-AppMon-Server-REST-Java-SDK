@@ -85,7 +85,10 @@ public class TestRun {
     @XmlAttribute
     private Integer numInvalidated;
 
-    @XmlElement(name = "testResults")
+    @XmlElement
+    private List<TestMetricFilter> includedMetrics = new ArrayList<>();
+
+    @XmlElement
     private List<TestResult> testResults = new ArrayList<>();
 
     public TestRun(Date startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
@@ -192,28 +195,23 @@ public class TestRun {
 		this.finished = finished;
 	}
 
+	public List<TestMetricFilter> getIncludedMetrics() {
+		return includedMetrics;
+	}
+
+	public void setIncludedMetrics(List<TestMetricFilter> includedMetrics) {
+		this.includedMetrics = includedMetrics;
+	}
+
 	@Override
-    public String toString() {
-        return "TestRun{" +
-                "startTime=" + this.startTime +
-                ", platform='" + this.platform + '\'' +
-                ", systemProfile='" + this.systemProfile + '\'' +
-                ", category=" + this.category +
-                ", id='" + this.id + '\'' +
-                ", finished=" + this.finished +
-                ", href='" + this.href + '\'' +
-                ", versionMajor='" + this.versionMajor + '\'' +
-                ", versionMinor='" + this.versionMinor + '\'' +
-                ", versionRevision='" + this.versionRevision + '\'' +
-                ", versionBuild='" + this.versionBuild + '\'' +
-                ", creationMode=" + this.creationMode +
-                ", numPassed=" + this.numPassed +
-                ", numFailed=" + this.numFailed +
-                ", numVolatile=" + this.numVolatile +
-                ", numImproved=" + this.numImproved +
-                ", numDegraded=" + this.numDegraded +
-                ", numInvalidated=" + this.numInvalidated +
-                ", testResults=" + this.testResults +
-                '}';
-    }
+	public String toString() {
+		return "TestRun [startTime=" + startTime + ", platform=" + platform + ", systemProfile=" + systemProfile + ", category="
+				+ category + ", id=" + id + ", href=" + href + ", finished=" + finished + ", versionMajor=" + versionMajor
+				+ ", versionMinor=" + versionMinor + ", versionRevision=" + versionRevision + ", versionBuild=" + versionBuild
+				+ ", creationMode=" + creationMode + ", numPassed=" + numPassed + ", numFailed=" + numFailed + ", numVolatile="
+				+ numVolatile + ", numImproved=" + numImproved + ", numDegraded=" + numDegraded + ", numInvalidated="
+				+ numInvalidated + ", includedMetrics=" + includedMetrics + ", testResults=" + testResults + "]";
+	}
+
+
 }

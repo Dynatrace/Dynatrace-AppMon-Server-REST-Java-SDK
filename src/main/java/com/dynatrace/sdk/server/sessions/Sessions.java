@@ -42,8 +42,6 @@ import com.dynatrace.sdk.server.sessions.models.StoreSessionRequest;
  */
 public class Sessions extends Service {
     public static final String SESSIONS_EP = "/profiles/%s/session/%s";
-    public static final String REANALYZE_SESSION_EP = "/rest/management/sessions/%s/reanalyze";
-    public static final String REANALYZE_SESSION_STATUS_EP = "/rest/management/sessions/%s/reanalyze/finished";
 
     public Sessions(DynatraceClient client) {
         super(client);

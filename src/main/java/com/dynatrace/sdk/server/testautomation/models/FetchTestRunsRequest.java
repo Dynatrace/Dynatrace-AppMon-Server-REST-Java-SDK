@@ -97,7 +97,7 @@ public class FetchTestRunsRequest {
     /**
      * @param maxTestRuns - Max number of testruns to be returned in this call.
      */
-    public void setMaxTestRuns(int maxTestRuns) {
+    public void setMaxTestRuns(Integer maxTestRuns) {
         this.maxTestRuns = maxTestRuns;
     }
 
@@ -111,7 +111,7 @@ public class FetchTestRunsRequest {
     /**
      * @param maxBuilds - Max number of different versionBuild parameters that {@link TestRuns} returned in this call will have.
      */
-    public void setMaxBuilds(int maxBuilds) {
+    public void setMaxBuilds(Integer maxBuilds) {
         this.maxBuilds = maxBuilds;
     }
 

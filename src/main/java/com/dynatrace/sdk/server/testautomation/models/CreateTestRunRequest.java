@@ -28,7 +28,15 @@
 
 package com.dynatrace.sdk.server.testautomation.models;
 
-import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "testRun")
@@ -56,6 +64,9 @@ public class CreateTestRunRequest {
 
     @XmlElement
     private TestMetaData additionalMetaData;
+
+    @XmlElement
+    private List<TestMetricFilter> includedMetrics = new ArrayList<>();
 
     //Required by JAXB
     public CreateTestRunRequest() {
@@ -146,12 +157,21 @@ public class CreateTestRunRequest {
         this.marker = marker;
     }
 
+	public List<TestMetricFilter> getIncludedMetrics() {
+		return includedMetrics;
+	}
+
+	public void setIncludedMetrics(List<TestMetricFilter> includedMetrics) {
+		this.includedMetrics = includedMetrics;
+	}
+
 	@Override
 	public String toString() {
 		return "CreateTestRunRequest [systemProfile=" + systemProfile + ", platform=" + platform + ", category=" + category
 				+ ", versionMajor=" + versionMajor + ", versionMinor=" + versionMinor + ", versionRevision=" + versionRevision
 				+ ", versionBuild=" + versionBuild + ", versionMilestone=" + versionMilestone + ", marker=" + marker
-				+ ", additionalMetaData=" + additionalMetaData + "]";
+				+ ", additionalMetaData=" + additionalMetaData + ", includedMetrics=" + includedMetrics + "]";
 	}
+
 
 }

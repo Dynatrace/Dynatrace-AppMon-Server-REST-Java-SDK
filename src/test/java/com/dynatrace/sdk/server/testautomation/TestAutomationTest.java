@@ -32,6 +32,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+import java.util.Arrays;
+
+import static org.hamcrest.Matchers.nullValue;
+
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -39,15 +43,7 @@ import com.dynatrace.sdk.server.BasicServerConfiguration;
 import com.dynatrace.sdk.server.DynatraceClient;
 import com.dynatrace.sdk.server.Service;
 import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
-import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
-import com.dynatrace.sdk.server.testautomation.models.CreationMode;
-import com.dynatrace.sdk.server.testautomation.models.FetchTestRunsRequest;
-import com.dynatrace.sdk.server.testautomation.models.TestCategory;
-import com.dynatrace.sdk.server.testautomation.models.TestMeasure;
-import com.dynatrace.sdk.server.testautomation.models.TestResult;
-import com.dynatrace.sdk.server.testautomation.models.TestRun;
-import com.dynatrace.sdk.server.testautomation.models.TestRuns;
-import com.dynatrace.sdk.server.testautomation.models.TestStatus;
+import com.dynatrace.sdk.server.testautomation.models.*;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class TestAutomationTest {
@@ -66,7 +62,17 @@ public class TestAutomationTest {
                 		"  \"versionRevision\": \"revision1\",\n" +
                 		"  \"versionBuild\": \"build1\",\n" +
                 		"  \"versionMilestone\": \"milestone1\",\n" +
-                		"  \"marker\": \"markerValue\"\n" +
+                		"  \"marker\": \"markerValue\",\n" +
+						"  \"includedMetrics\": [\n" +
+						"    {\n" +
+						"      \"group\": \"start1\",\n" +
+						"      \"metric\": \"stop1\"\n" +
+						"    },\n" +
+						"    {\n" +
+						"      \"group\": \"start2\",\n" +
+						"      \"metric\": \"stop2\"\n" +
+						"    }\n" +
+						"  ]\n" +
                 		"}")).willReturn(aResponse()
                                 .withStatus(201)
                                 .withBody("{\n" +
@@ -89,7 +95,17 @@ public class TestAutomationTest {
                                 		"  \"numInvalidated\": 0,\n" +
                                 		"  \"numPassed\": 0,\n" +
                                 		"  \"numVolatile\": 0,\n" +
-                                		"  \"finished\": false\n" +
+                                		"  \"finished\": false,\n" +
+										"  \"includedMetrics\": [\n" +
+										"    {\n" +
+										"      \"group\": \"group1\",\n" +
+										"      \"metric\": \"metric1\"\n" +
+										"    },\n" +
+										"    {\n" +
+										"      \"group\": \"group2\",\n" +
+										"      \"metric\": \"metric2\"\n" +
+										"    }\n" +
+										"  ]\n" +
                                 		"}")));
 
 
@@ -103,6 +119,8 @@ public class TestAutomationTest {
         request.setMarker("markerValue");
         request.setPlatform("platformValue");
         request.setCategory(TestCategory.UNIT);
+        request.setIncludedMetrics(Arrays.asList(new TestMetricFilter("start1", "stop1"),
+        		new TestMetricFilter("start2", "stop2")));
 
         TestRun tr = this.testAutomation.createTestRun(request);
         assertThat(tr.getCategory(), is(TestCategory.UNIT));
@@ -112,7 +130,11 @@ public class TestAutomationTest {
         assertThat(tr.getCreationMode(), is(CreationMode.MANUAL));
         assertThat(tr.isFinished(), is(false));
         assertThat(tr.getHref(), is("https://localhost:8021/api/v2/profiles/easyTravel/testruns/9a338757-5007-4bee-aa19-4952c7953a1e"));
-
+        assertThat(tr.getIncludedMetrics().size(), is(2));
+        assertThat(tr.getIncludedMetrics().get(0).getGroup(), is("group1"));
+        assertThat(tr.getIncludedMetrics().get(0).getMetric(), is("metric1"));
+        assertThat(tr.getIncludedMetrics().get(1).getGroup(), is("group2"));
+        assertThat(tr.getIncludedMetrics().get(1).getMetric(), is("metric2"));
     }
 
     @Test
@@ -159,9 +181,11 @@ public class TestAutomationTest {
         assertThat(measure.getImprovedRunsCount(), is(0));
         assertThat(measure.getDegradedRunsCount(), is(0));
 
-        //check edge case
-//        assertThat(result.getMeasures().get(1).getValue(), is(Double.NEGATIVE_INFINITY));
-//        assertThat(result.getMeasures().get(2).getValue(), is(Double.POSITIVE_INFINITY));
+        //check edge cases
+        TestResult tr2 = tr.getTestResults().get(2);
+        assertThat(tr2.getMeasures().get(0).getValue(), is(nullValue()));
+        assertThat(tr2.getMeasures().get(0).getExpectedMax(), is(Double.POSITIVE_INFINITY));
+        assertThat(tr2.getMeasures().get(0).getExpectedMin(), is(Double.NEGATIVE_INFINITY));
     }
 
     @Test

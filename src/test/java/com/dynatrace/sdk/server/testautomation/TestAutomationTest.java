@@ -55,58 +55,58 @@ public class TestAutomationTest {
     public void createTestRun() throws Exception {
         stubFor(post(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
                 .withRequestBody(equalToJson("{\n" +
-                		"  \"platform\": \"platformValue\",\n" +
-                		"  \"category\": \"unit\",\n" +
-                		"  \"versionMajor\": \"major1\",\n" +
-                		"  \"versionMinor\": \"minor1\",\n" +
-                		"  \"versionRevision\": \"revision1\",\n" +
-                		"  \"versionBuild\": \"build1\",\n" +
-                		"  \"versionMilestone\": \"milestone1\",\n" +
-                		"  \"marker\": \"markerValue\",\n" +
-						"  \"includedMetrics\": [\n" +
-						"    {\n" +
-						"      \"group\": \"start1\",\n" +
-						"      \"metric\": \"stop1\"\n" +
-						"    },\n" +
-						"    {\n" +
-						"      \"group\": \"start2\",\n" +
-						"      \"metric\": \"stop2\"\n" +
-						"    }\n" +
-						"  ]\n" +
-                		"}")).willReturn(aResponse()
-                                .withStatus(201)
-                                .withBody("{\n" +
-                                		"  \"id\": \"9a338757-5007-4bee-aa19-4952c7953a1e\",\n" +
-                                		"  \"category\": \"unit\",\n" +
-                                		"  \"versionBuild\": \"build1\",\n" +
-                                		"  \"versionMajor\": \"major1\",\n" +
-                                		"  \"versionMilestone\": \"milestone1\",\n" +
-                                		"  \"versionMinor\": \"minor1\",\n" +
-                                		"  \"versionRevision\": \"revision1\",\n" +
-                                		"  \"platform\": \"platformValue\",\n" +
-                                		"  \"startTime\": \"2017-01-16T16:56:23.518+01:00\",\n" +
-                                		"  \"systemProfile\": \"easyTravel\",\n" +
-                                		"  \"marker\": \"string\",\n" +
-                                		"  \"href\": \"https://localhost:8021/api/v2/profiles/easyTravel/testruns/9a338757-5007-4bee-aa19-4952c7953a1e\",\n" +
-                                		"  \"creationMode\": \"MANUAL\",\n" +
-                                		"  \"numDegraded\": 0,\n" +
-                                		"  \"numFailed\": 0,\n" +
-                                		"  \"numImproved\": 0,\n" +
-                                		"  \"numInvalidated\": 0,\n" +
-                                		"  \"numPassed\": 0,\n" +
-                                		"  \"numVolatile\": 0,\n" +
-                                		"  \"finished\": false,\n" +
-										"  \"includedMetrics\": [\n" +
-										"    {\n" +
-										"      \"group\": \"group1\",\n" +
-										"      \"metric\": \"metric1\"\n" +
-										"    },\n" +
-										"    {\n" +
-										"      \"group\": \"group2\",\n" +
-										"      \"metric\": \"metric2\"\n" +
-										"    }\n" +
-										"  ]\n" +
-                                		"}")));
+                        "  \"platform\": \"platformValue\",\n" +
+                        "  \"category\": \"unit\",\n" +
+                        "  \"versionMajor\": \"major1\",\n" +
+                        "  \"versionMinor\": \"minor1\",\n" +
+                        "  \"versionRevision\": \"revision1\",\n" +
+                        "  \"versionBuild\": \"build1\",\n" +
+                        "  \"versionMilestone\": \"milestone1\",\n" +
+                        "  \"marker\": \"markerValue\",\n" +
+                        "  \"includedMetrics\": [\n" +
+                        "    {\n" +
+                        "      \"group\": \"start1\",\n" +
+                        "      \"metric\": \"stop1\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"group\": \"start2\",\n" +
+                        "      \"metric\": \"stop2\"\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}")).willReturn(aResponse()
+                        .withStatus(201)
+                        .withBody("{\n" +
+                                "  \"id\": \"9a338757-5007-4bee-aa19-4952c7953a1e\",\n" +
+                                "  \"category\": \"unit\",\n" +
+                                "  \"versionBuild\": \"build1\",\n" +
+                                "  \"versionMajor\": \"major1\",\n" +
+                                "  \"versionMilestone\": \"milestone1\",\n" +
+                                "  \"versionMinor\": \"minor1\",\n" +
+                                "  \"versionRevision\": \"revision1\",\n" +
+                                "  \"platform\": \"platformValue\",\n" +
+                                "  \"startTime\": \"2017-01-16T16:56:23.518+01:00\",\n" +
+                                "  \"systemProfile\": \"easyTravel\",\n" +
+                                "  \"marker\": \"string\",\n" +
+                                "  \"href\": \"https://localhost:8021/api/v2/profiles/easyTravel/testruns/9a338757-5007-4bee-aa19-4952c7953a1e\",\n" +
+                                "  \"creationMode\": \"MANUAL\",\n" +
+                                "  \"numDegraded\": 0,\n" +
+                                "  \"numFailed\": 0,\n" +
+                                "  \"numImproved\": 0,\n" +
+                                "  \"numInvalidated\": 0,\n" +
+                                "  \"numPassed\": 0,\n" +
+                                "  \"numVolatile\": 0,\n" +
+                                "  \"finished\": false,\n" +
+                                "  \"includedMetrics\": [\n" +
+                                "    {\n" +
+                                "      \"group\": \"group1\",\n" +
+                                "      \"metric\": \"metric1\"\n" +
+                                "    },\n" +
+                                "    {\n" +
+                                "      \"group\": \"group2\",\n" +
+                                "      \"metric\": \"metric2\"\n" +
+                                "    }\n" +
+                                "  ]\n" +
+                                "}")));
 
 
         CreateTestRunRequest request = new CreateTestRunRequest();
@@ -120,7 +120,7 @@ public class TestAutomationTest {
         request.setPlatform("platformValue");
         request.setCategory(TestCategory.UNIT);
         request.setIncludedMetrics(Arrays.asList(new TestMetricFilter("start1", "stop1"),
-        		new TestMetricFilter("start2", "stop2")));
+                new TestMetricFilter("start2", "stop2")));
 
         TestRun tr = this.testAutomation.createTestRun(request);
         assertThat(tr.getCategory(), is(TestCategory.UNIT));
@@ -191,8 +191,8 @@ public class TestAutomationTest {
     @Test
     public void fetchTestRuns() throws Exception {
         stubFor(get(urlPathEqualTo(Service.API_VER_URI_PREFIX + String.format(TestAutomation.TEST_RUNS_EP, "easyTravel", "")))
-        		.withQueryParam("extend", equalTo("runs"))
-        		.withQueryParam("category", equalTo("unit"))
+                .withQueryParam("extend", equalTo("runs"))
+                .withQueryParam("category", equalTo("unit"))
                 .willReturn(aResponse()
                         .withStatus(200).withBodyFile("fetchTestrunsResponse.json")));
         FetchTestRunsRequest request = new FetchTestRunsRequest("easyTravel");
@@ -209,75 +209,75 @@ public class TestAutomationTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("{\n" +
-                        		"  \"id\": \"078e961b-9e6e-44ec-ab12-ab0d31be93fc\",\n" +
-                        		"  \"category\": \"unit\",\n" +
-                        		"  \"versionBuild\": \"3\",\n" +
-                        		"  \"versionMajor\": \"1\",\n" +
-                        		"  \"versionMilestone\": \"m4\",\n" +
-                        		"  \"versionMinor\": \"2\",\n" +
-                        		"  \"versionRevision\": \"3\",\n" +
-                        		"  \"platform\": \"Windows\",\n" +
-                        		"  \"startTime\": \"2017-01-10T15:21:20.618+01:00\",\n" +
-                        		"  \"systemProfile\": \"easyTravel\",\n" +
-                        		"  \"marker\": \"marker\",\n" +
-                        		"  \"creationMode\": \"MANUAL\",\n" +
-                        		"  \"additionalMetaData\": {\n" +
-                        		"    \"somekey\": \"somevalue\"\n" +
-                        		"  },\n" +
-                        		"  \"numDegraded\": 0,\n" +
-                        		"  \"numFailed\": 0,\n" +
-                        		"  \"numImproved\": 0,\n" +
-                        		"  \"numInvalidated\": 0,\n" +
-                        		"  \"numPassed\": 6,\n" +
-                        		"  \"numVolatile\": 0,\n" +
-                        		"  \"finished\": true,\n" +
-                        		"  \"testResults\": [\n" +
-                        		"    {\n" +
-                        		"      \"name\": \"SumTest.sumWithoutAdding\",\n" +
-                        		"      \"status\": \"passed\",\n" +
-                        		"      \"exectime\": \"2017-01-10T15:21:22.737+01:00\",\n" +
-                        		"      \"package\": \"com.example.simple\",\n" +
-                        		"      \"platform\": \"Windows\",\n" +
-                        		"      \"measures\": [\n" +
-                        		"        {\n" +
-                        		"          \"name\": \"Failed Transaction Count\",\n" +
-                        		"          \"metricGroup\": \"Error Detection\",\n" +
-                        		"          \"value\": 0,\n" +
-                        		"          \"unit\": \"num\",\n" +
-                        		"          \"expectedMin\": 0,\n" +
-                        		"          \"expectedMax\": 0,\n" +
-                        		"          \"numFailingOrInvalidatedRuns\": 0,\n" +
-                        		"          \"numValidRuns\": 10,\n" +
-                        		"          \"numImprovedRuns\": 0,\n" +
-                        		"          \"numDegradedRuns\": 0,\n" +
-                        		"          \"violationPercentage\": 0\n" +
-                        		"        }\n" +
-                        		"      ]\n" +
-                        		"    },\n" +
-                        		"    {\n" +
-                        		"      \"name\": \"StringMergeTest.doMergeFromSetter\",\n" +
-                        		"      \"status\": \"passed\",\n" +
-                        		"      \"exectime\": \"2017-01-10T15:21:22.736+01:00\",\n" +
-                        		"      \"package\": \"com.example.simple\",\n" +
-                        		"      \"platform\": \"Windows\",\n" +
-                        		"      \"measures\": [\n" +
-                        		"        {\n" +
-                        		"          \"name\": \"Failed Transaction Count\",\n" +
-                        		"          \"metricGroup\": \"Error Detection\",\n" +
-                        		"          \"value\": 0,\n" +
-                        		"          \"unit\": \"num\",\n" +
-                        		"          \"expectedMin\": 0,\n" +
-                        		"          \"expectedMax\": 0,\n" +
-                        		"          \"numFailingOrInvalidatedRuns\": 0,\n" +
-                        		"          \"numValidRuns\": 10,\n" +
-                        		"          \"numImprovedRuns\": 0,\n" +
-                        		"          \"numDegradedRuns\": 0,\n" +
-                        		"          \"violationPercentage\": 0\n" +
-                        		"        }\n" +
-                        		"      ]\n" +
-                        		"    }\n" +
-                        		"  ]\n" +
-                        		"}")));
+                                "  \"id\": \"078e961b-9e6e-44ec-ab12-ab0d31be93fc\",\n" +
+                                "  \"category\": \"unit\",\n" +
+                                "  \"versionBuild\": \"3\",\n" +
+                                "  \"versionMajor\": \"1\",\n" +
+                                "  \"versionMilestone\": \"m4\",\n" +
+                                "  \"versionMinor\": \"2\",\n" +
+                                "  \"versionRevision\": \"3\",\n" +
+                                "  \"platform\": \"Windows\",\n" +
+                                "  \"startTime\": \"2017-01-10T15:21:20.618+01:00\",\n" +
+                                "  \"systemProfile\": \"easyTravel\",\n" +
+                                "  \"marker\": \"marker\",\n" +
+                                "  \"creationMode\": \"MANUAL\",\n" +
+                                "  \"additionalMetaData\": {\n" +
+                                "    \"somekey\": \"somevalue\"\n" +
+                                "  },\n" +
+                                "  \"numDegraded\": 0,\n" +
+                                "  \"numFailed\": 0,\n" +
+                                "  \"numImproved\": 0,\n" +
+                                "  \"numInvalidated\": 0,\n" +
+                                "  \"numPassed\": 6,\n" +
+                                "  \"numVolatile\": 0,\n" +
+                                "  \"finished\": true,\n" +
+                                "  \"testResults\": [\n" +
+                                "    {\n" +
+                                "      \"name\": \"SumTest.sumWithoutAdding\",\n" +
+                                "      \"status\": \"passed\",\n" +
+                                "      \"exectime\": \"2017-01-10T15:21:22.737+01:00\",\n" +
+                                "      \"package\": \"com.example.simple\",\n" +
+                                "      \"platform\": \"Windows\",\n" +
+                                "      \"measures\": [\n" +
+                                "        {\n" +
+                                "          \"name\": \"Failed Transaction Count\",\n" +
+                                "          \"metricGroup\": \"Error Detection\",\n" +
+                                "          \"value\": 0,\n" +
+                                "          \"unit\": \"num\",\n" +
+                                "          \"expectedMin\": 0,\n" +
+                                "          \"expectedMax\": 0,\n" +
+                                "          \"numFailingOrInvalidatedRuns\": 0,\n" +
+                                "          \"numValidRuns\": 10,\n" +
+                                "          \"numImprovedRuns\": 0,\n" +
+                                "          \"numDegradedRuns\": 0,\n" +
+                                "          \"violationPercentage\": 0\n" +
+                                "        }\n" +
+                                "      ]\n" +
+                                "    },\n" +
+                                "    {\n" +
+                                "      \"name\": \"StringMergeTest.doMergeFromSetter\",\n" +
+                                "      \"status\": \"passed\",\n" +
+                                "      \"exectime\": \"2017-01-10T15:21:22.736+01:00\",\n" +
+                                "      \"package\": \"com.example.simple\",\n" +
+                                "      \"platform\": \"Windows\",\n" +
+                                "      \"measures\": [\n" +
+                                "        {\n" +
+                                "          \"name\": \"Failed Transaction Count\",\n" +
+                                "          \"metricGroup\": \"Error Detection\",\n" +
+                                "          \"value\": 0,\n" +
+                                "          \"unit\": \"num\",\n" +
+                                "          \"expectedMin\": 0,\n" +
+                                "          \"expectedMax\": 0,\n" +
+                                "          \"numFailingOrInvalidatedRuns\": 0,\n" +
+                                "          \"numValidRuns\": 10,\n" +
+                                "          \"numImprovedRuns\": 0,\n" +
+                                "          \"numDegradedRuns\": 0,\n" +
+                                "          \"violationPercentage\": 0\n" +
+                                "        }\n" +
+                                "      ]\n" +
+                                "    }\n" +
+                                "  ]\n" +
+                                "}")));
         TestRun tr = this.testAutomation.finishTestRun("easyTravel", "078e961b-9e6e-44ec-ab12-ab0d31be93fc");
         assertThat(tr.isFinished(), is(true));
         assertThat(tr.getStartTime(), is(DateStringIso8601Adapter.getAsDate("2017-01-10T15:21:20.618+01:00")));

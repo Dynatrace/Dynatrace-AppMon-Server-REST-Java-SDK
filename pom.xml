@@ -4,10 +4,44 @@
     <modelVersion>4.0.0</modelVersion>
     <name>Dynatrace Server SDK</name>
     <description>Provides an easy to use integration with Dynatrace Server</description>
+    <url>https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK</url>
     <groupId>com.dynatrace.sdk</groupId>
     <artifactId>server-rest-sdk</artifactId>
     <version>7.0.0</version>
     <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>dynaTrace BSD</name>
+            <url>https://raw.githubusercontent.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK.git</connection>
+        <developerConnection>scm:git:https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK.git</developerConnection>
+        <url>https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Tomasz Chojnacki</name>
+            <email>tomasz.chojnacki@dynatrace.com</email>
+            <organization>Dynatrace</organization>
+            <organizationUrl>https://www.dynatrace.com/</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,11 +68,11 @@
     </contributors>
 
     <dependencies>
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>org.eclipse.persistence.moxy</artifactId>
-			<version>2.5.0</version>
-		</dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
+            <version>2.5.0</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -65,15 +99,15 @@
     </dependencies>
 
     <build>
-    	<!-- attach jaxb index files, to allow ant plugin work with eclipse jaxb implementation -->
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/jaxb.*</include>
-				</includes>
-			</resource>
-		</resources>
+        <!-- attach jaxb index files, to allow ant plugin work with eclipse jaxb implementation -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/jaxb.*</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -106,36 +140,23 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-						<filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/license/**</exclude>
-                                <exclude>META-INF/*</exclude>
-                                <exclude>META-INF/maven/**</exclude>
-                                <exclude>LICENSE</exclude>
-                                <exclude>NOTICE</exclude>
-                                <exclude>/*.txt</exclude>
-                                <exclude>build.properties</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 </project>

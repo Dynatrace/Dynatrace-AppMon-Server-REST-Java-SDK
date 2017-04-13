@@ -16,30 +16,10 @@ This library provides an easy to use Java implementation of Dynatrace Server RES
 - [Rest API documentation](#restapidoc)
 
 ## <a name="installation"></a>Installation
-Manual installation is currently required, maven repository might be available in the future.
-The wrapper comes with Apache's HttpComponents shaded inside, thus you don't have to worry about library dependencies.
+Library is available in maven central repository (starting with version 7.0.0).
 
 ### Maven
-- Download the latest artifact from [Releases](https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/releases). Its version number will be labeled _LATEST_VERSION_ futher in this text.
-- Put the artifact and *pom.xml* under */repo/com/dynatrace/sdk/server-rest-sdk/LATEST_VERSION*
-- Add the following code to the *&lt;repositories&gt;* section:
-
-```xml
-<repository>
-    <id>local-repo</id>
-    <releases>
-        <enabled>true</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-    </releases>
-    <snapshots>
-        <enabled>false</enabled>
-    </snapshots>
-    <url>file://${project.basedir}/repo</url>
-</repository>
-```
-
 - Add the following code to the *&lt;dependencies&gt;* section:
-
 ```xml
 <dependency>
     <groupId>com.dynatrace.sdk</groupId>
@@ -49,12 +29,9 @@ The wrapper comes with Apache's HttpComponents shaded inside, thus you don't hav
 ```
 
 ### Gradle
-- Download the latest artifact from [Releases](/releases)
-- Put the artifact under */lib*
 - Put the following code in your *dependencies* block:
-
 ```groovy
-compile fileTree(dir: 'lib', include: '*.jar')
+compile 'com.dynatrace.sdk:server-rest-sdk:LATEST_VERSION'
 ```
 
 ## Services

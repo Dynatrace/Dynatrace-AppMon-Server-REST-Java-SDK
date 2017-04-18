@@ -28,30 +28,31 @@
 
 package com.dynatrace.sdk.server.testautomation;
 
-import com.dynatrace.sdk.server.DynatraceClient;
-import com.dynatrace.sdk.server.Service;
-import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
-import com.dynatrace.sdk.server.exceptions.ServerResponseException;
-import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
-import com.dynatrace.sdk.server.testautomation.models.FetchTestRunsRequest;
-import com.dynatrace.sdk.server.testautomation.models.TestRun;
-import com.dynatrace.sdk.server.testautomation.models.TestRuns;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.annotation.ThreadSafe;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.dynatrace.sdk.server.DynatraceClient;
+import com.dynatrace.sdk.server.Service;
+import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
+import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
+import com.dynatrace.sdk.server.testautomation.models.CreateTestRunRequest;
+import com.dynatrace.sdk.server.testautomation.models.FetchTestRunsRequest;
+import com.dynatrace.sdk.server.testautomation.models.TestRun;
+import com.dynatrace.sdk.server.testautomation.models.TestRuns;
 
 /**
  * Wraps Dynatrace Server TestAutomation REST API providing an easy to use set of methods.
  */
 @ThreadSafe
 public class TestAutomation extends Service {
-    public static final String TEST_RUNS_EP = "/rest/management/profiles/%s/testruns/%s";
+    public static final String TEST_RUNS_EP = "/profiles/%s/testruns/%s";
+    public static final String FINISH_TEST_RUN_EP = "/profiles/%s/testruns/%s/finish";
 
     public TestAutomation(DynatraceClient client) {
         super(client);
@@ -66,12 +67,23 @@ public class TestAutomation extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public TestRun createTestRun(CreateTestRunRequest request) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""));
-            return this.doPostRequest(uri, Service.xmlObjectToEntity(request), TestRun.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format: %s", request.getSystemProfile(), e.getMessage()), e);
-        }
+
+    	return this.doPostRequest(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), getBodyResponseResolver(TestRun.class), request);
+    }
+
+    /**
+     * Waits for all PurePaths for given {@link TestRun} to be processed and then mark the {@link TestRun} as finished.
+     * Returns the finished {@link TestRun} as a result.
+     *
+     * @param systemProfile {@link TestRun}'s system profile
+     * @param testRunId     {@link TestRun}'s id
+     * @return {@link TestRun} instance or {@code null} if no {@link TestRun} matching given parameters has been found
+     * @throws ServerConnectionException whenever connecting to the Dynatrace server fails
+     * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
+     */
+    public TestRun finishTestRun(String systemProfile, String testRunId) throws ServerConnectionException, ServerResponseException {
+
+    	return this.doPostRequest(String.format(FINISH_TEST_RUN_EP, systemProfile, testRunId), getBodyResponseResolver(TestRun.class), null);
     }
 
     /**
@@ -84,12 +96,7 @@ public class TestAutomation extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public TestRun fetchTestRun(String systemProfile, String testRunId) throws ServerConnectionException, ServerResponseException {
-        try {
-            URI uri = this.buildURI(String.format(TEST_RUNS_EP, systemProfile, testRunId));
-            return this.doGetRequest(uri, TestRun.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid system profile[%s] or testRunId[%s] format: %s", systemProfile, testRunId, e.getMessage()), e);
-        }
+    	return this.doGetRequest(String.format(TEST_RUNS_EP, systemProfile, testRunId), getBodyResponseResolver(TestRun.class));
     }
 
     /**
@@ -101,12 +108,13 @@ public class TestAutomation extends Service {
      * @throws ServerResponseException   whenever parsing a response fails or invalid status code is provided
      */
     public TestRuns fetchTestRuns(FetchTestRunsRequest request) throws ServerConnectionException, ServerResponseException {
-        ArrayList<NameValuePair> nvps = new ArrayList<>();
+
+        List<NameValuePair> nvps = new ArrayList<>();
         if (request.getStartTime() != null) {
-            nvps.add(new BasicNameValuePair("startTime", String.valueOf(request.getStartTime())));
+            nvps.add(new BasicNameValuePair("startTime", DateStringIso8601Adapter.getAsString(request.getStartTime())));
         }
         if (request.getEndTime() != null) {
-            nvps.add(new BasicNameValuePair("endTime", String.valueOf(request.getEndTime())));
+            nvps.add(new BasicNameValuePair("endTime", DateStringIso8601Adapter.getAsString(request.getEndTime())));
         }
         if (request.getExtend() != null) {
             nvps.add(new BasicNameValuePair("extend", request.getExtend().getInternal()));
@@ -123,11 +131,8 @@ public class TestAutomation extends Service {
                 nvps.add(new BasicNameValuePair(filter.getKey(), value));
             }
         }
-        try {
-            URI uri = this.buildURI(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), nvps.toArray(new NameValuePair[nvps.size()]));
-            return this.doGetRequest(uri, TestRuns.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(String.format("Invalid system profile[%s] format: %s", request.getSystemProfile(), e.getMessage()), e);
-        }
+
+        return this.doGetRequest(String.format(TEST_RUNS_EP, request.getSystemProfile(), ""), getBodyResponseResolver(TestRuns.class),
+        		nvps.toArray(new NameValuePair[nvps.size()]));
     }
 }

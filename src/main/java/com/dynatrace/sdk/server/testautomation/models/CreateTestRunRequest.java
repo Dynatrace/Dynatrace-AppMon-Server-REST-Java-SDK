@@ -28,16 +28,24 @@
 
 package com.dynatrace.sdk.server.testautomation.models;
 
-import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "testRun")
 public class CreateTestRunRequest {
 
+    @XmlTransient
+    private String systemProfile;
     @XmlAttribute
     private String platform;
-    @XmlAttribute(required = true)
-    private String systemProfile;
     @XmlAttribute
     private TestCategory category;
 
@@ -53,11 +61,12 @@ public class CreateTestRunRequest {
     private String versionMilestone;
     @XmlAttribute
     private String marker;
-    @XmlAttribute
-    private String agentGroup;
 
     @XmlElement
     private TestMetaData additionalMetaData;
+
+    @XmlElement
+    private List<TestMetricFilter> includedMetrics = new ArrayList<>();
 
     //Required by JAXB
     public CreateTestRunRequest() {
@@ -148,28 +157,21 @@ public class CreateTestRunRequest {
         this.marker = marker;
     }
 
-    public String getAgentGroup() {
-        return this.agentGroup;
-    }
+	public List<TestMetricFilter> getIncludedMetrics() {
+		return includedMetrics;
+	}
 
-    public void setAgentGroup(String agentGroup) {
-        this.agentGroup = agentGroup;
-    }
+	public void setIncludedMetrics(List<TestMetricFilter> includedMetrics) {
+		this.includedMetrics = includedMetrics;
+	}
 
-    @Override
-    public String toString() {
-        return "CreateTestRunRequest{" +
-                "platform='" + this.platform + '\'' +
-                ", systemProfile='" + this.systemProfile + '\'' +
-                ", category=" + this.category +
-                ", versionMajor='" + this.versionMajor + '\'' +
-                ", versionMinor='" + this.versionMinor + '\'' +
-                ", versionRevision='" + this.versionRevision + '\'' +
-                ", versionBuild='" + this.versionBuild + '\'' +
-                ", versionMilestone='" + this.versionMilestone + '\'' +
-                ", marker='" + this.marker + '\'' +
-                ", agentGroup='" + this.agentGroup + '\'' +
-                ", additionalMetaData=" + this.additionalMetaData +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "CreateTestRunRequest [systemProfile=" + systemProfile + ", platform=" + platform + ", category=" + category
+				+ ", versionMajor=" + versionMajor + ", versionMinor=" + versionMinor + ", versionRevision=" + versionRevision
+				+ ", versionBuild=" + versionBuild + ", versionMilestone=" + versionMilestone + ", marker=" + marker
+				+ ", additionalMetaData=" + additionalMetaData + ", includedMetrics=" + includedMetrics + "]";
+	}
+
+
 }

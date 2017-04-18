@@ -28,15 +28,26 @@
 
 package com.dynatrace.sdk.server.testautomation.models;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.dynatrace.sdk.server.testautomation.adapters.DateStringIso8601Adapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "testRun")
 public class TestRun {
+
     @XmlAttribute
-    private Long startTime;
+    @XmlJavaTypeAdapter(DateStringIso8601Adapter.class)
+    private Date startTime;
     @XmlAttribute
     private String platform;
     @XmlAttribute
@@ -47,6 +58,8 @@ public class TestRun {
     private String id;
     @XmlAttribute
     private String href;
+    @XmlAttribute
+    private boolean finished;
 
     @XmlAttribute
     private String versionMajor;
@@ -72,10 +85,13 @@ public class TestRun {
     @XmlAttribute
     private Integer numInvalidated;
 
-    @XmlElement(name = "testResult")
+    @XmlElement
+    private List<TestMetricFilter> includedMetrics = new ArrayList<>();
+
+    @XmlElement
     private List<TestResult> testResults = new ArrayList<>();
 
-    public TestRun(Long startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
+    public TestRun(Date startTime, String platform, String systemProfile, TestCategory category, String id, String href, String versionMajor, String versionMinor, String versionRevision, String versionBuild, CreationMode creationMode, Integer numPassed, Integer numFailed, Integer numVolatile, Integer numImproved, Integer numDegraded, Integer numInvalidated, List<TestResult> testResults) {
         this.startTime = startTime;
         this.platform = platform;
         this.systemProfile = systemProfile;
@@ -99,11 +115,11 @@ public class TestRun {
     //Required by JAXB
     public TestRun() {}
 
-    public Long getStartTime() {
-        return this.startTime;
-    }
 
-    public String getPlatform() {
+	public Date getStartTime() {
+		return startTime;
+	}
+	public String getPlatform() {
         return this.platform;
     }
 
@@ -171,27 +187,31 @@ public class TestRun {
         return this.numInvalidated;
     }
 
-    @Override
-    public String toString() {
-        return "TestRun{" +
-                "startTime=" + this.startTime +
-                ", platform='" + this.platform + '\'' +
-                ", systemProfile='" + this.systemProfile + '\'' +
-                ", category=" + this.category +
-                ", id='" + this.id + '\'' +
-                ", href='" + this.href + '\'' +
-                ", versionMajor='" + this.versionMajor + '\'' +
-                ", versionMinor='" + this.versionMinor + '\'' +
-                ", versionRevision='" + this.versionRevision + '\'' +
-                ", versionBuild='" + this.versionBuild + '\'' +
-                ", creationMode=" + this.creationMode +
-                ", numPassed=" + this.numPassed +
-                ", numFailed=" + this.numFailed +
-                ", numVolatile=" + this.numVolatile +
-                ", numImproved=" + this.numImproved +
-                ", numDegraded=" + this.numDegraded +
-                ", numInvalidated=" + this.numInvalidated +
-                ", testResults=" + this.testResults +
-                '}';
-    }
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public List<TestMetricFilter> getIncludedMetrics() {
+		return includedMetrics;
+	}
+
+	public void setIncludedMetrics(List<TestMetricFilter> includedMetrics) {
+		this.includedMetrics = includedMetrics;
+	}
+
+	@Override
+	public String toString() {
+		return "TestRun [startTime=" + startTime + ", platform=" + platform + ", systemProfile=" + systemProfile + ", category="
+				+ category + ", id=" + id + ", href=" + href + ", finished=" + finished + ", versionMajor=" + versionMajor
+				+ ", versionMinor=" + versionMinor + ", versionRevision=" + versionRevision + ", versionBuild=" + versionBuild
+				+ ", creationMode=" + creationMode + ", numPassed=" + numPassed + ", numFailed=" + numFailed + ", numVolatile="
+				+ numVolatile + ", numImproved=" + numImproved + ", numDegraded=" + numDegraded + ", numInvalidated="
+				+ numInvalidated + ", includedMetrics=" + includedMetrics + ", testResults=" + testResults + "]";
+	}
+
+
 }

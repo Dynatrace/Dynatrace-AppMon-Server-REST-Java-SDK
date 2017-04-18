@@ -28,33 +28,52 @@
 
 package com.dynatrace.sdk.server.sessions.models;
 
-import com.dynatrace.sdk.server.sessions.Sessions;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.dynatrace.sdk.server.sessions.Sessions;
+
 /**
  * Store Session Request class required for {@link Sessions#store} method
- * <strong>
- *     The timeframe parameters {@link StoreSessionRequest#timeframeStart} and {@link StoreSessionRequest#timeframeEnd}
- *     must be formatted according to ISO 8601, without a time zone specification, in the form yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss.S
- * </strong>
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class StoreSessionRequest {
+
+	/** System profile is used as url param, not included in request body. */
+	@XmlTransient
     private String systemProfile;
 
+    @XmlAttribute(name="recordingoption")
     private RecordingOption recordingOption;
+    @XmlAttribute(name="locksession")
     private Boolean isSessionLocked;
+    @XmlAttribute(name="appendtimestamp")
     private Boolean appendTimestamp;
-    private String timeframeStart;
-    private String timeframeEnd;
+    @XmlAttribute(name="timeframestart")
+    private Date timeframeStart;
+    @XmlAttribute(name="timeframeend")
+    private Date timeframeEnd;
+    @XmlAttribute(name="sessionname")
     private String storedSessionName;
+    @XmlElement(name="labels")
     private List<String> labels = new ArrayList<>();
+    @XmlElement
+    private String description;
 
-    public StoreSessionRequest(String systemProfile) {
+
+    public StoreSessionRequest() {
+	}
+
+	public StoreSessionRequest(String systemProfile) {
         this.systemProfile = systemProfile;
     }
 
@@ -90,37 +109,30 @@ public class StoreSessionRequest {
         this.appendTimestamp = appendTimestamp;
     }
 
-    public String getTimeframeStart() {
-        return this.timeframeStart;
-    }
+    public Date getTimeframeStart() {
+		return timeframeStart;
+	}
 
-    public void setTimeframeStart(String timeframeStart) {
-        this.timeframeStart = timeframeStart;
-    }
+	public void setTimeframeStart(Date timeframeStart) {
+		this.timeframeStart = timeframeStart;
+	}
 
-    public void setTimeframeStart(Date timeframeStart) {
-        this.timeframeStart = this.getTimeframeDateFormat().format(timeframeStart);
-    }
+	public Date getTimeframeEnd() {
+		return timeframeEnd;
+	}
 
-    public String getTimeframeEnd() {
-        return this.timeframeEnd;
-    }
+	public void setTimeframeEnd(Date timeframeEnd) {
+		this.timeframeEnd = timeframeEnd;
+	}
 
-    public void setTimeframeEnd(String timeframeEnd) {
-        this.timeframeEnd = timeframeEnd;
-    }
-
-    public void setTimeframeEnd(Date timeframeEnd) {
-        this.timeframeEnd = this.getTimeframeDateFormat().format(timeframeEnd);
-    }
-
-    public String getStoredSessionName() {
+	public String getStoredSessionName() {
         return this.storedSessionName;
     }
 
     public void setStoredSessionName(String storedSessionName) {
         this.storedSessionName = storedSessionName;
     }
+
     public List<String> getLabels() {
         return this.labels;
     }
@@ -146,7 +158,15 @@ public class StoreSessionRequest {
                 '}';
     }
 
-    private DateFormat getTimeframeDateFormat() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
-    }
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
 }

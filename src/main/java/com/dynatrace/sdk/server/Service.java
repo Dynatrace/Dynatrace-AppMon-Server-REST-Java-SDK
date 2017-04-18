@@ -28,23 +28,6 @@
 
 package com.dynatrace.sdk.server;
 
-import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
-import com.dynatrace.sdk.server.exceptions.ServerResponseException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.*;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
-import org.xml.sax.InputSource;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -52,130 +35,241 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
+import org.eclipse.persistence.jaxb.MarshallerProperties;
+import org.eclipse.persistence.jaxb.UnmarshallerProperties;
+
+import com.dynatrace.sdk.server.exceptions.ServerConnectionException;
+import com.dynatrace.sdk.server.exceptions.ServerResponseException;
+import com.dynatrace.sdk.server.response.models.ErrorResponse;
+
 public abstract class Service {
-    private final DynatraceClient client;
 
-    protected Service(DynatraceClient client) {
-        this.client = client;
-    }
+	/** Default API version URI prefix, may be overwritten in constructor. */
+	public final static String API_VER_URI_PREFIX = "/api/v2";
 
-    protected static XPathExpression compileValueExpression() {
-        try {
-            return XPathFactory.newInstance().newXPath().compile("/result/@value");
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	private final String apiVerURIPrefix;
+	private final DynatraceClient client;
 
-    @SuppressWarnings("unchecked")
-    private static <T> T xmlInputStreamToObject(InputStream xml, Class<T> clazz) throws JAXBException, IOException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        try {
-            return (T) unmarshaller.unmarshal(xml);
-        } finally {
-            xml.close();
-        }
-    }
+	protected Service(DynatraceClient client) {
+		this(client, API_VER_URI_PREFIX);
+	}
 
-    public static StringEntity xmlObjectToEntity(Object object) {
-        try {
-            StringWriter writer = new StringWriter();
-            JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.marshal(object, writer);
-            StringEntity entity = new StringEntity(writer.getBuffer().toString());
-            entity.setContentType("application/xml");
-            return entity;
-        } catch (JAXBException | UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
-        }
-    }
+	protected Service(DynatraceClient client, String apiVerURIPrefix) {
+		this.apiVerURIPrefix = apiVerURIPrefix;
+		this.client = client;
+	}
 
-    protected URI buildURI(String path, NameValuePair... params) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
-        uriBuilder.setHost(this.client.getConfiguration().getHost());
-        uriBuilder.setPort(this.client.getConfiguration().getPort());
-        uriBuilder.setPath(path);
-        uriBuilder.setParameters(params);
-        return uriBuilder.build();
-    }
+	private static <T> T jsonInputStreamToObject(InputStream json, Class<T> clazz) throws JAXBException, IOException {
+		// passing service classloader is required for JAXBContext.newInstance, because Ant tasks runs using specific classloader,
+		// what causes that jaxb default classloader cannot find org.eclipse.persistence.jaxb classes (used for json parsing)
+		JAXBContext jaxbContext = JAXBContext.newInstance(clazz.getPackage().getName(),
+				Service.class.getClassLoader());
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		unmarshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
+		unmarshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, false);
+		try {
+			return unmarshaller.unmarshal(new StreamSource(json), clazz).getValue();
+		} finally {
+			json.close();
+		}
+	}
 
-    protected CloseableHttpResponse doRequest(HttpRequestBase request) throws ServerConnectionException, ServerResponseException {
-        request.setHeader("Accept", "*/xml");
 
-        request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
-        try {
-            CloseableHttpResponse response = this.client.getClient().execute(request);
-            if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
-                String error = null;
-                // dynatrace often returns an error message along with a status code
-                // we try to parse it, if that doesn't work we use a code bound message
-                // as a reason in exception
-                try (InputStream is = response.getEntity().getContent()) {
-                    // xpath is reasonable for parsing such a small entity
-                    error = XPathFactory.newInstance().newXPath().compile("/error/@reason").evaluate(new InputSource(is));
-                } catch (XPathExpressionException e) {
-                    // error message might not exist
-                }
+	protected static StringEntity jsonObjectToEntity(Object object) {
+		try {
+			StringWriter writer = new StringWriter();
+			// passing service classloader is required for JAXBContext.newInstance, because Ant tasks runs using specific classloader,
+			// what causes that jaxb default classloader cannot find org.eclipse.persistence.jaxb classes (used for json parsing)
+			JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass().getPackage().getName(),
+					Service.class.getClassLoader());
+			Marshaller marshaller = jaxbContext.createMarshaller();
+			marshaller.setProperty(MarshallerProperties.MEDIA_TYPE, "application/json");
+			marshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, false);
+			marshaller.marshal(object, writer);
+			String string = writer.getBuffer().toString();
+			StringEntity entity = new StringEntity(string);
+			entity.setContentType("application/json");
 
-                if (error == null || error.isEmpty()) {
-                    error = response.getStatusLine().getReasonPhrase();
-                }
-                throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
-            }
-            return response;
-        } catch (IOException e) {
-            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
-        }
-    }
+			return entity;
+		} catch (JAXBException | UnsupportedEncodingException e) {
+			throw new IllegalArgumentException(String.format("Provided request couldn't be serialized: %s", e.getMessage()), e);
+		}
+	}
 
-    protected <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
-        try {
-            return xmlInputStreamToObject(response.getEntity().getContent(), responseClass);
-        } catch (IOException | JAXBException e) {
-            throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Could not unmarshall response into given object: %s", e.getMessage()), e);
-        }
-    }
+	private URI buildURI(String path, NameValuePair... params) throws URISyntaxException {
+		URIBuilder uriBuilder = new URIBuilder();
+		uriBuilder.setScheme(this.client.getConfiguration().isSSL() ? "https" : "http");
+		uriBuilder.setHost(this.client.getConfiguration().getHost());
+		uriBuilder.setPort(this.client.getConfiguration().getPort());
+		uriBuilder.setPath(apiVerURIPrefix + path);
+		uriBuilder.setParameters(params);
+		return uriBuilder.build();
+	}
 
-    protected CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
-        HttpPost post = new HttpPost(uri);
-        post.setEntity(entity);
-        return this.doRequest(post);
-    }
 
-    protected <T> T doPostRequest(URI uri, HttpEntity entity, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-        try (CloseableHttpResponse response = this.doPostRequest(uri, entity)) {
-            return this.parseResponse(response, responseClass);
-        } catch (IOException e) {
-            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
-        }
-    }
+	protected CloseableHttpResponse doRequest(HttpRequestBase request) throws ServerConnectionException, ServerResponseException {
+		request.setHeader("Accept", "*/json");
 
-    protected CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
-        HttpPut put = new HttpPut(uri);
-        put.setEntity(entity);
-        return this.doRequest(put);
-    }
+		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((this.client.getConfiguration().getName() + ":" + this.client.getConfiguration().getPassword()).getBytes()));
+		try {
+			CloseableHttpResponse response = this.client.getClient().execute(request);
+			if (response.getStatusLine().getStatusCode() >= 300 || response.getStatusLine().getStatusCode() < 200) {
+				String error = null;
+				// dynatrace often returns an error message along with a status code
+				// we try to parse it, if that doesn't work we use a code bound message
+				// as a reason in exception
+				try (InputStream is = response.getEntity().getContent()) {
+					error = jsonInputStreamToObject(is, ErrorResponse.class).getMessage();
+				} catch (JAXBException e) {
+					// error message might not exist
+				}
 
-    protected <T> T doPutRequest(URI uri, HttpEntity entity, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-        try (CloseableHttpResponse response = this.doPutRequest(uri, entity)) {
-            return this.parseResponse(response, responseClass);
-        } catch (IOException e) {
-            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
-        }
-    }
+				if (error == null || error.isEmpty()) {
+					error = response.getStatusLine().getReasonPhrase();
+				}
+				throw new ServerResponseException(response.getStatusLine().getStatusCode(), error);
+			}
+			return response;
+		} catch (IOException e) {
+			throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
+		}
+	}
 
-    protected CloseableHttpResponse doGetRequest(URI uri) throws ServerConnectionException, ServerResponseException {
-        return this.doRequest(new HttpGet(uri));
-    }
+	private static <T> T parseResponse(CloseableHttpResponse response, Class<T> responseClass) throws ServerResponseException {
+		try {
+			return jsonInputStreamToObject(response.getEntity().getContent(), responseClass);
+		} catch (IOException | JAXBException e) {
+			throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Could not unmarshall response into given object: %s", e.getMessage()), e);
+		}
+	}
 
-    protected <T> T doGetRequest(URI uri, Class<T> responseClass) throws ServerConnectionException, ServerResponseException {
-        try (CloseableHttpResponse response = this.doGetRequest(uri)) {
-            return this.parseResponse(response, responseClass);
-        } catch (IOException e) {
-            throw new ServerConnectionException(String.format("Could not connect to Dynatrace Server: %s", e.getMessage()), e);
-        }
-    }
+	private CloseableHttpResponse doPutRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+		HttpPut put = new HttpPut(uri);
+		put.setEntity(entity);
+		return this.doRequest(put);
+	}
+
+
+	public <T> T doPutRequest(String uriString, Object entityObject, ResponseResolver<T> resolver) throws ServerConnectionException, ServerResponseException {
+
+		HttpEntity entity = entityObject == null ? null : Service.jsonObjectToEntity(entityObject);
+
+		try (CloseableHttpResponse response = this.doPutRequest(buildURI(uriString), entity)) {
+
+			return resolver.resolve(response);
+
+		} catch (IOException e) {
+			throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException("Invalid uri: " + uriString + ". " + e.getMessage(), e);
+		}
+	}
+
+	public <T> T doGetRequest(String uriString, ResponseResolver<T> resolver, NameValuePair ... params) throws ServerConnectionException, ServerResponseException {
+
+		try (CloseableHttpResponse response = this.doRequest(new HttpGet(buildURI(uriString, params)))) {
+
+			return resolver.resolve(response);
+
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException("Invalid uri: " + uriString + ", params: " + params + " . " + e.getMessage(), e);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not close http response: " + e.getMessage(), e);
+		}
+
+	}
+
+	private CloseableHttpResponse doPostRequest(URI uri, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+		HttpPost post = new HttpPost(uri);
+		post.setEntity(entity);
+		return this.doRequest(post);
+	}
+
+	private <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, HttpEntity entity) throws ServerConnectionException, ServerResponseException {
+
+		try (CloseableHttpResponse response = this.doPostRequest(this.buildURI(uriString), entity)) {
+			return resolver.resolve(response);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not close http response:" + e.getMessage(), e);
+		} catch (URISyntaxException e) {
+			throw new IllegalArgumentException("Invalid uri: " + e.getMessage(), e);
+		}
+	}
+
+	public <T> T doPostRequest(String uriString, ResponseResolver<T> resolver, Object entityObject) throws ServerConnectionException, ServerResponseException {
+
+		HttpEntity entity = entityObject == null ? null : Service.jsonObjectToEntity(entityObject);
+
+		return this.doPostRequest(uriString, resolver, entity);
+	}
+
+	/**
+	 *
+	 * @param clazz of response
+	 * @return object of given class returned in response body
+	 */
+	protected static <T> ResponseResolver<T> getBodyResponseResolver(final Class<T> clazz) {
+		return new ResponseResolver<T>() {
+			public T resolve(CloseableHttpResponse response) throws ServerResponseException {
+				return Service.parseResponse(response, clazz);
+			}
+		};
+	}
+
+	/**
+	 *
+	 * @return location param of response header.
+	 */
+	protected static ResponseResolver<String> getHeaderLocationResolver() {
+		return headerLocationResolver;
+	}
+
+	/**
+	 *
+	 * @return always true
+	 */
+	protected static ResponseResolver<Boolean> getEmtpyResolver() {
+		return emptyResolver;
+	}
+
+	static ResponseResolver<Boolean> emptyResolver = new ResponseResolver<Boolean>() {
+
+		@Override
+		public Boolean resolve(CloseableHttpResponse response) throws ServerResponseException {
+			return true;
+		}
+
+	};
+
+	static ResponseResolver<String> headerLocationResolver = new ResponseResolver<String>() {
+
+		private static final String RESPONSE_LOCATION_HEADER_NAME = "Location";
+		public String resolve(CloseableHttpResponse response) throws ServerResponseException {
+
+			Header locationHeader = response.getLastHeader(RESPONSE_LOCATION_HEADER_NAME);
+
+			if (locationHeader != null) {
+				return locationHeader.getValue();
+			} else {
+				throw new ServerResponseException(response.getStatusLine().getStatusCode(), String.format("Invalid server response: %s header is not set", RESPONSE_LOCATION_HEADER_NAME));
+			}
+		}
+	};
 }

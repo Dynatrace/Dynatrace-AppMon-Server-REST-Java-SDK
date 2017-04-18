@@ -28,12 +28,21 @@
 
 package com.dynatrace.sdk.server.sessions.models;
 
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlEnum(String.class)
+@XmlType
 public enum RecordingOption {
     // All PurePaths including time series
+	@XmlEnumValue("all")
     ALL("all"),
     // Only PurePaths marked as violated, including time series.
+    @XmlEnumValue("violations")
     VIOLATIONS("violations"),
     // Time series only
+    @XmlEnumValue("timeseries")
     TIME_SERIES("timeseries");
 
     private final String internal;

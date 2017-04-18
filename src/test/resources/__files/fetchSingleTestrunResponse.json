@@ -1,0 +1,157 @@
+{
+  "id": "a75964f5-7a41-4794-b929-fbd694456ad4",
+  "category": "unit",
+  "versionBuild": "3",
+  "versionMajor": "1",
+  "versionMilestone": "m4",
+  "versionMinor": "2",
+  "versionRevision": "3",
+  "platform": "Windows",
+  "startTime": "2017-01-10T14:56:54.722+01:00",
+  "systemProfile": "easyTravel",
+  "marker": "marker",
+  "creationMode": "MANUAL",
+  "additionalMetaData": {
+    "somekey": "somevalue"
+  },
+  "numDegraded": 0,
+  "numFailed": 1,
+  "numImproved": 0,
+  "numInvalidated": 0,
+  "numPassed": 6,
+  "numVolatile": 0,
+  "finished": true,
+  "testResults": [
+    {
+      "name": "SumTest.sumWithoutAdding",
+      "status": "passed",
+      "exectime": "2017-01-10T14:56:56.785+01:00",
+      "package": "com.example.simple",
+      "platform": "Windows",
+      "measures": [
+        {
+          "name": "Failed Transaction Count",
+          "metricGroup": "Error Detection",
+          "value": 0,
+          "unit": "num",
+          "expectedMin": 0,
+          "expectedMax": 0,
+          "numFailingOrInvalidatedRuns": 2,
+          "numValidRuns": 9,
+          "numImprovedRuns": 0,
+          "numDegradedRuns": 0,
+          "violationPercentage": 0
+        }
+      ]
+    },
+    {
+      "name": "StringMergeTest.doMergeFromSetter",
+      "status": "passed",
+      "exectime": "2017-01-10T14:56:56.784+01:00",
+      "package": "com.example.simple",
+      "platform": "Windows",
+      "measures": [
+        {
+          "name": "Failed Transaction Count",
+          "metricGroup": "Error Detection",
+          "value": 0,
+          "unit": "num",
+          "expectedMin": 0,
+          "expectedMax": 0,
+          "numFailingOrInvalidatedRuns": 0,
+          "numValidRuns": 9,
+          "numImprovedRuns": 0,
+          "numDegradedRuns": 0,
+          "violationPercentage": 0
+        }
+      ]
+    },
+    {
+      "name": "SumTest.sumWithNegativeNumbers",
+      "status": "passed",
+      "exectime": "2017-01-10T14:56:57.789+01:00",
+      "package": "com.example.simple",
+      "platform": "Windows",
+      "measures": [
+        {
+          "name": "Failed Transaction Count",
+          "metricGroup": "Error Detection",
+          "unit": "num",
+          "expectedMin": "-INF",
+          "expectedMax": "INF",
+          "numFailingOrInvalidatedRuns": 0,
+          "numValidRuns": 9,
+          "numImprovedRuns": 0,
+          "numDegradedRuns": 0,
+          "violationPercentage": 0
+        }
+      ]
+    },
+    {
+      "name": "SumTest.sumWithPositiveNumbers",
+      "status": "passed",
+      "exectime": "2017-01-10T14:56:57.287+01:00",
+      "package": "com.example.simple",
+      "platform": "Windows",
+      "measures": [
+        {
+          "name": "Failed Transaction Count",
+          "metricGroup": "Error Detection",
+          "value": 0,
+          "unit": "num",
+          "expectedMin": 0,
+          "expectedMax": 0,
+          "numFailingOrInvalidatedRuns": 0,
+          "numValidRuns": 9,
+          "numImprovedRuns": 0,
+          "numDegradedRuns": 0,
+          "violationPercentage": 0
+        }
+      ]
+    },
+    {
+      "name": "SumTest.sumWithMixedNumbers",
+      "status": "passed",
+      "exectime": "2017-01-10T14:56:58.290+01:00",
+      "package": "com.example.simple",
+      "platform": "Windows",
+      "measures": [
+        {
+          "name": "Failed Transaction Count",
+          "metricGroup": "Error Detection",
+          "value": 0,
+          "unit": "num",
+          "expectedMin": 0,
+          "expectedMax": 0,
+          "numFailingOrInvalidatedRuns": 0,
+          "numValidRuns": 9,
+          "numImprovedRuns": 0,
+          "numDegradedRuns": 0,
+          "violationPercentage": 0
+        }
+      ]
+    },
+    {
+      "name": "StringMergeTest.doMergeFromConstructor",
+      "status": "passed",
+      "exectime": "2017-01-10T14:56:56.781+01:00",
+      "package": "com.example.simple",
+      "platform": "Windows",
+      "measures": [
+        {
+          "name": "Failed Transaction Count",
+          "metricGroup": "Error Detection",
+          "value": 0,
+          "unit": "num",
+          "expectedMin": 0,
+          "expectedMax": 0,
+          "numFailingOrInvalidatedRuns": 0,
+          "numValidRuns": 9,
+          "numImprovedRuns": 0,
+          "numDegradedRuns": 0,
+          "violationPercentage": 0
+        }
+      ]
+    }
+  ]
+}

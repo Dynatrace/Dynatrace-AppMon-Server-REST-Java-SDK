@@ -35,7 +35,7 @@ compile 'com.dynatrace.sdk:server-rest-sdk:LATEST_VERSION'
 ```
 
 ## Services
-The SDK is divided into small modules called `services`. Each `service` corresponds to the appropriate wiki entry under *[REST Interfaces](https://community.dynatrace.com/community/display/DOCDT99/REST+Interfaces)* section.
+The SDK is divided into small modules called `services`. Each `service` corresponds to the appropriate Rest API endpoint. Documentation of Rest API endpoints can be found on your local Dynatrace Server: [https://DTSERVER:8021/api-docs/current/](https://localhost:8021/api-docs/current/).
 The SDK currently supports a small part of the available interfaces, therefore Pull Requests are highly appreciated.
 
 Each `service` takes a [DynatraceClient](src/main/java/com/dynatrace/sdk/server/DynatraceClient.java) as the only parameter in the constructor.
@@ -119,5 +119,5 @@ The SDK comes with some unit tests, to run them, execute the following command:
 
 ### <a name="restapidoc"></a>Rest API documentation
 
-Detailed documentation of the Server Rest API can be found on your local Dynatrace Server: [https://DTSERVER:8021/api-docs/current/](https://localhost:8021/api-docs/current/)
+[Server Rest interfaces wiki](https://www.dynatrace.com/support/doc/appmon/appmon-reference/rest-interfaces/server-rest-interfaces/)
 

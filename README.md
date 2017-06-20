@@ -15,7 +15,7 @@ This library provides an easy to use Java implementation of Dynatrace Server RES
     - [Running tests](#tests)
 
 ## <a name="installation"></a>Installation
-Library is available in maven central repository (starting with version 7.0.0).
+Library is available in maven central repository (starting with version 7.0.0; for previous versions see the [Releases page](https://github.com/Dynatrace/Dynatrace-Server-REST-Java-SDK/releases)).
 
 ### Maven
 - Add the following code to the *&lt;dependencies&gt;* section:
